@@ -152,7 +152,7 @@ export function LeftRail() {
               <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>badge</span>
             </div>
             <a
-              href="https://buymeacoffee.com"
+              href="https://buymeacoffee.com/sushiboba"
               target="_blank"
               rel="noopener noreferrer"
               style={{

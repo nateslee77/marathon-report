@@ -31,7 +31,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
   return (
     <div className="space-y-6">
       {/* Filter Toggle */}
-      <div className="flex justify-end">
+      <div className="flex justify-start md:justify-end overflow-x-auto">
         <ToggleSwitch
           options={filterOptions}
           value={filter}

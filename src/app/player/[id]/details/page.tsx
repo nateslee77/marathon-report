@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { detailedPlayers, mockMatches, mockRecentlyPlayedWith, mockWeaponStats } from '@/lib/mock-data';
@@ -27,7 +27,12 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   const runner = RUNNER_VISUALS[player.runner];
   const stats = player.stats.overall;
   const { user, equippedBadges, cardThemeColor } = useApp();
-  const isOwnProfile = user?.id === player.id;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const isOwnProfile = mounted && user?.id === player.id;
   const effectiveAccent = isOwnProfile && cardThemeColor ? cardThemeColor : runner.accent;
 
   function hexToRgb(hex: string) {
@@ -51,12 +56,12 @@ export default function DetailsPage({ params }: DetailsPageProps) {
     : [];
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-[1400px] mx-auto">
+    <div className="space-y-6 md:space-y-8 animate-fade-in max-w-[1400px] mx-auto px-4 md:px-0 py-4 md:py-0">
       {/* ── Back link ── */}
       <Link
         href={`/player/${player.id}`}
         className="inline-flex items-center gap-2 text-sm transition-colors duration-150 hover:opacity-80"
-        style={{ color: '#c2ff0b' }}
+        style={{ color: '#c2ff0b', minHeight: 44, display: 'inline-flex', alignItems: 'center' }}
       >
         <span style={{ fontSize: '0.75rem' }}>&larr;</span>
         Back to Fireteam
@@ -67,7 +72,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
         className="relative overflow-hidden"
         style={{
           background: emblemGradient,
-          minHeight: 200,
+          minHeight: 160,
           border: `1px solid ${effectiveAccent}22`,
         }}
       >
@@ -105,7 +110,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
         />
 
         {/* Hero content */}
-        <div className="relative px-8 py-8 flex flex-col justify-end" style={{ minHeight: 200 }}>
+        <div className="relative px-4 py-5 md:px-8 md:py-8 flex flex-col justify-end" style={{ minHeight: 160 }}>
           {/* Equipped badges */}
           {displayBadges.length > 0 && (
             <div className="flex items-center flex-wrap gap-2 mb-3">
@@ -120,8 +125,9 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             <Image
               src={player.avatar}
               alt={player.name}
-              width={72}
-              height={72}
+              width={56}
+              height={56}
+              className="md:w-[72px] md:h-[72px]"
               style={{
                 flexShrink: 0,
                 border: `2px solid ${effectiveAccent}55`,
@@ -129,22 +135,24 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                 objectFit: 'cover',
               }}
             />
-            <div className="flex items-baseline gap-3">
-              <h1 className="text-3xl font-bold tracking-tight" style={{ color: '#fff' }}>
-                {player.name}
-              </h1>
-              <span className="font-mono text-lg" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                {player.tag}
-              </span>
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-2 md:gap-3">
+                <h1 className="text-xl md:text-3xl font-bold tracking-tight truncate" style={{ color: '#fff' }}>
+                  {player.name}
+                </h1>
+                <span className="font-mono text-sm md:text-lg flex-shrink-0" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                  {player.tag}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Runner + Platform + Rating row */}
-          <div className="flex items-center gap-4">
-            <span className="font-mono text-sm font-bold" style={{ color: effectiveAccent }}>
+          {/* Runner + Platform + Rating row — wraps on mobile */}
+          <div className="flex flex-wrap items-center gap-2 md:gap-4 mt-1">
+            <span className="font-mono text-xs md:text-sm font-bold" style={{ color: effectiveAccent }}>
               {runner.name}
             </span>
-            <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem' }}>
+            <span className="hidden md:inline" style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem' }}>
               {runner.role}
             </span>
             {player.membership !== 'free' && (
@@ -163,36 +171,22 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                 {player.membership === 'pinnacle' ? 'Pinnacle' : 'Runner Pass'}
               </span>
             )}
-            <span
-              style={{
-                width: 1,
-                height: 14,
-                background: 'rgba(255,255,255,0.1)',
-                display: 'inline-block',
-              }}
-            />
-            <span className="font-mono text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
+            <span className="hidden md:inline-block" style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+            <span className="font-mono text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
               {player.platform}
             </span>
-            <span className="font-mono text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
+            <span className="font-mono text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
               Lvl {player.level}
             </span>
-            <span className="font-mono text-sm font-bold" style={{ color: effectiveAccent }}>
+            <span className="font-mono text-xs md:text-sm font-bold" style={{ color: effectiveAccent }}>
               {player.rating} SR
             </span>
-            <span
-              style={{
-                width: 1,
-                height: 14,
-                background: 'rgba(255,255,255,0.1)',
-                display: 'inline-block',
-              }}
-            />
-            <RankBadge rank={player.competitiveRank} size="md" />
+            <span className="hidden md:inline-block" style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+            <RankBadge rank={player.competitiveRank} size="sm" />
           </div>
 
-          {/* Quick stats row */}
-          <div className="flex gap-6 mt-4">
+          {/* Quick stats — grid on mobile, flex on desktop */}
+          <div className="grid grid-cols-3 md:flex md:gap-6 gap-y-3 mt-4">
             {[
               { label: 'K/D', value: formatKD(stats.kd) },
               { label: 'Extract Rate', value: formatPercentage(stats.winRate) },
@@ -201,12 +195,12 @@ export default function DetailsPage({ params }: DetailsPageProps) {
               { label: 'Extraction', value: formatPercentage(stats.extractionRate) },
             ].map((s) => (
               <div key={s.label}>
-                <div className="font-mono text-xl font-bold tabular-nums" style={{ color: '#fff' }}>
+                <div className="font-mono text-base md:text-xl font-bold tabular-nums" style={{ color: '#fff' }}>
                   {s.value}
                 </div>
                 <div
                   style={{
-                    fontSize: '0.575rem',
+                    fontSize: '0.525rem',
                     letterSpacing: '0.1em',
                     color: 'rgba(255,255,255,0.3)',
                     textTransform: 'uppercase',
@@ -222,7 +216,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
       </div>
 
       {/* ── Loadout + Career Highlights ── */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
         {/* Loadout */}
         <div
           style={{
@@ -232,14 +226,14 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           }}
         >
           <div
-            className="px-5 py-3.5"
+            className="px-4 md:px-5 py-3 md:py-3.5"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>
+            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
               Loadout
             </h2>
           </div>
-          <div className="p-5 grid grid-cols-4 gap-3">
+          <div className="p-3 md:p-5 grid grid-cols-4 gap-2 md:gap-3">
             {player.loadout.map((item) => (
               <div
                 key={item.slot}
@@ -247,22 +241,22 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                 style={{
                   background: 'rgba(255,255,255,0.03)',
                   border: `1px solid ${effectiveAccent}11`,
-                  padding: '12px 8px',
+                  padding: '8px 4px',
                 }}
               >
                 <div
-                  className="font-mono text-2xl font-bold mb-2"
+                  className="font-mono text-xl md:text-2xl font-bold mb-1 md:mb-2"
                   style={{ color: effectiveAccent + '88' }}
                 >
                   {item.icon}
                 </div>
-                <div className="text-sm font-medium" style={{ color: '#e5e5e5' }}>
+                <div className="text-xs md:text-sm font-medium truncate" style={{ color: '#e5e5e5' }}>
                   {item.name}
                 </div>
                 <div
-                  className="mt-1"
+                  className="mt-0.5 md:mt-1"
                   style={{
-                    fontSize: '0.575rem',
+                    fontSize: '0.5rem',
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
                     color: 'rgba(255,255,255,0.25)',
@@ -284,34 +278,34 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           }}
         >
           <div
-            className="px-5 py-3.5"
+            className="px-4 md:px-5 py-3 md:py-3.5"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>
+            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
               Career Highlights
             </h2>
           </div>
-          <div className="p-5 space-y-4">
+          <div className="p-3 md:p-5 space-y-2 md:space-y-4">
             {player.careerHighlights.map((highlight) => (
               <div
                 key={highlight.label}
                 className="flex items-center justify-between"
                 style={{
-                  padding: '8px 12px',
+                  padding: '6px 10px',
                   background: 'rgba(255,255,255,0.02)',
                   border: '1px solid rgba(255,255,255,0.04)',
                 }}
               >
                 <span
                   style={{
-                    fontSize: '0.75rem',
+                    fontSize: '0.7rem',
                     color: 'rgba(255,255,255,0.5)',
                   }}
                 >
                   {highlight.label}
                 </span>
                 <span
-                  className="font-mono font-bold tabular-nums"
+                  className="font-mono font-bold tabular-nums text-sm"
                   style={{ color: effectiveAccent }}
                 >
                   {highlight.value}
@@ -329,7 +323,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
       <RecentMatches matches={mockMatches} />
 
       {/* ── Weapons + Recently Played With ── */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
         <WeaponUsage weapons={mockWeaponStats} />
         <RecentlyPlayedWith players={mockRecentlyPlayedWith} />
       </div>

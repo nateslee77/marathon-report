@@ -22,253 +22,234 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div
-      className="relative flex flex-col md:mx-[-24px] md:mt-[-24px]"
-    >
+    <div className="relative flex flex-col md:mx-[-24px] md:mt-[-24px]">
       {/* ── Hero Section with Background ── */}
-      <div className="relative min-h-screen md:min-h-[calc(100vh-48px)] flex flex-col" style={{ padding: '24px' }}>
-        {/* Background image */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 0,
-            backgroundImage: 'url(/images/904f23205038723.66b3a6eecd27b.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top',
-            backgroundRepeat: 'no-repeat',
-            pointerEvents: 'none',
-          }}
-        />
-        {/* Dark overlay for readability + bottom fade */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 0,
-            background: 'linear-gradient(180deg, rgba(10,10,10,0.45) 0%, rgba(10,10,10,0.55) 60%, rgba(10,10,10,0.95) 90%, rgba(10,10,10,1) 100%)',
-            pointerEvents: 'none',
-          }}
-        />
-
-      {/* ── Sign In / User Menu (top right) ── */}
-      <div className="relative z-50 flex justify-end px-6 pt-6">
-        {!user ? (
-          <button
-            onClick={signIn}
+      <div
+        className="relative flex flex-col"
+        style={{ padding: '0' }}
+      >
+        {/* Hero image container — clamped on mobile, full on desktop */}
+        <div className="relative h-[32vh] min-h-[200px] max-h-[280px] md:h-auto md:min-h-[calc(100vh-48px)] md:max-h-none flex flex-col">
+          {/* Background image */}
+          <div
             style={{
-              padding: '8px 20px',
-              fontSize: '0.8rem',
-              fontWeight: 600,
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-              color: '#e5e5e5',
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              cursor: 'pointer',
-              transition: 'all 150ms',
+              position: 'absolute',
+              inset: 0,
+              zIndex: 0,
+              backgroundImage: 'url(/images/904f23205038723.66b3a6eecd27b.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: '46% 30%',
+              backgroundRepeat: 'no-repeat',
+              pointerEvents: 'none',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(194,255,11,0.3)';
-              e.currentTarget.style.color = '#c2ff0b';
+          />
+          {/* Dark overlay for readability + bottom fade */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 0,
+              background: 'linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.5) 50%, rgba(10,10,10,0.92) 85%, rgba(10,10,10,1) 100%)',
+              pointerEvents: 'none',
             }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-              e.currentTarget.style.color = '#e5e5e5';
-            }}
-          >
-            Sign In
-          </button>
-        ) : (
-          <div ref={menuRef} style={{ position: 'relative' }}>
-            <button
-              onClick={() => setMenuOpen((v) => !v)}
-              style={{
-                width: 44,
-                height: 44,
-                padding: 0,
-                background: 'transparent',
-                border: '2px solid rgba(194,255,11,0.4)',
-                cursor: 'pointer',
-                overflow: 'hidden',
-                transition: 'all 150ms',
-              }}
-            >
-              <Image
-                src={user.avatar}
-                alt={user.name}
-                width={44}
-                height={44}
-                style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-            </button>
+          />
 
-            {menuOpen && (
-              <div
-                className="animate-slide-down"
+          {/* ── Desktop Sign In / User Menu (top right) — hidden on mobile (header handles it) ── */}
+          <div className="hidden md:flex relative z-50 justify-end px-6 pt-6">
+            {!user ? (
+              <button
+                onClick={signIn}
                 style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 8px)',
-                  right: 0,
-                  width: 220,
-                  background: 'linear-gradient(180deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
-                  zIndex: 50,
+                  padding: '8px 20px',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.05em',
+                  textTransform: 'uppercase',
+                  color: '#e5e5e5',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  cursor: 'pointer',
+                  transition: 'all 150ms',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(194,255,11,0.3)';
+                  e.currentTarget.style.color = '#c2ff0b';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                  e.currentTarget.style.color = '#e5e5e5';
                 }}
               >
-                {/* User info */}
-                <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <div className="font-semibold text-sm" style={{ color: '#e5e5e5' }}>
-                    {user.name}
-                  </div>
-                  <div className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                    {user.tag}
-                  </div>
-                </div>
+                Sign In
+              </button>
+            ) : (
+              <div ref={menuRef} style={{ position: 'relative' }}>
+                <button
+                  onClick={() => setMenuOpen((v) => !v)}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    padding: 0,
+                    background: 'transparent',
+                    border: '2px solid rgba(194,255,11,0.4)',
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    transition: 'all 150ms',
+                  }}
+                >
+                  <Image
+                    src={user.avatar}
+                    alt={user.name}
+                    width={44}
+                    height={44}
+                    style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </button>
 
-                {/* Menu items */}
-                <div style={{ padding: '6px 0' }}>
-                  <Link
-                    href={`/player/${user.id}/details`}
-                    onClick={() => setMenuOpen(false)}
-                    className="block"
+                {menuOpen && (
+                  <div
+                    className="animate-slide-down"
                     style={{
-                      padding: '8px 16px',
-                      fontSize: '0.8rem',
-                      color: '#a1a1a1',
-                      textDecoration: 'none',
-                      transition: 'all 100ms',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#e5e5e5';
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#a1a1a1';
-                      e.currentTarget.style.background = 'transparent';
+                      position: 'absolute',
+                      top: 'calc(100% + 8px)',
+                      right: 0,
+                      width: 220,
+                      background: 'linear-gradient(180deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
+                      zIndex: 50,
                     }}
                   >
-                    Profile
-                  </Link>
-                  <Link
-                    href="/settings"
-                    onClick={() => setMenuOpen(false)}
-                    className="block"
-                    style={{
-                      padding: '8px 16px',
-                      fontSize: '0.8rem',
-                      color: '#a1a1a1',
-                      textDecoration: 'none',
-                      transition: 'all 100ms',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#e5e5e5';
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = '#a1a1a1';
-                      e.currentTarget.style.background = 'transparent';
-                    }}
-                  >
-                    Settings
-                  </Link>
-                </div>
-
-                {/* Sign out */}
-                <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '6px 0' }}>
-                  <button
-                    onClick={() => { signOut(); setMenuOpen(false); }}
-                    className="block w-full text-left"
-                    style={{
-                      padding: '8px 16px',
-                      fontSize: '0.8rem',
-                      color: '#ff4444',
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      transition: 'all 100ms',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(255,68,68,0.06)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'transparent';
-                    }}
-                  >
-                    Sign Out
-                  </button>
-                </div>
+                    <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div className="font-semibold text-sm" style={{ color: '#e5e5e5' }}>
+                        {user.name}
+                      </div>
+                      <div className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                        {user.tag}
+                      </div>
+                    </div>
+                    <div style={{ padding: '6px 0' }}>
+                      <Link
+                        href={`/player/${user.id}/details`}
+                        onClick={() => setMenuOpen(false)}
+                        className="block"
+                        style={{
+                          padding: '8px 16px',
+                          fontSize: '0.8rem',
+                          color: '#a1a1a1',
+                          textDecoration: 'none',
+                          transition: 'all 100ms',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = '#e5e5e5';
+                          e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = '#a1a1a1';
+                          e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        Profile
+                      </Link>
+                      <Link
+                        href="/settings"
+                        onClick={() => setMenuOpen(false)}
+                        className="block"
+                        style={{
+                          padding: '8px 16px',
+                          fontSize: '0.8rem',
+                          color: '#a1a1a1',
+                          textDecoration: 'none',
+                          transition: 'all 100ms',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = '#e5e5e5';
+                          e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = '#a1a1a1';
+                          e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        Settings
+                      </Link>
+                    </div>
+                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '6px 0' }}>
+                      <button
+                        onClick={() => { signOut(); setMenuOpen(false); }}
+                        className="block w-full text-left"
+                        style={{
+                          padding: '8px 16px',
+                          fontSize: '0.8rem',
+                          color: '#ff4444',
+                          background: 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'all 100ms',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(255,68,68,0.06)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
 
-      {/* ── Hero section ── */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center py-12 md:py-20 max-w-[1400px] mx-auto w-full">
-        <div className="text-center max-w-2xl mx-auto w-full px-4 md:px-0">
-          {/* Mobile logo (hidden on desktop where left rail has it) */}
-          <div className="flex md:hidden items-center justify-center gap-3 mb-6">
-            <Image
-              src="/images/Marathon_Bungie_Icon.svg"
-              alt="Marathon Report"
-              width={32}
-              height={32}
-            />
-            <div>
-              <span className="text-lg font-bold tracking-tight text-text-primary">
-                MARATHON
-              </span>
-              <span className="text-lg font-bold tracking-tight text-text-tertiary">
-                {' '}REPORT
-              </span>
-            </div>
-          </div>
+          {/* ── Hero content ── */}
+          <div className="relative z-10 flex-1 flex flex-col items-center justify-end pb-6 md:justify-center md:py-20 max-w-[1400px] mx-auto w-full px-4 md:px-6">
+            <div className="text-center max-w-2xl mx-auto w-full">
+              {/* Tagline */}
+              <div className="stat-label mb-2 md:mb-4 tracking-widest" style={{ color: '#c2ff0b' }}>
+                Player Intelligence Platform
+              </div>
 
-          {/* Tagline */}
-          <div className="stat-label mb-4 tracking-widest" style={{ color: '#c2ff0b' }}>
-            Player Intelligence Platform
-          </div>
+              <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-2 md:mb-4 text-balance">
+                Marathon Report
+              </h1>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4 text-balance">
-            Marathon Report
-          </h1>
-
-          <p className="hidden md:block text-base text-text-secondary max-w-md mx-auto mb-10">
-            Search for any player in the left panel to view detailed performance
-            metrics, match history, fireteam analytics, and more.
-          </p>
-
-          {/* Mobile search bar */}
-          <div className="md:hidden w-full max-w-sm mx-auto mb-8">
-            <SearchBar variant="hero" />
-          </div>
-
-          <p className="md:hidden text-sm text-text-tertiary max-w-xs mx-auto mb-8">
-            Search for any player to view stats, match history, and more.
-          </p>
-
-          {/* Stats ribbon */}
-          <div className="inline-flex items-center gap-4 md:gap-8 px-5 md:px-8 py-3 md:py-4 game-card">
-            <div className="text-center">
-              <div className="text-lg md:text-xl font-mono font-bold text-text-primary tabular-nums">342</div>
-              <div className="stat-label mt-1">Players</div>
-            </div>
-            <div className="w-px h-8 bg-border/50" />
-            <div className="text-center">
-              <div className="text-lg md:text-xl font-mono font-bold text-text-primary tabular-nums">12.4K</div>
-              <div className="stat-label mt-1">Matches</div>
-            </div>
-            <div className="w-px h-8 bg-border/50" />
-            <div className="text-center">
-              <div className="text-lg md:text-xl font-mono font-bold tabular-nums" style={{ color: '#c2ff0b' }}>Live</div>
-              <div className="stat-label mt-1">Updates</div>
+              <p className="hidden md:block text-base text-text-secondary max-w-md mx-auto mb-10">
+                Search for any player in the left panel to view detailed performance
+                metrics, match history, fireteam analytics, and more.
+              </p>
             </div>
           </div>
         </div>
-      </div>
 
+        {/* ── Mobile search bar — immediately below hero ── */}
+        <div className="md:hidden relative z-20 px-4 -mt-1" style={{ background: '#0a0a0a' }}>
+          <SearchBar variant="hero" />
+        </div>
+
+        {/* ── Stats ribbon ── */}
+        <div className="relative z-10 flex justify-center px-4 pt-6 pb-4 md:py-0 md:pb-16 md:-mt-8">
+          <div
+            className="inline-flex items-center gap-3 md:gap-8 px-4 md:px-8 py-2.5 md:py-4 game-card"
+            style={{ background: 'linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)' }}
+          >
+            <div className="text-center">
+              <div className="text-base md:text-xl font-mono font-bold text-text-primary tabular-nums">342</div>
+              <div className="stat-label mt-0.5">Players</div>
+            </div>
+            <div className="w-px h-6 md:h-8 bg-border/50" />
+            <div className="text-center">
+              <div className="text-base md:text-xl font-mono font-bold text-text-primary tabular-nums">12.4K</div>
+              <div className="stat-label mt-0.5">Matches</div>
+            </div>
+            <div className="w-px h-6 md:h-8 bg-border/50" />
+            <div className="text-center">
+              <div className="text-base md:text-xl font-mono font-bold tabular-nums" style={{ color: '#c2ff0b' }}>Live</div>
+              <div className="stat-label mt-0.5">Updates</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* ── Leaderboard Cards Section ── */}
@@ -277,31 +258,31 @@ export default function HomePage() {
         style={{ padding: '0 16px 48px', background: '#0a0a0a' }}
       >
         <div className="max-w-[1400px] mx-auto">
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6">
             {/* Weekly Extractions Leaderboard */}
             <div className="game-card">
               <div
-                className="px-5 py-3.5 flex items-center justify-between"
+                className="px-4 md:px-5 py-3 flex items-center justify-between"
                 style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
               >
-                <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>
+                <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
                   Weekly Extractions
                 </h2>
                 <span
                   style={{
-                    fontSize: '0.6rem',
+                    fontSize: '0.55rem',
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
                     color: '#c2ff0b',
                     border: '1px solid rgba(194,255,11,0.3)',
-                    padding: '2px 10px',
+                    padding: '2px 8px',
                     background: 'rgba(194,255,11,0.08)',
                   }}
                 >
                   This Week
                 </span>
               </div>
-              <div className="p-5 space-y-2">
+              <div className="p-3 md:p-5 space-y-1.5 md:space-y-2">
                 {[
                   { rank: 1, name: 'VoidWalker', tag: '#7741', extractions: 147 },
                   { rank: 2, name: 'NeonStrike', tag: '#2209', extractions: 132 },
@@ -311,29 +292,29 @@ export default function HomePage() {
                 ].map((entry) => (
                   <div
                     key={entry.rank}
-                    className="flex items-center justify-between font-mono text-sm"
+                    className="flex items-center justify-between font-mono text-xs md:text-sm"
                     style={{
-                      padding: '8px 12px',
+                      padding: '6px 10px',
                       background: entry.rank <= 3 ? 'rgba(194,255,11,0.04)' : 'rgba(255,255,255,0.02)',
                       border: `1px solid ${entry.rank <= 3 ? 'rgba(194,255,11,0.12)' : 'rgba(255,255,255,0.04)'}`,
                     }}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3 min-w-0">
                       <span
                         className="font-bold tabular-nums"
                         style={{
                           color: entry.rank <= 3 ? '#c2ff0b' : 'rgba(255,255,255,0.3)',
-                          width: 20,
+                          width: 16,
                         }}
                       >
                         {entry.rank}
                       </span>
-                      <span style={{ color: '#e5e5e5' }}>{entry.name}</span>
-                      <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
+                      <span className="truncate" style={{ color: '#e5e5e5' }}>{entry.name}</span>
+                      <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
                         {entry.tag}
                       </span>
                     </div>
-                    <span className="font-bold tabular-nums" style={{ color: '#c2ff0b' }}>
+                    <span className="font-bold tabular-nums flex-shrink-0" style={{ color: '#c2ff0b' }}>
                       {entry.extractions}
                     </span>
                   </div>
@@ -344,27 +325,27 @@ export default function HomePage() {
             {/* All Time Extractions Leaderboard */}
             <div className="game-card">
               <div
-                className="px-5 py-3.5 flex items-center justify-between"
+                className="px-4 md:px-5 py-3 flex items-center justify-between"
                 style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
               >
-                <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>
+                <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
                   All Time Extractions
                 </h2>
                 <span
                   style={{
-                    fontSize: '0.6rem',
+                    fontSize: '0.55rem',
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
                     color: '#ffaa00',
                     border: '1px solid rgba(255,170,0,0.3)',
-                    padding: '2px 10px',
+                    padding: '2px 8px',
                     background: 'rgba(255,170,0,0.08)',
                   }}
                 >
                   All Time
                 </span>
               </div>
-              <div className="p-5 space-y-2">
+              <div className="p-3 md:p-5 space-y-1.5 md:space-y-2">
                 {[
                   { rank: 1, name: 'NeonStrike', tag: '#2209', extractions: 8421 },
                   { rank: 2, name: 'VoidWalker', tag: '#7741', extractions: 7893 },
@@ -374,29 +355,29 @@ export default function HomePage() {
                 ].map((entry) => (
                   <div
                     key={entry.rank}
-                    className="flex items-center justify-between font-mono text-sm"
+                    className="flex items-center justify-between font-mono text-xs md:text-sm"
                     style={{
-                      padding: '8px 12px',
+                      padding: '6px 10px',
                       background: entry.rank <= 3 ? 'rgba(255,170,0,0.04)' : 'rgba(255,255,255,0.02)',
                       border: `1px solid ${entry.rank <= 3 ? 'rgba(255,170,0,0.12)' : 'rgba(255,255,255,0.04)'}`,
                     }}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3 min-w-0">
                       <span
                         className="font-bold tabular-nums"
                         style={{
                           color: entry.rank <= 3 ? '#ffaa00' : 'rgba(255,255,255,0.3)',
-                          width: 20,
+                          width: 16,
                         }}
                       >
                         {entry.rank}
                       </span>
-                      <span style={{ color: '#e5e5e5' }}>{entry.name}</span>
-                      <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
+                      <span className="truncate" style={{ color: '#e5e5e5' }}>{entry.name}</span>
+                      <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
                         {entry.tag}
                       </span>
                     </div>
-                    <span className="font-bold tabular-nums" style={{ color: '#ffaa00' }}>
+                    <span className="font-bold tabular-nums flex-shrink-0" style={{ color: '#ffaa00' }}>
                       {entry.extractions.toLocaleString()}
                     </span>
                   </div>

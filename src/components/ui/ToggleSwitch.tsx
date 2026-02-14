@@ -16,13 +16,13 @@ export function ToggleSwitch<T extends string>({
   className,
 }: ToggleSwitchProps<T>) {
   return (
-    <div className={cn('inline-flex border border-border bg-background-elevated', className)}>
+    <div className={cn('inline-flex border border-border bg-background-elevated overflow-x-auto hide-scrollbar max-w-full', className)}>
       {options.map((option, index) => (
         <button
           key={option.value}
           onClick={() => onChange(option.value)}
           className={cn(
-            'px-4 py-2 text-sm font-medium transition-all duration-150 focus-accent',
+            'px-2.5 md:px-4 py-2 text-xs md:text-sm font-medium transition-all duration-150 focus-accent whitespace-nowrap',
             'border-r border-border last:border-r-0',
             value === option.value
               ? 'bg-background-surface text-text-primary'

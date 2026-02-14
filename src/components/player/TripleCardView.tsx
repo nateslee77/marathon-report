@@ -27,16 +27,11 @@ export function TripleCardView({ players }: TripleCardViewProps) {
         {teammate2 && <PlayerCard player={teammate2} />}
       </div>
 
-      {/* Mobile: stacked condensed cards */}
-      <div className="md:hidden animate-fade-in">
-        <div
-          className="game-card overflow-hidden"
-          style={{ margin: '0' }}
-        >
-          {primary && <MobilePlayerCard player={primary} isCenter />}
-          {teammate1 && <MobilePlayerCard player={teammate1} />}
-          {teammate2 && <MobilePlayerCard player={teammate2} />}
-        </div>
+      {/* Mobile: stacked full compact cards */}
+      <div className="md:hidden animate-fade-in px-2 py-3 space-y-3">
+        {primary && <MobilePlayerCard player={primary} isCenter />}
+        {teammate1 && <MobilePlayerCard player={teammate1} />}
+        {teammate2 && <MobilePlayerCard player={teammate2} />}
       </div>
     </>
   );

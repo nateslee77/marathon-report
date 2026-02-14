@@ -11,8 +11,8 @@ export function WeaponUsage({ weapons }: WeaponUsageProps) {
   return (
     <div className="game-card overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-3.5 border-b border-border/40 bg-background-elevated/30">
-        <h2 className="text-lg font-semibold text-text-primary">Weapon Usage</h2>
+      <div className="px-4 md:px-5 py-3 md:py-3.5 border-b border-border/40 bg-background-elevated/30">
+        <h2 className="text-base md:text-lg font-semibold text-text-primary">Weapon Usage</h2>
       </div>
 
       {/* Weapon List */}
@@ -21,12 +21,12 @@ export function WeaponUsage({ weapons }: WeaponUsageProps) {
           const barWidth = (weapon.kills / maxKills) * 100;
 
           return (
-            <div key={weapon.weaponName} className="px-5 py-3">
+            <div key={weapon.weaponName} className="px-3 md:px-5 py-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-text-primary font-medium text-sm">
                   {weapon.weaponName}
                 </div>
-                <div className="flex items-center gap-4 text-sm">
+                <div className="flex items-center gap-2 md:gap-4 text-sm">
                   <span className="text-text-secondary font-mono tabular-nums">
                     {weapon.kills.toLocaleString()} kills
                   </span>

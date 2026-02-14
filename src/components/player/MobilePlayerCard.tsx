@@ -1,13 +1,14 @@
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { DetailedPlayer } from '@/types';
 import { RUNNER_VISUALS } from '@/lib/runners';
 import { formatKD, formatPercentage } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
+import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { useApp } from '@/context/AppContext';
+import { getBadgeById } from '@/lib/badges';
 
 interface MobilePlayerCardProps {
   player: DetailedPlayer;
@@ -15,260 +16,251 @@ interface MobilePlayerCardProps {
 }
 
 export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardProps) {
-  const { user, cardThemeColor } = useApp();
+  const { user, cardThemeColor, equippedBadges } = useApp();
   const isOwnCard = user?.id === player.id;
   const runner = RUNNER_VISUALS[player.runner];
   const effectiveAccent = isOwnCard && cardThemeColor ? cardThemeColor : runner.accent;
+  const useCustomTheme = isOwnCard && !!cardThemeColor;
   const stats = player.stats.overall;
 
-  const [expanded, setExpanded] = useState(false);
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
-  const isDragging = useRef(false);
+  function hexToRgb(hex: string) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return { r, g, b };
+  }
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-    isDragging.current = true;
-  }, []);
+  const emblemGradient = useCustomTheme
+    ? (() => {
+        const { r, g, b } = hexToRgb(cardThemeColor);
+        const dark = `rgb(${Math.round(r * 0.3)},${Math.round(g * 0.3)},${Math.round(b * 0.3)})`;
+        const mid = `rgb(${r},${g},${b})`;
+        const light = `rgb(${Math.min(255, Math.round(r * 1.3))},${Math.min(255, Math.round(g * 1.3))},${Math.min(255, Math.round(b * 1.3))})`;
+        return `linear-gradient(135deg, ${dark} 0%, ${mid} 45%, ${light} 55%, ${dark} 100%)`;
+      })()
+    : runner.emblemGradient;
 
-  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-
-    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
-    const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY.current);
-
-    // Only trigger if horizontal swipe is dominant
-    if (Math.abs(deltaX) > 50 && deltaY < 80) {
-      if (deltaX < -50) {
-        setExpanded(true);
-      } else if (deltaX > 50) {
-        setExpanded(false);
-      }
-    }
-  }, []);
+  const displayBadges = isOwnCard
+    ? equippedBadges.map(getBadgeById).filter(Boolean)
+    : [];
 
   return (
-    <div
-      className="relative overflow-hidden"
-      style={{
-        borderBottom: '1px solid rgba(255,255,255,0.04)',
-      }}
+    <Link
+      href={`/player/${player.id}/details`}
+      className="block group"
+      style={{ textDecoration: 'none' }}
     >
-      {/* Condensed card */}
       <div
-        className="relative flex items-center gap-3 px-4 py-3 transition-transform duration-300 will-change-transform"
         style={{
-          transform: expanded ? 'translateX(-100%)' : 'translateX(0)',
-          background: isCenter
-            ? `linear-gradient(90deg, ${effectiveAccent}08 0%, transparent 100%)`
-            : 'transparent',
-          borderLeft: isCenter ? `2px solid ${effectiveAccent}44` : '2px solid transparent',
-          minHeight: 72,
+          background: 'linear-gradient(180deg, rgba(16,16,16,0.95) 0%, rgba(10,10,10,0.98) 100%)',
+          border: `1px solid ${isCenter ? effectiveAccent + '1a' : 'rgba(255,255,255,0.05)'}`,
+          boxShadow: isCenter
+            ? `0 0 20px ${effectiveAccent}06, 0 2px 8px rgba(0,0,0,0.4)`
+            : '0 2px 8px rgba(0,0,0,0.3)',
+          overflow: 'hidden',
         }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
       >
-        {/* Emblem */}
+        {/* ── Emblem Banner ── */}
         <div
-          className="flex-shrink-0 relative overflow-hidden"
-          style={{
-            width: 56,
-            height: 56,
-            background: runner.emblemGradient,
-          }}
+          className="relative overflow-hidden"
+          style={{ height: 80, background: emblemGradient }}
         >
-          <Image
-            src={player.avatar}
-            alt={player.name}
-            width={56}
-            height={56}
-            style={{
-              objectFit: 'cover',
-              border: `1px solid ${effectiveAccent}33`,
-            }}
-          />
-        </div>
-
-        {/* Name + tag */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-sm text-text-primary truncate">
-              {player.name}
-            </span>
-            <span className="text-xs text-text-tertiary font-mono">
-              {player.tag}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 mt-1">
-            <span
-              className="font-mono text-xs font-semibold uppercase"
-              style={{ color: effectiveAccent }}
-            >
-              {runner.name}
-            </span>
-            <span className="text-xs text-text-tertiary">{runner.role}</span>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <div className="text-right">
+          {/* Badges */}
+          {displayBadges.length > 0 && (
             <div
-              className="font-mono text-sm font-bold tabular-nums"
               style={{
-                color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444',
+                position: 'absolute',
+                top: 6,
+                left: 10,
+                zIndex: 10,
+                display: 'flex',
+                gap: 3,
               }}
             >
-              {formatKD(stats.kd)}
+              {displayBadges.map((badge) => badge && (
+                <BadgeIcon key={badge.id} badge={badge} size="sm" variant="tag" />
+              ))}
             </div>
-            <div className="text-[0.6rem] text-text-tertiary uppercase tracking-wide">K/D</div>
+          )}
+
+          {/* Runner silhouette */}
+          <div
+            className="absolute top-0 right-0"
+            style={{ width: 70, height: 80, opacity: 0.4, transform: 'scaleX(-1)' }}
+          >
+            <Image
+              src={runner.image}
+              alt={runner.name}
+              fill
+              style={{ objectFit: 'cover', objectPosition: 'left top' }}
+            />
           </div>
-          <RankBadge rank={player.competitiveRank} size="sm" />
+
+          {/* Vignette */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(180deg, transparent 30%, rgba(16,16,16,0.95) 100%)',
+          }} />
+
+          {/* Player name + rating overlay */}
+          <div style={{ position: 'absolute', bottom: 8, left: 12, right: 12 }}>
+            <div className="flex items-end justify-between">
+              <div className="flex items-center gap-2 min-w-0">
+                <Image
+                  src={player.avatar}
+                  alt={player.name}
+                  width={36}
+                  height={36}
+                  style={{
+                    flexShrink: 0,
+                    border: `1px solid ${effectiveAccent}33`,
+                    objectFit: 'cover',
+                  }}
+                />
+                <div className="min-w-0">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="font-bold text-base tracking-tight text-white truncate">
+                      {player.name}
+                    </span>
+                    <span className="font-mono text-[0.6rem] text-white/40">
+                      {player.tag}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span
+                      className="font-mono text-[0.6rem] font-semibold uppercase"
+                      style={{ color: effectiveAccent }}
+                    >
+                      {runner.name}
+                    </span>
+                    <span className="text-[0.55rem] text-white/25">{runner.role}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <RankBadge rank={player.competitiveRank} size="sm" />
+                <span
+                  className="font-mono text-sm font-bold"
+                  style={{ color: effectiveAccent }}
+                >
+                  {player.rating}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Swipe hint arrow */}
+        {/* ── Core Stats ── */}
         <div
-          className="flex-shrink-0 transition-opacity duration-200"
+          className="grid grid-cols-3 gap-0"
           style={{
-            color: 'rgba(255,255,255,0.15)',
-            opacity: expanded ? 0 : 1,
+            padding: '8px 12px',
+            borderBottom: '1px solid rgba(255,255,255,0.04)',
+            background: runner.bgGradient,
           }}
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Expanded detail panel */}
-      <div
-        className="absolute inset-0 transition-transform duration-300 will-change-transform overflow-y-auto"
-        style={{
-          transform: expanded ? 'translateX(0)' : 'translateX(100%)',
-          background: 'linear-gradient(180deg, rgba(16,16,16,0.98) 0%, rgba(10,10,10,0.99) 100%)',
-          borderLeft: `2px solid ${effectiveAccent}33`,
-        }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Close / back bar */}
-        <div
-          className="flex items-center gap-2 px-4 py-3"
-          style={{ borderBottom: `1px solid ${effectiveAccent}22` }}
-        >
-          <button
-            onClick={() => setExpanded(false)}
-            className="flex items-center gap-2 text-xs uppercase tracking-wide"
-            style={{
-              color: effectiveAccent,
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '4px 0',
-              minHeight: 44,
-              minWidth: 44,
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            Back
-          </button>
-          <div className="flex-1" />
-          <Link
-            href={`/player/${player.id}/details`}
-            className="text-xs uppercase tracking-wide font-semibold"
-            style={{
-              color: effectiveAccent,
-              textDecoration: 'none',
-              padding: '8px 12px',
-              border: `1px solid ${effectiveAccent}33`,
-              background: `${effectiveAccent}0a`,
-              minHeight: 44,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            Full Report
-          </Link>
-        </div>
-
-        {/* Player header */}
-        <div className="flex items-center gap-3 px-4 py-3">
-          <Image
-            src={player.avatar}
-            alt={player.name}
-            width={48}
-            height={48}
-            style={{
-              border: `1px solid ${effectiveAccent}44`,
-              objectFit: 'cover',
-            }}
-          />
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="font-bold text-lg text-text-primary">{player.name}</span>
-              <span className="font-mono text-xs text-text-tertiary">{player.tag}</span>
-            </div>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="font-mono text-xs font-semibold uppercase" style={{ color: effectiveAccent }}>
-                {runner.name}
-              </span>
-              <RankBadge rank={player.competitiveRank} size="sm" />
-              <span className="font-mono text-sm font-bold" style={{ color: effectiveAccent }}>
-                {player.rating}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats grid */}
-        <div
-          className="grid grid-cols-4 gap-0 px-4 py-3"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.04)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}
         >
           {[
             { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444' },
             { label: 'EXT%', value: formatPercentage(stats.winRate, 1), color: stats.winRate >= 60 ? effectiveAccent : '#e5e5e5' },
-            { label: 'MATCHES', value: String(stats.matchesPlayed), color: '#e5e5e5' },
-            { label: 'STREAK', value: String(stats.currentStreak), color: stats.currentStreak >= 3 ? effectiveAccent : '#e5e5e5' },
+            { label: 'RATING', value: String(player.rating), color: effectiveAccent },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="font-mono text-base font-bold tabular-nums" style={{ color: stat.color }}>
+              <div
+                className="font-mono text-lg font-bold tabular-nums leading-none"
+                style={{ color: stat.color }}
+              >
                 {stat.value}
               </div>
-              <div className="mt-0.5" style={{ fontSize: '0.55rem', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>
+              <div
+                className="mt-1"
+                style={{
+                  fontSize: '0.5rem',
+                  letterSpacing: '0.12em',
+                  color: 'rgba(255,255,255,0.28)',
+                  textTransform: 'uppercase',
+                }}
+              >
                 {stat.label}
               </div>
             </div>
           ))}
         </div>
 
-        {/* Recent matches */}
-        <div className="px-4 py-3">
-          <div className="mb-2" style={{ fontSize: '0.575rem', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase' }}>
-            Recent
+        {/* ── Performance Bar ── */}
+        <div style={{ padding: '0 12px' }}>
+          <div
+            style={{
+              height: 2,
+              width: '100%',
+              background: 'rgba(255,255,255,0.04)',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                width: `${stats.winRate}%`,
+                background: `linear-gradient(90deg, ${effectiveAccent}44 0%, ${effectiveAccent} 100%)`,
+              }}
+            />
           </div>
+        </div>
+
+        {/* ── Loadout ── */}
+        <div style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+            {player.loadout.map((item) => (
+              <div
+                key={item.slot}
+                className="flex-shrink-0 text-center"
+                style={{
+                  width: 56,
+                  background: 'rgba(255,255,255,0.025)',
+                  border: '1px solid rgba(255,255,255,0.04)',
+                  padding: '5px 2px',
+                }}
+              >
+                <div className="font-mono text-xs font-bold" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                  {item.icon}
+                </div>
+                <div className="mt-0.5 truncate" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)' }}>
+                  {item.name}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Recent Matches ── */}
+        <div style={{ padding: '8px 12px 10px' }}>
           <div className="space-y-1">
             {player.recentMatchSummary.slice(0, 3).map((match, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between font-mono text-xs"
+                className="flex items-center justify-between font-mono text-[0.65rem]"
                 style={{
-                  padding: '4px 8px',
-                  background: 'rgba(255,255,255,0.02)',
+                  padding: '3px 6px',
+                  background: 'rgba(255,255,255,0.015)',
                   border: '1px solid rgba(255,255,255,0.03)',
                 }}
               >
                 <div className="flex items-center gap-2">
-                  <span style={{ color: match.result === 'EXTRACTED' ? '#c2ff0b' : '#ff4444', fontWeight: 700, fontSize: '0.65rem' }}>
-                    {match.result === 'EXTRACTED' ? 'E' : 'D'}
+                  <span
+                    style={{
+                      color: match.result === 'EXTRACTED' ? '#c2ff0b' : '#ff4444',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {match.result === 'EXTRACTED' ? 'EXT' : 'KIA'}
                   </span>
-                  <span style={{ color: 'rgba(255,255,255,0.5)' }}>{match.map}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.4)' }}>{match.map}</span>
                 </div>
-                <span style={{ color: 'rgba(255,255,255,0.6)' }}>
+                <span style={{ color: 'rgba(255,255,255,0.5)' }}>
                   {match.kills}/{match.deaths}/{match.assists}
                 </span>
               </div>
@@ -276,6 +268,6 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

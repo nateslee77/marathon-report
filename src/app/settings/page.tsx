@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
@@ -56,6 +56,24 @@ export default function SettingsPage() {
   const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges } = useApp();
   const [selectedColor, setSelectedColor] = useState(cardThemeColor || '#8844ff');
   const [replacingSlot, setReplacingSlot] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Sync selectedColor when cardThemeColor changes (e.g. after hydration)
+  useEffect(() => {
+    if (cardThemeColor) setSelectedColor(cardThemeColor);
+  }, [cardThemeColor]);
+
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-text-tertiary text-sm">Loading...</div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -71,7 +89,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in max-w-[1000px] mx-auto">
+    <div className="space-y-6 md:space-y-8 animate-fade-in max-w-[1000px] mx-auto px-4 md:px-0 py-4 md:py-0">
       {/* Back */}
       <Link
         href="/"
@@ -374,10 +392,10 @@ export default function SettingsPage() {
                   className="text-center group"
                   style={{
                     padding: '14px 8px 10px',
-                    background: isEquipped ? `${badge.color}08` : replacingSlot !== null ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)',
+                    background: isEquipped ? `${badge.color}18` : replacingSlot !== null ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.04)',
                     border: isEquipped
-                      ? `2px solid ${badge.color}44`
-                      : `1px solid ${isPremium ? badge.color + '22' : isRunner ? badge.color + '15' : 'rgba(255,255,255,0.04)'}`,
+                      ? `2px solid ${badge.color}55`
+                      : `1px solid ${isPremium ? badge.color + '33' : isRunner ? badge.color + '25' : 'rgba(255,255,255,0.06)'}`,
                     position: 'relative',
                     cursor: replacingSlot !== null || !isEquipped && equippedBadges.length < 5 || isEquipped ? 'pointer' : 'default',
                     transition: 'all 200ms',
