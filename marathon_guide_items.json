@@ -1,0 +1,1452 @@
+[
+  {
+    "Name": "Overrun AR",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "M77 Assault Rifle",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Retaliator LMG",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Demolition HMG",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Conquest LMG",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "V11 Punch",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "CE Tactical Sidearm",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 25.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Magnum MC",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Hardline PR",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Repeater HPR",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Twin Tap HBR",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 150.0,
+    "Notes": ""
+  },
+  {
+    "Name": "V00 Zeus RG",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "WSTR Combat Shotgun",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Longshot",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Bully SMG",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 25.0,
+    "Notes": ""
+  },
+  {
+    "Name": "V22 Volt Thrower",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "BRRT Smg",
+    "Type": "Weapon",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "MIPS",
+    "Type": "Ammo",
+    "Rarity": "Standard",
+    "AppliesTo": "WSTR Combat Shotgun, Longshot",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 0.5,
+    "Notes": ""
+  },
+  {
+    "Name": "Light Rounds",
+    "Type": "Ammo",
+    "Rarity": "Standard",
+    "AppliesTo": "Overrun AR, M77 Assault Rifle, Retaliator LMG, Conquest LMG, CE Tactical Sidearm, Hardline PR, BRRT Smg",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 0.04,
+    "Notes": ""
+  },
+  {
+    "Name": "Heavy Rounds",
+    "Type": "Ammo",
+    "Rarity": "Standard",
+    "AppliesTo": "Demolition HMG, Magnum MC, Repeater HPR, Twin Tap HBR, Bully SMG",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 0.33,
+    "Notes": ""
+  },
+  {
+    "Name": "Volt Battery",
+    "Type": "Ammo",
+    "Rarity": "Standard",
+    "AppliesTo": "V11 Punch, V22 Volt Thrower",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 0.75,
+    "Notes": ""
+  },
+  {
+    "Name": "Volt Cell",
+    "Type": "Ammo",
+    "Rarity": "Standard",
+    "AppliesTo": "V00 Zeus RG",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 0.75,
+    "Notes": ""
+  },
+  {
+    "Name": "8XS Base Pack",
+    "Type": "Backpack",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 100.0,
+    "Notes": ""
+  },
+  {
+    "Name": "16XS Base Pack",
+    "Type": "Backpack",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 550.0,
+    "Notes": ""
+  },
+  {
+    "Name": "24XS Base Pack",
+    "Type": "Backpack",
+    "Rarity": "Superior",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 1650.0,
+    "Notes": ""
+  },
+  {
+    "Name": "8XS Med Pack",
+    "Type": "Backpack",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "24XS Med Pack+",
+    "Type": "Backpack",
+    "Rarity": "Prestige",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 5000.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Advanced Mechanics Kit",
+    "Type": "Consumable",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "OS Reboot",
+    "Type": "Consumable",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Advanced OS Reboot",
+    "Type": "Consumable",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 140.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Shield Charge",
+    "Type": "Consumable",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 40.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Advanced Shield Charge",
+    "Type": "Consumable",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 80.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Patch Kit",
+    "Type": "Consumable",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 55.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Advanced Patch Kit",
+    "Type": "Consumable",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 90.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Energy Amp",
+    "Type": "Consumable",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 80.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Cardio Kick",
+    "Type": "Consumable",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 90.0,
+    "Notes": ""
+  },
+  {
+    "Name": "HEC",
+    "Type": "Consumable",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Self Revive",
+    "Type": "Consumable",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 100.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Panacea Kit",
+    "Type": "Consumable",
+    "Rarity": "Superior",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 140.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Heavy Ordnance",
+    "Type": "Core",
+    "Rarity": "Enhanced",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Ankle Breaker",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bullrush",
+    "Type": "Core",
+    "Rarity": "Superior",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Impact Siphons",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Counter Attack",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bombardier",
+    "Type": "Core",
+    "Rarity": "Enhanced",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Myrmidon",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bombing Run",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "destroyer",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Tag!",
+    "Type": "Core",
+    "Rarity": "Enhanced",
+    "AppliesTo": "vandal",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Mechanized Holsters",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "vandal",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Adrenal Core",
+    "Type": "Core",
+    "Rarity": "Superior",
+    "AppliesTo": "vandal",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Microjet Efficiency Package",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "vandal",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Hot Pursuit",
+    "Type": "Core",
+    "Rarity": "Enhanced",
+    "AppliesTo": "recon",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "On the Trail",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "recon",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Cluster Payload",
+    "Type": "Core",
+    "Rarity": "Superior",
+    "AppliesTo": "recon",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Early Warning System",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "recon",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Intuition",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "recon",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Breathing Space",
+    "Type": "Core",
+    "Rarity": "Enhanced",
+    "AppliesTo": "assassin",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Patience",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "assassin",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Guerrilla",
+    "Type": "Core",
+    "Rarity": "Superior",
+    "AppliesTo": "assassin",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Shadow Strike",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "assassin",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Flexweave Casing",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "assassin",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Safe Landing",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "assassin",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Minus Sights",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "assassin",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "High Voltage",
+    "Type": "Core",
+    "Rarity": "Enhanced",
+    "AppliesTo": "triage",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Electron Recapture Sinks",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "triage",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "No Good Deed",
+    "Type": "Core",
+    "Rarity": "Superior",
+    "AppliesTo": "triage",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Samaritan",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "triage",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Greed is Good",
+    "Type": "Core",
+    "Rarity": "Enhanced",
+    "AppliesTo": "thief",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Hit and Run",
+    "Type": "Core",
+    "Rarity": "Deluxe",
+    "AppliesTo": "thief",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Case the Joint",
+    "Type": "Core",
+    "Rarity": "Superior",
+    "AppliesTo": "thief",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Partner in Crime",
+    "Type": "Core",
+    "Rarity": "Prestige",
+    "AppliesTo": "thief",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 2500.0,
+    "Notes": ""
+  },
+  {
+    "Name": "2500",
+    "Type": "Currency",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Proximity Sensor",
+    "Type": "Equipment",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 45.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bubble Shield",
+    "Type": "Equipment",
+    "Rarity": "Superior",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 400.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Smoke Grenade",
+    "Type": "Equipment",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "EMP Grenade",
+    "Type": "Equipment",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 100.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Claymore Mine",
+    "Type": "Equipment",
+    "Rarity": "Standard",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Heat Grenade",
+    "Type": "Equipment",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 45.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Frag Grenade",
+    "Type": "Equipment",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 45.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Trap Pack",
+    "Type": "Equipment",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 45.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Flechette Grenade",
+    "Type": "Equipment",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 45.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Chem Grenade",
+    "Type": "Equipment",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 100.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Ping+ V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Energy Harvesting V1",
+    "Type": "Implant",
+    "Rarity": "Standard",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Energy Harvesting V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Energy Harvesting V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Helping Hands V1",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 35.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Helping Hands V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Helping Hands V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Nimble Fingers V5",
+    "Type": "Implant",
+    "Rarity": "Prestige",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Distance Runner V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Legs",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Regen V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Regen V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Augmented Capacitors V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Augmented Capacitors V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Head",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Hurting Hands V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Hurting Hands V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Knife Fight V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Knife Fight V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Survival Kit V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Survival Kit V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Torso",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Graceful Landings V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Legs",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Graceful Landings V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Legs",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bionic Leg Upgrades V2",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Legs",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 70.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bionic Leg Upgrades V3",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Legs",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bionic Leg Upgrades V4",
+    "Type": "Implant",
+    "Rarity": "Superior",
+    "AppliesTo": "Legs",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Bionic Leg Upgrades V5",
+    "Type": "Implant",
+    "Rarity": "Prestige",
+    "AppliesTo": "Legs",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 1800.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Kinetic Resistance V2",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 200.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Protector V1",
+    "Type": "Implant",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 100.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Protector V2",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 300.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Protector V3",
+    "Type": "Implant",
+    "Rarity": "Superior",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 900.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Volt Resistance V2",
+    "Type": "Implant",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 900.0,
+    "Notes": ""
+  },
+  {
+    "Name": "North Relay Storage",
+    "Type": "Key",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 600.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Lost Contract: Traxus",
+    "Type": "Lost Contract",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Sterilized Biostripping",
+    "Type": "Salvage",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "Dire Marsh: Algae Ponds | CyberAcme Upgrades",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Deimosite Rods",
+    "Type": "Salvage",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "Dire Marsh: Field Maintenance | Arms Locker",
+    "FactionUsages": "Traxus Upgrades, Traxus Vendor Unlocks",
+    "Credits": 10.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Lab Xerogel",
+    "Type": "Salvage",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "Dire Marsh: Quarantine, Greenhouse | Tool Cart | Locked Room - Deluxe",
+    "FactionUsages": "CyberAcme Upgrades",
+    "Credits": 50.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Cetinite Rods",
+    "Type": "Salvage",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "Dire Marsh: Field Maintenance | Arms Locker | Locked Room - Deluxe",
+    "FactionUsages": "Traxus Barter, Traxus Upgrades",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Combat Xerogel",
+    "Type": "Salvage",
+    "Rarity": "Superior",
+    "AppliesTo": "",
+    "Sources": "UESC Incursion, Locked Room - Superior | CyberAcme Upgrades",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Reclaimed Biostripping",
+    "Type": "Salvage",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "Dire Marsh: Algae Ponds",
+    "FactionUsages": "",
+    "Credits": 10.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Shell ID",
+    "Type": "Salvage",
+    "Rarity": "Superior",
+    "AppliesTo": "",
+    "Sources": "High Value Target, Supply Drop | CyberAcme Upgrades",
+    "FactionUsages": "",
+    "Credits": 300.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Storage Drive",
+    "Type": "Salvage",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "Perimeter: South Relay | Core Storage",
+    "FactionUsages": "NuCaloric Upgrades, NuCaloric Vendor Unlocks, Traxus Vendor Unlocks",
+    "Credits": 10.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Precision Barrel",
+    "Type": "Mod",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Bully SMG, V22 Volt Thrower, BRRT Smg",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 180.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Pinpoint Barrel",
+    "Type": "Mod",
+    "Rarity": "Superior",
+    "AppliesTo": "WSTR Combat Shotgun",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 540.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Flash Draw Chip",
+    "Type": "Mod",
+    "Rarity": "Superior",
+    "AppliesTo": "All Weapons",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 540.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Keen Scout Chip",
+    "Type": "Mod",
+    "Rarity": "Enhanced",
+    "AppliesTo": "All Weapons",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Motionsense Chip",
+    "Type": "Mod",
+    "Rarity": "Enhanced",
+    "AppliesTo": "All Weapons",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Torch Bug",
+    "Type": "Mod",
+    "Rarity": "Deluxe",
+    "AppliesTo": "All Weapons",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Ornithologist",
+    "Type": "Mod",
+    "Rarity": "Superior",
+    "AppliesTo": "All Weapons",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 621.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Combat Grip",
+    "Type": "Mod",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Overrun AR, M77 Assault Rifle",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Combat Grip",
+    "Type": "Mod",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Overrun AR, M77 Assault Rifle",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 180.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Extended Feather Mag",
+    "Type": "Mod",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Overrun AR, M77 Assault Rifle",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Tapered Heatsink",
+    "Type": "Mod",
+    "Rarity": "Deluxe",
+    "AppliesTo": "V00 Zeus RG",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 180.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Hollow-Case Rounds",
+    "Type": "Mod",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Overrun AR, M77 Assault Rifle, Bully SMG",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Hollow-Case Rounds",
+    "Type": "Mod",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Overrun AR, M77 Assault Rifle, Bully SMG",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 207.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Midsight Optic",
+    "Type": "Mod",
+    "Rarity": "Enhanced",
+    "AppliesTo": "Overrun AR, Bully SMG, BRRT Smg",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 60.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Midsight Optic",
+    "Type": "Mod",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Overrun AR, Bully SMG, BRRT Smg",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 180.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Far Reach Optic",
+    "Type": "Mod",
+    "Rarity": "Deluxe",
+    "AppliesTo": "Overrun AR, Bully SMG, BRRT Smg",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 207.0,
+    "Notes": ""
+  },
+  {
+    "Name": "Enhanced CyberAcme Sponsored Kit",
+    "Type": "Sponsored Kit",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Enhanced NuCaloric Sponsored Kit",
+    "Type": "Sponsored Kit",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Enhanced Traxus Sponsored Kit",
+    "Type": "Sponsored Kit",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Enhanced Mida Sponsored Kit",
+    "Type": "Sponsored Kit",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Enhanced Arachne Sponsored Kit",
+    "Type": "Sponsored Kit",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Enhanced Sekiguchi Sponsored Kit",
+    "Type": "Sponsored Kit",
+    "Rarity": "Enhanced",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": NaN,
+    "Notes": ""
+  },
+  {
+    "Name": "Broken Alarm System",
+    "Type": "Valuable",
+    "Rarity": "Deluxe",
+    "AppliesTo": "",
+    "Sources": "",
+    "FactionUsages": "",
+    "Credits": 550.0,
+    "Notes": ""
+  }
+]

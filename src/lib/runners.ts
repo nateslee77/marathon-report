@@ -1,0 +1,60 @@
+import { RunnerType, RunnerVisual } from '@/types';
+
+export const RUNNER_VISUALS: Record<RunnerType, RunnerVisual> = {
+  destroyer: {
+    name: 'Destroyer',
+    role: 'Tank',
+    accent: '#ff4422',
+    bgGradient: 'radial-gradient(ellipse at 50% 20%, rgba(255, 68, 34, 0.14) 0%, transparent 55%)',
+    emblemGradient: 'linear-gradient(135deg, #661100 0%, #ff4422 45%, #ff6644 55%, #661100 100%)',
+    image: '/images/destroyer-150x230.png',
+  },
+  vandal: {
+    name: 'Vandal',
+    role: 'Assault',
+    accent: '#ffaa00',
+    bgGradient: 'radial-gradient(ellipse at 50% 20%, rgba(255, 170, 0, 0.12) 0%, transparent 55%)',
+    emblemGradient: 'linear-gradient(135deg, #553300 0%, #cc8800 45%, #ffcc44 55%, #553300 100%)',
+    image: '/images/vandal-150x230.png',
+  },
+  recon: {
+    name: 'Recon',
+    role: 'Scout',
+    accent: '#2288ff',
+    bgGradient: 'radial-gradient(ellipse at 50% 20%, rgba(34, 136, 255, 0.14) 0%, transparent 55%)',
+    emblemGradient: 'linear-gradient(135deg, #112266 0%, #2266ff 45%, #44aaff 55%, #112266 100%)',
+    image: '/images/recon-150x230.png',
+  },
+  assassin: {
+    name: 'Assassin',
+    role: 'Stealth',
+    accent: '#8844ff',
+    bgGradient: 'radial-gradient(ellipse at 50% 20%, rgba(136, 68, 255, 0.14) 0%, transparent 55%)',
+    emblemGradient: 'linear-gradient(135deg, #331166 0%, #8844ff 45%, #aa66ff 55%, #331166 100%)',
+    image: '/images/assassin-150x230.png',
+  },
+  triage: {
+    name: 'Triage',
+    role: 'Support',
+    accent: '#c2ff0b',
+    bgGradient: 'radial-gradient(ellipse at 50% 20%, rgba(194, 255, 11, 0.12) 0%, transparent 55%)',
+    emblemGradient: 'linear-gradient(135deg, #004422 0%, #00cc66 45%, #c2ff0b 55%, #004422 100%)',
+    image: '/images/triage-150x230.png',
+  },
+  thief: {
+    name: 'Thief',
+    role: 'Flanker',
+    accent: '#ff2288',
+    bgGradient: 'radial-gradient(ellipse at 50% 20%, rgba(255, 34, 136, 0.14) 0%, transparent 55%)',
+    emblemGradient: 'linear-gradient(135deg, #660033 0%, #cc0066 45%, #ff44aa 55%, #660033 100%)',
+    image: '/images/thief-150x230.png',
+  },
+  rook: {
+    name: 'Rook',
+    role: 'Defense',
+    accent: '#8899bb',
+    bgGradient: 'radial-gradient(ellipse at 50% 20%, rgba(136, 153, 187, 0.10) 0%, transparent 55%)',
+    emblemGradient: 'linear-gradient(135deg, #334455 0%, #6688aa 45%, #99aabb 55%, #334455 100%)',
+    image: '/images/rook-150x230.png',
+  },
+};

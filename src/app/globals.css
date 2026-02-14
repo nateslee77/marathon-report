@@ -1,0 +1,346 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background-base text-text-primary font-sans antialiased;
+  }
+
+  /* Remove default focus rings */
+  *:focus {
+    outline: none;
+  }
+
+  /* Custom scrollbar - main */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #333;
+  }
+}
+
+@layer components {
+  /* ═══════════════════════════════════════
+     NOISE OVERLAY — subtle grain texture
+     ═══════════════════════════════════════ */
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
+  }
+
+  /* ═══════════════════════════════════════
+     GAME CARD — premium panel base
+     ═══════════════════════════════════════ */
+  .game-card {
+    background: linear-gradient(
+      180deg,
+      rgba(20, 20, 20, 0.9) 0%,
+      rgba(12, 12, 12, 0.95) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.03),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+      0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .game-card:hover {
+    border-color: rgba(255, 255, 255, 0.09);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+      0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Accent-highlighted card (main player) */
+  .game-card-accent {
+    background: linear-gradient(
+      180deg,
+      rgba(194, 255, 11, 0.02) 0%,
+      rgba(12, 12, 12, 0.95) 40%
+    );
+    border: 1px solid rgba(194, 255, 11, 0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(194, 255, 11, 0.04),
+      0 0 30px rgba(194, 255, 11, 0.03),
+      0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .game-card-accent:hover {
+    border-color: rgba(194, 255, 11, 0.18);
+    box-shadow:
+      inset 0 1px 0 rgba(194, 255, 11, 0.06),
+      0 0 40px rgba(194, 255, 11, 0.05),
+      0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ═══════════════════════════════════════
+     APP SHELL — two-column grid layout
+     ═══════════════════════════════════════ */
+  .app-shell {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    min-height: 100vh;
+  }
+
+  .app-main {
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  /* ═══════════════════════════════════════
+     LEFT RAIL
+     ═══════════════════════════════════════ */
+  .left-rail {
+    background: #111;
+    border-right: 1px solid #222;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .left-rail::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .left-rail::-webkit-scrollbar-thumb {
+    background: #1a1a1a;
+  }
+
+  /* ═══════════════════════════════════════
+     SEARCH
+     ═══════════════════════════════════════ */
+  .search-input {
+    @apply w-full px-4 py-3 text-base bg-background-base/80 text-text-primary placeholder:text-text-tertiary transition-all duration-150;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .search-input:focus {
+    border-color: rgba(194, 255, 11, 0.3);
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(194, 255, 11, 0.1);
+  }
+
+  .search-dropdown {
+    @apply absolute left-0 right-0 top-full mt-1 border border-border bg-background-elevated z-50;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+    animation: slide-down 150ms ease-out;
+  }
+
+  .search-suggestion {
+    @apply flex items-center gap-3 px-4 py-3 text-sm cursor-pointer transition-colors duration-100;
+  }
+
+  .search-suggestion:hover {
+    @apply bg-background-surface;
+  }
+
+  /* ═══════════════════════════════════════
+     FOCUS STYLES
+     ═══════════════════════════════════════ */
+  .focus-accent {
+    @apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-primary;
+  }
+
+  /* ═══════════════════════════════════════
+     PERFORMANCE BAR
+     ═══════════════════════════════════════ */
+  .perf-bar {
+    @apply relative h-1 w-full overflow-hidden;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .perf-bar-fill {
+    @apply absolute inset-y-0 left-0;
+    background: linear-gradient(
+      90deg,
+      rgba(194, 255, 11, 0.3) 0%,
+      rgba(194, 255, 11, 0.7) 100%
+    );
+  }
+
+  /* ═══════════════════════════════════════
+     STAT LABEL — consistent micro label
+     ═══════════════════════════════════════ */
+  .stat-label {
+    @apply text-xs uppercase tracking-wide text-text-tertiary;
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+  }
+
+  .stat-value {
+    @apply font-mono font-semibold tabular-nums text-text-primary;
+  }
+
+  /* ═══════════════════════════════════════
+     TABLE ROW HOVER
+     ═══════════════════════════════════════ */
+  .table-row-hover {
+    @apply transition-colors duration-100 hover:bg-background-elevated;
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION DIVIDER
+     ═══════════════════════════════════════ */
+  .section-divider {
+    @apply border-t border-border/50 my-1;
+  }
+
+  /* Loading skeleton */
+  .skeleton {
+    @apply animate-pulse bg-background-surface;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ═══════════════════════════════════════
+   KEYFRAMES (referenced by Tailwind config)
+   ═══════════════════════════════════════ */
+@keyframes slide-down {
+  0% { opacity: 0; transform: translateY(-4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════
+   BADGE TOOLTIP
+   ═══════════════════════════════════════ */
+.badge-tooltip-wrap {
+  position: relative;
+}
+
+.badge-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 160px;
+  max-width: 220px;
+  padding: 8px 10px;
+  background: rgba(10, 10, 10, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0s;
+  z-index: 100;
+  text-align: left;
+}
+
+.badge-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 12px;
+  border: 5px solid transparent;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.badge-tooltip-wrap:hover .badge-tooltip {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════
+   BADGE ANIMATIONS (premium pass badges)
+   ═══════════════════════════════════════ */
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 0 4px currentColor, inset 0 0 4px transparent; }
+  50% { box-shadow: 0 0 12px currentColor, inset 0 0 6px currentColor; }
+}
+
+@keyframes badge-shimmer-sweep {
+  0% { transform: translateX(-100%) rotate(25deg); }
+  100% { transform: translateX(200%) rotate(25deg); }
+}
+
+.badge-animated {
+  animation: badge-glow 2.5s ease-in-out infinite;
+}
+
+.badge-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  animation: badge-shimmer-sweep 3s ease-in-out infinite;
+}
+
+/* ── Ice badge animation ── */
+@keyframes badge-ice-glow {
+  0%, 100% { box-shadow: 0 0 4px #88ddff, 0 0 8px rgba(136,221,255,0.3), inset 0 0 4px rgba(136,221,255,0.15); }
+  50% { box-shadow: 0 0 10px #88ddff, 0 0 20px rgba(136,221,255,0.4), inset 0 0 8px rgba(136,221,255,0.25); }
+}
+
+@keyframes badge-ice-frost {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+.badge-ice {
+  animation: badge-ice-glow 2s ease-in-out infinite;
+  background: linear-gradient(135deg, rgba(136,221,255,0.15) 0%, rgba(200,240,255,0.08) 30%, rgba(136,221,255,0.2) 60%, rgba(200,240,255,0.05) 100%) !important;
+  background-size: 200% 200% !important;
+}
+
+/* ── Fire badge animation ── */
+@keyframes badge-fire-glow {
+  0%, 100% { box-shadow: 0 0 4px #ff4400, 0 0 8px rgba(255,68,0,0.3), inset 0 0 4px rgba(255,100,0,0.15); }
+  33% { box-shadow: 0 0 12px #ff6600, 0 0 24px rgba(255,100,0,0.5), inset 0 0 6px rgba(255,100,0,0.3); }
+  66% { box-shadow: 0 0 8px #ff2200, 0 0 16px rgba(255,34,0,0.4), inset 0 0 5px rgba(255,68,0,0.2); }
+}
+
+@keyframes badge-fire-flicker {
+  0%, 100% { opacity: 0.8; transform: scaleY(1); }
+  25% { opacity: 1; transform: scaleY(1.05); }
+  50% { opacity: 0.9; transform: scaleY(0.98); }
+  75% { opacity: 1; transform: scaleY(1.02); }
+}
+
+.badge-fire {
+  animation: badge-fire-glow 1.5s ease-in-out infinite, badge-fire-flicker 0.8s ease-in-out infinite;
+  background: linear-gradient(180deg, rgba(255,68,0,0.2) 0%, rgba(255,100,0,0.1) 50%, rgba(255,34,0,0.2) 100%) !important;
+}
