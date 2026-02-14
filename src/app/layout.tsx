@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   icons: {
     icon: '/images/Marathon_Bungie_Icon.svg',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -41,15 +47,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-background-base text-text-primary font-sans antialiased">
         <AppProvider>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '340px 1fr',
-              minHeight: '100vh',
-            }}
-          >
+          <div className="min-h-screen md:grid md:grid-cols-[340px_1fr]">
             <LeftRail />
-            <main style={{ minWidth: 0, overflowX: 'hidden', padding: '24px 24px' }}>
+            <main className="min-w-0 overflow-x-hidden p-0 md:p-6">
               {children}
             </main>
           </div>

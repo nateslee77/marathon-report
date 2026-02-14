@@ -7,8 +7,13 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background-base text-text-primary font-sans antialiased;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   /* Remove default focus rings */
@@ -140,6 +145,7 @@
     @apply w-full px-4 py-3 text-base bg-background-base/80 text-text-primary placeholder:text-text-tertiary transition-all duration-150;
     border: 1px solid rgba(255, 255, 255, 0.06);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 16px; /* Prevents iOS zoom on focus */
   }
 
   .search-input:focus {
@@ -147,6 +153,23 @@
     box-shadow:
       inset 0 2px 4px rgba(0, 0, 0, 0.3),
       0 0 0 1px rgba(194, 255, 11, 0.1);
+  }
+
+  /* Hero variant: slightly larger with more contrast for overlay on image */
+  .search-input-hero {
+    background: rgba(10, 10, 10, 0.75) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .search-input-hero:focus {
+    border-color: rgba(194, 255, 11, 0.4);
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.5),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(194, 255, 11, 0.15);
   }
 
   .search-dropdown {

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
+import { SearchBar } from '@/components/search/SearchBar';
 
 export default function HomePage() {
   const { user, signIn, signOut } = useApp();
@@ -22,11 +23,10 @@ export default function HomePage() {
 
   return (
     <div
-      className="relative flex flex-col"
-      style={{ margin: '-24px -24px 0' }}
+      className="relative flex flex-col md:mx-[-24px] md:mt-[-24px]"
     >
       {/* ── Hero Section with Background ── */}
-      <div className="relative min-h-[calc(100vh-48px)] flex flex-col" style={{ padding: '24px' }}>
+      <div className="relative min-h-screen md:min-h-[calc(100vh-48px)] flex flex-col" style={{ padding: '24px' }}>
         {/* Background image */}
         <div
           style={{
@@ -206,36 +206,63 @@ export default function HomePage() {
       </div>
 
       {/* ── Hero section ── */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center py-20 max-w-[1400px] mx-auto w-full">
-        <div className="text-center max-w-2xl mx-auto">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center py-12 md:py-20 max-w-[1400px] mx-auto w-full">
+        <div className="text-center max-w-2xl mx-auto w-full px-4 md:px-0">
+          {/* Mobile logo (hidden on desktop where left rail has it) */}
+          <div className="flex md:hidden items-center justify-center gap-3 mb-6">
+            <Image
+              src="/images/Marathon_Bungie_Icon.svg"
+              alt="Marathon Report"
+              width={32}
+              height={32}
+            />
+            <div>
+              <span className="text-lg font-bold tracking-tight text-text-primary">
+                MARATHON
+              </span>
+              <span className="text-lg font-bold tracking-tight text-text-tertiary">
+                {' '}REPORT
+              </span>
+            </div>
+          </div>
+
           {/* Tagline */}
           <div className="stat-label mb-4 tracking-widest" style={{ color: '#c2ff0b' }}>
             Player Intelligence Platform
           </div>
 
-          <h1 className="text-4xl font-bold text-text-primary mb-4 text-balance">
+          <h1 className="text-3xl md:text-4xl font-bold text-text-primary mb-4 text-balance">
             Marathon Report
           </h1>
 
-          <p className="text-base text-text-secondary max-w-md mx-auto mb-10">
+          <p className="hidden md:block text-base text-text-secondary max-w-md mx-auto mb-10">
             Search for any player in the left panel to view detailed performance
             metrics, match history, fireteam analytics, and more.
           </p>
 
+          {/* Mobile search bar */}
+          <div className="md:hidden w-full max-w-sm mx-auto mb-8">
+            <SearchBar variant="hero" />
+          </div>
+
+          <p className="md:hidden text-sm text-text-tertiary max-w-xs mx-auto mb-8">
+            Search for any player to view stats, match history, and more.
+          </p>
+
           {/* Stats ribbon */}
-          <div className="inline-flex items-center gap-8 px-8 py-4 game-card">
+          <div className="inline-flex items-center gap-4 md:gap-8 px-5 md:px-8 py-3 md:py-4 game-card">
             <div className="text-center">
-              <div className="text-xl font-mono font-bold text-text-primary tabular-nums">342</div>
+              <div className="text-lg md:text-xl font-mono font-bold text-text-primary tabular-nums">342</div>
               <div className="stat-label mt-1">Players</div>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <div className="text-xl font-mono font-bold text-text-primary tabular-nums">12.4K</div>
+              <div className="text-lg md:text-xl font-mono font-bold text-text-primary tabular-nums">12.4K</div>
               <div className="stat-label mt-1">Matches</div>
             </div>
             <div className="w-px h-8 bg-border/50" />
             <div className="text-center">
-              <div className="text-xl font-mono font-bold tabular-nums" style={{ color: '#c2ff0b' }}>Live</div>
+              <div className="text-lg md:text-xl font-mono font-bold tabular-nums" style={{ color: '#c2ff0b' }}>Live</div>
               <div className="stat-label mt-1">Updates</div>
             </div>
           </div>
@@ -247,7 +274,7 @@ export default function HomePage() {
       {/* ── Leaderboard Cards Section ── */}
       <div
         className="relative z-10"
-        style={{ padding: '0 24px 48px', background: '#0a0a0a' }}
+        style={{ padding: '0 16px 48px', background: '#0a0a0a' }}
       >
         <div className="max-w-[1400px] mx-auto">
           <div className="grid md:grid-cols-2 gap-6">
