@@ -28,19 +28,22 @@ const MONETIZATION_TIERS = [
     current: true,
   },
   {
-    name: 'Runner Pass',
-    price: '$4.99',
-    priceNote: 'one-time',
-    features: ['Full match history', 'Card theme customization', 'Custom profile banner', 'Priority stat updates', 'Animated rank badge', 'Exclusive Runner Pass badges'],
-    accent: '#c2ff0b',
-  },
-  {
     name: 'Pinnacle',
     price: '$9.99',
     priceNote: 'one-time',
-    features: ['Everything in Runner Pass', 'Fireteam analytics', 'Advanced weapon breakdown', 'Heatmaps & trends', 'API access', 'Exclusive Pinnacle badge', 'All premium badges unlocked'],
+    features: ['Full match history', 'Card theme customization', 'Custom profile banner', 'Priority stat updates', 'Animated rank badge', 'Fireteam analytics', 'Advanced weapon breakdown', 'Heatmaps & trends', 'API access', 'All premium badges unlocked', 'Premium avatars'],
     accent: '#ffaa00',
   },
+];
+
+const AVAILABLE_AVATARS = [
+  { id: 'sushi', src: '/images/avatars/sushi.svg', name: 'Sushi', premium: false },
+  { id: 'voidwalker', src: '/images/avatars/voidwalker.svg', name: 'Voidwalker', premium: false },
+  { id: 'ironsight', src: '/images/avatars/ironsight.svg', name: 'Ironsight', premium: false },
+  { id: 'novablade', src: '/images/avatars/novablade.svg', name: 'Novablade', premium: true },
+  { id: 'phantomedge', src: '/images/avatars/phantomedge.svg', name: 'Phantomedge', premium: true },
+  { id: 'quantumfist', src: '/images/avatars/quantumfist.svg', name: 'Quantumfist', premium: true },
+  { id: 'shadowreaper', src: '/images/avatars/shadowreaper.svg', name: 'Shadowreaper', premium: true },
 ];
 
 const CUSTOMIZATION_OPTIONS = [
@@ -53,7 +56,7 @@ const CUSTOMIZATION_OPTIONS = [
 ];
 
 export default function SettingsPage() {
-  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges } = useApp();
+  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar } = useApp();
   const [selectedColor, setSelectedColor] = useState(cardThemeColor || '#8844ff');
   const [replacingSlot, setReplacingSlot] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -111,8 +114,8 @@ export default function SettingsPage() {
         <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
           <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>Profile</h2>
         </div>
-        <div className="p-5 flex items-center gap-5">
-          <div style={{ position: 'relative' }}>
+        <div className="p-5">
+          <div className="flex items-center gap-5 mb-5">
             <Image
               src={user.avatar}
               alt={user.name}
@@ -120,29 +123,110 @@ export default function SettingsPage() {
               height={64}
               style={{ border: `2px solid ${selectedColor}55` }}
             />
-            <button
-              style={{
-                position: 'absolute',
-                bottom: -4,
-                right: -4,
-                width: 22,
-                height: 22,
-                background: 'rgba(20,20,20,0.95)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.6rem',
-                color: '#a1a1a1',
-              }}
-            >
-              +
-            </button>
+            <div>
+              <div className="font-bold text-lg text-text-primary">{user.name}</div>
+              <div className="font-mono text-sm text-text-tertiary">{user.tag}</div>
+            </div>
           </div>
+
+          {/* Avatar Picker */}
           <div>
-            <div className="font-bold text-lg text-text-primary">{user.name}</div>
-            <div className="font-mono text-sm text-text-tertiary">{user.tag}</div>
+            <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+              Choose Avatar
+            </div>
+            <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
+              {AVAILABLE_AVATARS.map((avatar) => {
+                const isSelected = selectedAvatar === avatar.src;
+                return (
+                  <button
+                    key={avatar.id}
+                    onClick={() => {
+                      if (!avatar.premium) {
+                        setSelectedAvatar(avatar.src);
+                      }
+                    }}
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      aspectRatio: '1',
+                      background: isSelected ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)',
+                      border: isSelected
+                        ? '2px solid rgba(194,255,11,0.5)'
+                        : avatar.premium
+                          ? '1px solid rgba(255,170,0,0.25)'
+                          : '1px solid rgba(255,255,255,0.08)',
+                      cursor: avatar.premium ? 'not-allowed' : 'pointer',
+                      padding: 6,
+                      transition: 'all 150ms',
+                    }}
+                  >
+                    {/* Lock icon for premium */}
+                    {avatar.premium && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 3,
+                          left: 3,
+                          width: 16,
+                          height: 16,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          background: 'rgba(0,0,0,0.7)',
+                          zIndex: 2,
+                        }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" strokeWidth="2.5">
+                          <rect x="3" y="11" width="18" height="11" rx="2" />
+                          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      </div>
+                    )}
+                    {/* Check mark for selected */}
+                    {isSelected && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 3,
+                          right: 3,
+                          width: 16,
+                          height: 16,
+                          background: '#c2ff0b',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          zIndex: 2,
+                        }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      </div>
+                    )}
+                    <Image
+                      src={avatar.src}
+                      alt={avatar.name}
+                      width={72}
+                      height={72}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex items-center gap-3 mt-3">
+              <div className="flex items-center gap-1.5">
+                <span style={{ width: 8, height: 8, background: '#888', display: 'inline-block' }} />
+                <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Free</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffaa00" strokeWidth="3">
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Pinnacle</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -477,7 +561,7 @@ export default function SettingsPage() {
       {/* ── Monetization Tiers ── */}
       <div>
         <h2 className="text-lg font-semibold text-text-primary mb-4">Plans</h2>
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           {MONETIZATION_TIERS.map((tier) => (
             <div
               key={tier.name}

@@ -235,7 +235,7 @@ export default function HomePage() {
             style={{ background: 'linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)' }}
           >
             <div className="text-center">
-              <div className="text-base md:text-xl font-mono font-bold text-text-primary tabular-nums">342</div>
+              <div className="text-base md:text-xl font-mono font-bold text-text-primary tabular-nums">50K</div>
               <div className="stat-label mt-0.5">Players</div>
             </div>
             <div className="w-px h-6 md:h-8 bg-border/50" />
@@ -245,7 +245,10 @@ export default function HomePage() {
             </div>
             <div className="w-px h-6 md:h-8 bg-border/50" />
             <div className="text-center">
-              <div className="text-base md:text-xl font-mono font-bold tabular-nums" style={{ color: '#c2ff0b' }}>Live</div>
+              <div className="text-base md:text-xl font-mono font-bold tabular-nums flex items-center gap-1.5" style={{ color: '#c2ff0b' }}>
+                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#c2ff0b', display: 'inline-block', animation: 'pulse-dot 1.5s ease-in-out infinite' }} />
+                Live
+              </div>
               <div className="stat-label mt-0.5">Updates</div>
             </div>
           </div>

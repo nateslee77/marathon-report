@@ -37,7 +37,7 @@ export function MobileHeader() {
       <Link
         href="/"
         className="flex items-center gap-1.5"
-        style={{ position: 'fixed', left: '47.5%', transform: 'translateX(-50%)', height: 48, zIndex: 51 }}
+        style={{ position: 'fixed', left: '47%', transform: 'translateX(-50%)', height: 48, zIndex: 51 }}
       >
         <span className="text-sm font-bold tracking-tight text-text-primary">
           MARATHON
