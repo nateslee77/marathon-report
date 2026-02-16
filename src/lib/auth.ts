@@ -7,7 +7,13 @@ export const authOptions: NextAuthOptions = {
   debug: true,
   logger: {
     error(code, metadata) {
-      console.error('NextAuth Error:', code, JSON.stringify(metadata, null, 2));
+      const err = metadata instanceof Error ? metadata : (metadata as any)?.error;
+      console.error('NextAuth Error:', code);
+      if (err instanceof Error) {
+        console.error('Error message:', err.message);
+        console.error('Error stack:', err.stack);
+      }
+      console.error('Error metadata:', JSON.stringify(metadata, Object.getOwnPropertyNames(metadata || {}), 2));
     },
     warn(code) {
       console.warn('NextAuth Warning:', code);
