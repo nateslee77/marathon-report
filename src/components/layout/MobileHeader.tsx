@@ -3,10 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession, signIn as nextAuthSignIn, signOut as nextAuthSignOut } from 'next-auth/react';
 import { useApp } from '@/context/AppContext';
 
 export function MobileHeader() {
-  const { user, signIn, signOut } = useApp();
+  const { data: session } = useSession();
+  const { selectedAvatar } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -58,9 +60,9 @@ export function MobileHeader() {
 
       {/* Right: profile / sign-in */}
       <div style={{ width: 44, display: 'flex', justifyContent: 'flex-end' }}>
-        {!user ? (
+        {!session ? (
           <button
-            onClick={signIn}
+            onClick={() => nextAuthSignIn('bungie')}
             style={{
               width: 44,
               height: 44,
@@ -100,8 +102,8 @@ export function MobileHeader() {
                 overflow: 'hidden',
               }}>
                 <Image
-                  src={user.avatar}
-                  alt={user.name}
+                  src={selectedAvatar}
+                  alt={session.user.name || 'User'}
                   width={32}
                   height={32}
                   style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
@@ -125,15 +127,15 @@ export function MobileHeader() {
               >
                 <div style={{ padding: '12px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="font-semibold text-sm" style={{ color: '#e5e5e5' }}>
-                    {user.name}
+                    {session.user.name}
                   </div>
                   <div className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                    {user.tag}
+                    #{session.user.bungieMembershipId?.slice(-4)}
                   </div>
                 </div>
                 <div style={{ padding: '4px 0' }}>
                   <Link
-                    href={`/player/${user.id}/details`}
+                    href={`/player/${session.user.bungieMembershipId}/details`}
                     onClick={() => setMenuOpen(false)}
                     className="block"
                     style={{ padding: '10px 14px', fontSize: '0.8rem', color: '#a1a1a1', textDecoration: 'none' }}
@@ -151,7 +153,7 @@ export function MobileHeader() {
                 </div>
                 <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '4px 0' }}>
                   <button
-                    onClick={() => { signOut(); setMenuOpen(false); }}
+                    onClick={() => { nextAuthSignOut(); setMenuOpen(false); }}
                     className="block w-full text-left"
                     style={{ padding: '10px 14px', fontSize: '0.8rem', color: '#ff4444', background: 'transparent', border: 'none', cursor: 'pointer' }}
                   >

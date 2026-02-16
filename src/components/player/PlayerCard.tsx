@@ -9,6 +9,7 @@ import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
+import { playerBadges } from '@/lib/mock-data';
 
 interface PlayerCardProps {
   player: DetailedPlayer;
@@ -53,7 +54,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
   // Get badges to display for this player
   const displayBadges = isOwnCard
     ? equippedBadges.map(getBadgeById).filter(Boolean)
-    : [];
+    : (playerBadges[player.id] || []).map(getBadgeById).filter(Boolean);
 
   const stats = player.stats.overall;
 

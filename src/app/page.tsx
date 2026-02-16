@@ -1,15 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useApp } from '@/context/AppContext';
 import { SearchBar } from '@/components/search/SearchBar';
+import { DesktopAuthButton } from '@/components/auth/DesktopAuthButton';
 
 export default function HomePage() {
-  const { user, signIn, signOut } = useApp();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // March 5th, 2026 10:00 AM PST = 18:00 UTC
@@ -34,16 +31,6 @@ export default function HomePage() {
     const id = setInterval(update, 1000);
     return () => clearInterval(id);
   }, [launchDate]);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <div className="relative flex flex-col md:mx-[-24px] md:mt-[-24px]">
@@ -137,154 +124,8 @@ export default function HomePage() {
               flexDirection: 'column',
             }}
           >
-            {/* ── Desktop Sign In / User Menu (top right) ── */}
-            <div className="hidden md:flex relative justify-end px-6 pt-6">
-              {!user ? (
-                <button
-                  onClick={signIn}
-                  style={{
-                    padding: '8px 20px',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.05em',
-                    textTransform: 'uppercase',
-                    color: '#e5e5e5',
-                    background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    cursor: 'pointer',
-                    transition: 'all 150ms',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(194,255,11,0.3)';
-                    e.currentTarget.style.color = '#c2ff0b';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                    e.currentTarget.style.color = '#e5e5e5';
-                  }}
-                >
-                  Sign In
-                </button>
-              ) : (
-                <div ref={menuRef} style={{ position: 'relative' }}>
-                  <button
-                    onClick={() => setMenuOpen((v) => !v)}
-                    style={{
-                      width: 44,
-                      height: 44,
-                      padding: 0,
-                      background: 'transparent',
-                      border: '2px solid rgba(194,255,11,0.4)',
-                      cursor: 'pointer',
-                      overflow: 'hidden',
-                      transition: 'all 150ms',
-                    }}
-                  >
-                    <Image
-                      src={user.avatar}
-                      alt={user.name}
-                      width={44}
-                      height={44}
-                      style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </button>
-
-                  {menuOpen && (
-                    <div
-                      className="animate-slide-down"
-                      style={{
-                        position: 'absolute',
-                        top: 'calc(100% + 8px)',
-                        right: 0,
-                        width: 220,
-                        background: 'linear-gradient(180deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
-                        zIndex: 50,
-                      }}
-                    >
-                      <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                        <div className="font-semibold text-sm" style={{ color: '#e5e5e5' }}>
-                          {user.name}
-                        </div>
-                        <div className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                          {user.tag}
-                        </div>
-                      </div>
-                      <div style={{ padding: '6px 0' }}>
-                        <Link
-                          href={`/player/${user.id}/details`}
-                          onClick={() => setMenuOpen(false)}
-                          className="block"
-                          style={{
-                            padding: '8px 16px',
-                            fontSize: '0.8rem',
-                            color: '#a1a1a1',
-                            textDecoration: 'none',
-                            transition: 'all 100ms',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#e5e5e5';
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color = '#a1a1a1';
-                            e.currentTarget.style.background = 'transparent';
-                          }}
-                        >
-                          Profile
-                        </Link>
-                        <Link
-                          href="/settings"
-                          onClick={() => setMenuOpen(false)}
-                          className="block"
-                          style={{
-                            padding: '8px 16px',
-                            fontSize: '0.8rem',
-                            color: '#a1a1a1',
-                            textDecoration: 'none',
-                            transition: 'all 100ms',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#e5e5e5';
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.color = '#a1a1a1';
-                            e.currentTarget.style.background = 'transparent';
-                          }}
-                        >
-                          Settings
-                        </Link>
-                      </div>
-                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '6px 0' }}>
-                        <button
-                          onClick={() => { signOut(); setMenuOpen(false); }}
-                          className="block w-full text-left"
-                          style={{
-                            padding: '8px 16px',
-                            fontSize: '0.8rem',
-                            color: '#ff4444',
-                            background: 'transparent',
-                            border: 'none',
-                            cursor: 'pointer',
-                            transition: 'all 100ms',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255,68,68,0.06)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'transparent';
-                          }}
-                        >
-                          Sign Out
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+            {/* Sign in button - desktop only */}
+            <DesktopAuthButton />
 
             {/* ── Hero text — centered over the image ── */}
             <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-6">
@@ -410,15 +251,16 @@ export default function HomePage() {
               </div>
               <div className="p-3 md:p-5 space-y-1.5 md:space-y-2">
                 {[
-                  { rank: 1, name: 'VoidWalker', tag: '#7741', extractions: 147 },
-                  { rank: 2, name: 'NeonStrike', tag: '#2209', extractions: 132 },
-                  { rank: 3, name: 'PhantomAce', tag: '#5518', extractions: 124 },
-                  { rank: 4, name: 'GhostRecon', tag: '#8834', extractions: 118 },
-                  { rank: 5, name: 'SteelNova', tag: '#1190', extractions: 109 },
+                  { rank: 1, id: 'player-005', name: 'VoidWalker', tag: '#7741', extractions: 147 },
+                  { rank: 2, id: 'player-024', name: 'NeonStrike', tag: '#2209', extractions: 132 },
+                  { rank: 3, id: 'player-025', name: 'PhantomAce', tag: '#5518', extractions: 124 },
+                  { rank: 4, id: 'player-026', name: 'GhostRecon', tag: '#8834', extractions: 118 },
+                  { rank: 5, id: 'player-027', name: 'SteelNova', tag: '#1190', extractions: 109 },
                 ].map((entry) => (
-                  <div
+                  <Link
                     key={entry.rank}
-                    className="flex items-center justify-between font-mono text-xs md:text-sm"
+                    href={`/player/${entry.id}`}
+                    className="flex items-center justify-between font-mono text-xs md:text-sm transition-all hover:scale-[1.02]"
                     style={{
                       padding: '6px 10px',
                       background: entry.rank <= 3 ? 'rgba(194,255,11,0.04)' : 'rgba(255,255,255,0.02)',
@@ -443,7 +285,7 @@ export default function HomePage() {
                     <span className="font-bold tabular-nums flex-shrink-0" style={{ color: '#c2ff0b' }}>
                       {entry.extractions}
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -473,15 +315,16 @@ export default function HomePage() {
               </div>
               <div className="p-3 md:p-5 space-y-1.5 md:space-y-2">
                 {[
-                  { rank: 1, name: 'NeonStrike', tag: '#2209', extractions: 8421 },
-                  { rank: 2, name: 'VoidWalker', tag: '#7741', extractions: 7893 },
-                  { rank: 3, name: 'IronClad', tag: '#4402', extractions: 7214 },
-                  { rank: 4, name: 'CyberWraith', tag: '#6615', extractions: 6988 },
-                  { rank: 5, name: 'PhantomAce', tag: '#5518', extractions: 6541 },
+                  { rank: 1, id: 'player-024', name: 'NeonStrike', tag: '#2209', extractions: 8421 },
+                  { rank: 2, id: 'player-005', name: 'VoidWalker', tag: '#7741', extractions: 7893 },
+                  { rank: 3, id: 'player-028', name: 'IronClad', tag: '#4402', extractions: 7214 },
+                  { rank: 4, id: 'player-029', name: 'CyberWraith', tag: '#6615', extractions: 6988 },
+                  { rank: 5, id: 'player-025', name: 'PhantomAce', tag: '#5518', extractions: 6541 },
                 ].map((entry) => (
-                  <div
+                  <Link
                     key={entry.rank}
-                    className="flex items-center justify-between font-mono text-xs md:text-sm"
+                    href={`/player/${entry.id}`}
+                    className="flex items-center justify-between font-mono text-xs md:text-sm transition-all hover:scale-[1.02]"
                     style={{
                       padding: '6px 10px',
                       background: entry.rank <= 3 ? 'rgba(255,170,0,0.04)' : 'rgba(255,255,255,0.02)',
@@ -506,7 +349,7 @@ export default function HomePage() {
                     <span className="font-bold tabular-nums flex-shrink-0" style={{ color: '#ffaa00' }}>
                       {entry.extractions.toLocaleString()}
                     </span>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

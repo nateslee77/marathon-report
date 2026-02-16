@@ -3,8 +3,10 @@ import { Inter } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import { AppProvider } from '@/context/AppContext';
+import { SessionProvider } from '@/components/auth/SessionProvider';
 import { LeftRail } from '@/components/layout/LeftRail';
 import { MobileHeader } from '@/components/layout/MobileHeader';
+import { DesktopAuthButton } from '@/components/auth/DesktopAuthButton';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -47,15 +49,17 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-screen bg-background-base text-text-primary font-sans antialiased" suppressHydrationWarning>
-        <AppProvider>
-          <MobileHeader />
-          <div className="min-h-screen md:grid md:grid-cols-[340px_1fr]">
-            <LeftRail />
-            <main className="min-w-0 overflow-x-hidden p-0 md:p-6">
-              {children}
-            </main>
-          </div>
-        </AppProvider>
+        <SessionProvider>
+          <AppProvider>
+            <MobileHeader />
+            <div className="min-h-screen md:grid md:grid-cols-[340px_1fr]">
+              <LeftRail />
+              <main className="min-w-0 overflow-x-hidden p-0 md:p-6">
+                {children}
+              </main>
+            </div>
+          </AppProvider>
+        </SessionProvider>
       </body>
     </html>
   );
