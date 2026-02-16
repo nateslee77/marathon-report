@@ -1,6 +1,8 @@
 import { NextAuthOptions } from 'next-auth';
 import { supabaseAdmin } from './supabase';
 
+const SITE_URL = process.env.NEXTAUTH_URL || 'https://www.marathonintel.com';
+
 export const authOptions: NextAuthOptions = {
   debug: true,
   logger: {
@@ -26,6 +28,7 @@ export const authOptions: NextAuthOptions = {
         url: 'https://www.bungie.net/en/OAuth/Authorize',
         params: {
           response_type: 'code',
+          redirect_uri: `${SITE_URL}/api/auth/callback/bungie`,
         },
       },
       token: {
@@ -43,6 +46,7 @@ export const authOptions: NextAuthOptions = {
                 code: params.code as string,
                 client_id: process.env.BUNGIE_CLIENT_ID!,
                 client_secret: process.env.BUNGIE_CLIENT_SECRET!,
+                redirect_uri: `${SITE_URL}/api/auth/callback/bungie`,
               }),
             }
           );
