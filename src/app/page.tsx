@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
@@ -10,6 +10,30 @@ export default function HomePage() {
   const { user, signIn, signOut } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  // March 5th, 2026 10:00 AM PST = 18:00 UTC
+  const launchDate = useMemo(() => new Date('2026-03-05T18:00:00Z'), []);
+
+  useEffect(() => {
+    function update() {
+      const now = new Date();
+      const diff = launchDate.getTime() - now.getTime();
+      if (diff <= 0) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      setCountdown({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
+      });
+    }
+    update();
+    const id = setInterval(update, 1000);
+    return () => clearInterval(id);
+  }, [launchDate]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -23,6 +47,54 @@ export default function HomePage() {
 
   return (
     <div className="relative flex flex-col md:mx-[-24px] md:mt-[-24px]">
+      {/* ── Info Banner ── */}
+      <div style={{ padding: '12px 16px', background: '#0a0a0a' }}>
+        <div className="max-w-[1400px] mx-auto">
+          <div
+            className="game-card"
+            style={{ border: '1px solid rgba(194,255,11,0.15)' }}
+          >
+            <div className="p-4 md:p-5 flex gap-3">
+              <div style={{ flexShrink: 0, marginTop: 2 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#c2ff0b" strokeWidth="1.5" />
+                  <line x1="12" y1="16" x2="12" y2="12" stroke="#c2ff0b" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="12" cy="8" r="1" fill="#c2ff0b" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.6, marginBottom: 12 }}>
+                  Hello, and thank you for visiting Marathon Intel! As we wait for the release of Marathon, I wanted to create a website to keep track of our statistics. Please note that all info currently displayed is placeholder data and will be updated as soon as the Marathon API is released. If you have any questions or would like to leave some suggestions, feel free to use the Google Form below or visit the Discord. Thank you!
+                </div>
+                <a
+                  href="https://forms.gle/i8iPpJpkGqC1x9cR9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '6px 16px',
+                    fontSize: '0.7rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    color: '#0a0a0a',
+                    background: '#c2ff0b',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    transition: 'all 150ms',
+                  }}
+                >
+                  Feedback / Suggestions
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* ── Hero Section with Background ── */}
       <div
         className="relative flex flex-col"
@@ -221,11 +293,51 @@ export default function HomePage() {
                   Player Intelligence Platform
                 </div>
 
-                <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-2 md:mb-4 text-balance">
+                <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-3 md:mb-5 text-balance">
                   Marathon Intel
                 </h1>
 
-                <p className="hidden md:block text-base text-text-secondary max-w-md mx-auto mb-10">
+                {/* Countdown inline */}
+                <div className="flex justify-center gap-2 md:gap-3 mb-4 md:mb-8">
+                  {[
+                    { value: countdown.days, label: 'Days' },
+                    { value: countdown.hours, label: 'Hrs' },
+                    { value: countdown.minutes, label: 'Min' },
+                    { value: countdown.seconds, label: 'Sec' },
+                  ].map((unit) => (
+                    <div
+                      key={unit.label}
+                      className="text-center"
+                      style={{
+                        background: 'rgba(0,0,0,0.5)',
+                        border: '1px solid rgba(194,255,11,0.15)',
+                        padding: '8px 12px',
+                        minWidth: 56,
+                        backdropFilter: 'blur(8px)',
+                      }}
+                    >
+                      <div
+                        className="font-mono text-xl md:text-3xl font-bold tabular-nums leading-none"
+                        style={{ color: '#c2ff0b' }}
+                      >
+                        {String(unit.value).padStart(2, '0')}
+                      </div>
+                      <div
+                        className="mt-1"
+                        style={{
+                          fontSize: '0.45rem',
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase',
+                          color: 'rgba(255,255,255,0.4)',
+                        }}
+                      >
+                        {unit.label}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="hidden md:block text-sm text-text-secondary max-w-md mx-auto mb-6">
                   Search for any player in the left panel to view detailed performance
                   metrics, match history, fireteam analytics, and more.
                 </p>

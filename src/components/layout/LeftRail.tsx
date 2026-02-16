@@ -199,7 +199,7 @@ export function LeftRail() {
 
       {/* Bottom bar */}
       <div style={{ padding: '10px 20px', borderTop: '1px solid rgba(34,34,34,0.4)', fontSize: '11px', color: '#333' }}>
-        v0.1.0 &middot; Not affiliated with Bungie
+        v0.1.0 &middot; Not affiliated with Bungie &middot; Made by Sushi
       </div>
     </aside>
   );

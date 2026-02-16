@@ -38,10 +38,10 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     ],
     stats: {
       overall: { matchesPlayed: 342, winRate: 68.4, kd: 10.87, kda: 12.34, averageKills: 14.2, averageDeaths: 7.6, extractionRate: 42.1, bestStreak: 12, currentStreak: 3, timePlayed: '127h 43m' },
-      last10: { matchesPlayed: 10, winRate: 70.0, kd: 10.92, kda: 12.41, averageKills: 15.1, averageDeaths: 7.9, extractionRate: 40.0, bestStreak: 5, currentStreak: 3, timePlayed: '3h 47m' },
-      last50: { matchesPlayed: 50, winRate: 66.0, kd: 10.84, kda: 12.29, averageKills: 14.5, averageDeaths: 7.9, extractionRate: 38.0, bestStreak: 8, currentStreak: 3, timePlayed: '18h 52m' },
-      thisWeek: { matchesPlayed: 23, winRate: 73.9, kd: 10.01, kda: 12.52, averageKills: 15.8, averageDeaths: 7.9, extractionRate: 43.5, bestStreak: 7, currentStreak: 3, timePlayed: '8h 34m' },
-      thisSeason: { matchesPlayed: 89, winRate: 70.8, kd: 10.93, kda: 12.39, averageKills: 14.9, averageDeaths: 7.7, extractionRate: 44.9, bestStreak: 12, currentStreak: 3, timePlayed: '33h 21m' },
+      last10: { matchesPlayed: 10, winRate: 70.0, kd: 10.87, kda: 12.41, averageKills: 15.1, averageDeaths: 7.9, extractionRate: 40.0, bestStreak: 5, currentStreak: 3, timePlayed: '3h 47m' },
+      last50: { matchesPlayed: 50, winRate: 66.0, kd: 10.87, kda: 12.29, averageKills: 14.5, averageDeaths: 7.9, extractionRate: 38.0, bestStreak: 8, currentStreak: 3, timePlayed: '18h 52m' },
+      thisWeek: { matchesPlayed: 23, winRate: 73.9, kd: 10.87, kda: 12.52, averageKills: 15.8, averageDeaths: 7.9, extractionRate: 43.5, bestStreak: 7, currentStreak: 3, timePlayed: '8h 34m' },
+      thisSeason: { matchesPlayed: 89, winRate: 70.8, kd: 10.87, kda: 12.39, averageKills: 14.9, averageDeaths: 7.7, extractionRate: 44.9, bestStreak: 12, currentStreak: 3, timePlayed: '33h 21m' },
     },
   },
   'player-002': {
@@ -287,7 +287,7 @@ export function getFireteam(playerId: string): DetailedPlayer[] {
 // ══════════════════════════════════════
 
 export const mockSearchPlayers: SearchPlayer[] = [
-  { id: 'player-001', name: 'Sushi', tag: '#7742', platform: 'PC', rank: 1247, kd: 1.87, winRate: 68.4, competitiveRank: 'Diamond' },
+  { id: 'player-001', name: 'Sushi', tag: '#7742', platform: 'PC', rank: 1247, kd: 10.87, winRate: 68.4, competitiveRank: 'Diamond' },
   { id: 'player-002', name: 'NovaBlade', tag: '#1234', platform: 'PC', rank: 892, kd: 1.65, winRate: 62.1, competitiveRank: 'Platinum' },
   { id: 'player-003', name: 'IronSight', tag: '#5678', platform: 'Xbox', rank: 1103, kd: 1.72, winRate: 65.3, competitiveRank: 'Gold' },
   { id: 'player-004', name: 'ShadowReaper', tag: '#9012', platform: 'PlayStation', rank: 2341, kd: 1.34, winRate: 54.2, competitiveRank: 'Gold' },

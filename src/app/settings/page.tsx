@@ -31,7 +31,7 @@ const MONETIZATION_TIERS = [
     name: 'Pinnacle',
     price: '$9.99',
     priceNote: 'one-time',
-    features: ['Full match history', 'Card theme customization', 'Custom profile banner', 'Priority stat updates', 'Animated rank badge', 'Fireteam analytics', 'Advanced weapon breakdown', 'Heatmaps & trends', 'API access', 'All Pinnacle badges unlocked', 'Exclusive avatars'],
+    features: ['Get cool customization options', 'Add social links to your profile', 'All Pinnacle badges unlocked', 'Exclusive avatars', 'Card theme customization', 'Animated rank badge', 'Custom profile banner', 'Support the developer :)'],
     accent: '#ffaa00',
   },
 ];

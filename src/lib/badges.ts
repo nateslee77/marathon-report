@@ -40,5 +40,5 @@ export function getBadgeById(id: string): Badge | undefined {
   return AVAILABLE_BADGES.find((b) => b.id === id);
 }
 
-// Default equipped badges for Sushi
-export const SUSHI_DEFAULT_BADGES = ['frostbite', 'inferno', 'neon-edge', 'holographic', 'vanguard'];
+// Default equipped badges for Sushi (empty = no badges by default)
+export const SUSHI_DEFAULT_BADGES: string[] = [];

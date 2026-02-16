@@ -50,7 +50,7 @@ const AppContext = createContext<AppContextType>({
 export function AppProvider({ children }: { children: ReactNode }) {
   const [recentPlayers, setRecentPlayers] = useState<SearchPlayer[]>([]);
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [cardThemeColor, setCardThemeColorState] = useState<string | null>(null);
+  const [cardThemeColor, setCardThemeColorState] = useState<string | null>('#cccccc');
   const [equippedBadges, setEquippedBadgesState] = useState<string[]>(SUSHI_DEFAULT_BADGES);
   const [selectedAvatar, setSelectedAvatarState] = useState<string>(DEFAULT_AVATAR);
   const [avatarBorderStyle, setAvatarBorderStyleState] = useState<AvatarBorderStyle>('none');
