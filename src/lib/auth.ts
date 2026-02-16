@@ -2,7 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import { supabaseAdmin } from './supabase';
 
 export const authOptions: NextAuthOptions = {
-  debug: true,
+  debug: process.env.NODE_ENV === 'development',
   providers: [
     {
       id: 'bungie',
@@ -123,7 +123,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/',
+    error: '/auth/error',
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
