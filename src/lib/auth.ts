@@ -74,13 +74,15 @@ export const authOptions: NextAuthOptions = {
 
         if (error) {
           console.error('Supabase upsert error:', error);
-          return false;
+          // Still allow sign-in even if Supabase fails
+          return true;
         }
 
         return true;
       } catch (error) {
         console.error('Sign-in error:', error);
-        return false;
+        // Still allow sign-in even if Supabase fails
+        return true;
       }
     },
     async session({ session, token }) {
