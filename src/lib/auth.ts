@@ -34,9 +34,11 @@ export const authOptions: NextAuthOptions = {
         url: 'https://www.bungie.net/en/OAuth/Authorize',
         params: {
           response_type: 'code',
+          scope: '',
           redirect_uri: `${SITE_URL}/api/auth/callback/bungie`,
         },
       },
+      idToken: false,
       token: {
         url: 'https://www.bungie.net/platform/app/oauth/token/',
         async request({ params }) {
