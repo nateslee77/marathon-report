@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react';
+import { useSession } from 'next-auth/react';
 import { SearchPlayer } from '@/types';
 import { SUSHI_DEFAULT_BADGES } from '@/lib/badges';
 
@@ -48,6 +49,7 @@ const AppContext = createContext<AppContextType>({
 });
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  const { data: session } = useSession();
   const [recentPlayers, setRecentPlayers] = useState<SearchPlayer[]>([]);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [cardThemeColor, setCardThemeColorState] = useState<string | null>('#cccccc');
@@ -96,9 +98,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  // Sync NextAuth session with app user state
+  useEffect(() => {
+    if (session?.user) {
+      setUser({
+        id: session.user.bungieMembershipId || '',
+        name: session.user.name || 'Guardian',
+        tag: session.user.bungieMembershipId ? `#${session.user.bungieMembershipId.slice(-4)}` : '',
+        avatar: selectedAvatar,
+      });
+    } else {
+      setUser(null);
+    }
+  }, [session, selectedAvatar]);
+
   const signIn = useCallback(() => {
-    setUser({ id: 'player-001', name: 'Sushi', tag: '#7742', avatar: selectedAvatar });
-  }, [selectedAvatar]);
+    // Now handled by NextAuth - kept for compatibility
+  }, []);
 
   const signOut = useCallback(() => {
     setUser(null);
