@@ -131,15 +131,16 @@ export default function SettingsPage() {
               <img
                 src={user.avatar}
                 alt={user.name}
-                style={{ width: 64, height: 64, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
+                style={{ width: 80, height: 80, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
               />
             ) : (
               <Image
                 src={user.avatar}
                 alt={user.name}
-                width={64}
-                height={64}
-                style={{ width: 64, height: 64, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
+                width={160}
+                height={160}
+                quality={90}
+                style={{ width: 80, height: 80, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
               />
             )}
             <div>
@@ -153,7 +154,7 @@ export default function SettingsPage() {
             <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
               Choose Avatar
             </div>
-            <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
               {AVAILABLE_AVATARS.map((avatar) => {
                 const isSelected = selectedAvatar === avatar.src;
                 const isGif = avatar.src.endsWith('.gif');
@@ -222,9 +223,10 @@ export default function SettingsPage() {
                       <Image
                         src={avatar.src}
                         alt={avatar.id}
-                        width={72}
-                        height={72}
-                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        width={200}
+                        height={200}
+                        quality={90}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     )}
                   </button>

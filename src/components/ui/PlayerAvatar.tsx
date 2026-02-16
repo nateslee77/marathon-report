@@ -19,17 +19,21 @@ export function PlayerAvatar({ src, alt, width, height, className, style }: Play
         src={src}
         alt={alt}
         className={className}
-        style={{ width, height, ...style }}
+        style={{ width, height, objectFit: 'cover', ...style }}
       />
     );
   }
+
+  // Use a larger intrinsic size so Next.js fetches a higher-quality source
+  const intrinsic = Math.max(width, height, 128);
 
   return (
     <Image
       src={src}
       alt={alt}
-      width={width}
-      height={height}
+      width={intrinsic}
+      height={intrinsic}
+      quality={90}
       className={className}
       style={{ width, height, ...style }}
     />
