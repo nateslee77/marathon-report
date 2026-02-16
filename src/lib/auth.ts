@@ -2,6 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import { supabaseAdmin } from './supabase';
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   providers: [
     {
       id: 'bungie',
@@ -11,9 +12,32 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.BUNGIE_CLIENT_SECRET!,
       authorization: {
         url: 'https://www.bungie.net/en/OAuth/Authorize',
-        params: {},
+        params: {
+          response_type: 'code',
+        },
       },
-      token: 'https://www.bungie.net/platform/app/oauth/token/',
+      token: {
+        url: 'https://www.bungie.net/platform/app/oauth/token/',
+        async request({ client, params, checks, provider }) {
+          const response = await fetch(
+            'https://www.bungie.net/platform/app/oauth/token/',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: new URLSearchParams({
+                grant_type: 'authorization_code',
+                code: params.code as string,
+                client_id: process.env.BUNGIE_CLIENT_ID!,
+                client_secret: process.env.BUNGIE_CLIENT_SECRET!,
+              }),
+            }
+          );
+          const tokens = await response.json();
+          return { tokens };
+        },
+      },
       userinfo: {
         url: 'https://www.bungie.net/Platform/User/GetMembershipsForCurrentUser/',
         async request({ tokens }) {
