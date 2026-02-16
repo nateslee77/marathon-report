@@ -12,7 +12,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Marathon Report - Player Stats & Analytics',
+  title: 'Marathon Intel - Player Stats & Analytics',
   description: 'Premium stats tracking and analytics for Marathon players',
   icons: {
     icon: '/images/Marathon_Bungie_Icon.svg',

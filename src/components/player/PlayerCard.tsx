@@ -8,7 +8,7 @@ import { formatKD, formatPercentage, cn } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { useApp } from '@/context/AppContext';
-import { getBadgeById } from '@/lib/badges';
+import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 
 interface PlayerCardProps {
   player: DetailedPlayer;
@@ -16,7 +16,7 @@ interface PlayerCardProps {
 }
 
 export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
-  const { user, cardThemeColor, equippedBadges } = useApp();
+  const { user, cardThemeColor, equippedBadges, avatarBorderStyle } = useApp();
   const isOwnCard = user?.id === player.id;
   const runner = RUNNER_VISUALS[player.runner];
   const effectiveAccent = isOwnCard && cardThemeColor ? cardThemeColor : runner.accent;
@@ -38,6 +38,17 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
         return `linear-gradient(135deg, ${dark} 0%, ${mid} 45%, ${light} 55%, ${dark} 100%)`;
       })()
     : runner.emblemGradient;
+
+  // Avatar border animation
+  const borderClass = isOwnCard && avatarBorderStyle !== 'none'
+    ? `avatar-border-${avatarBorderStyle}`
+    : '';
+  const borderVars = {
+    '--border-color': effectiveAccent,
+    '--border-color-dim': effectiveAccent + '88',
+    '--border-color-dim2': effectiveAccent + '44',
+    '--border-color-light': effectiveAccent + 'cc',
+  } as React.CSSProperties;
 
   // Get badges to display for this player
   const displayBadges = isOwnCard
@@ -135,11 +146,15 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 alt={player.name}
                 width={48}
                 height={48}
+                className={borderClass}
                 style={{
                   flexShrink: 0,
-                  border: `1px solid ${effectiveAccent}44`,
+                  width: 48,
+                  height: 48,
+                  border: `2px solid ${effectiveAccent}44`,
                   borderRadius: 0,
                   objectFit: 'cover',
+                  ...borderVars,
                 }}
               />
               <div className="flex items-baseline gap-2">
@@ -185,21 +200,8 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {player.membership !== 'free' && (
-                <span
-                  style={{
-                    fontSize: '0.45rem',
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    fontWeight: 700,
-                    color: player.membership === 'pinnacle' ? '#ffcc00' : '#c2ff0b',
-                    background: player.membership === 'pinnacle' ? 'rgba(255,204,0,0.1)' : 'rgba(194,255,11,0.1)',
-                    border: `1px solid ${player.membership === 'pinnacle' ? 'rgba(255,204,0,0.3)' : 'rgba(194,255,11,0.3)'}`,
-                    padding: '1px 5px',
-                  }}
-                >
-                  {player.membership === 'pinnacle' ? 'Pinnacle' : 'Runner Pass'}
-                </span>
+              {player.membership === 'pinnacle' && (
+                <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
               )}
               <RankBadge rank={player.competitiveRank} size="sm" />
               <span
@@ -295,12 +297,29 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                     padding: '6px 2px',
                   }}
                 >
-                  <div
-                    className="font-mono text-sm font-bold"
-                    style={{ color: 'rgba(255,255,255,0.5)' }}
-                  >
-                    {item.icon}
-                  </div>
+                  {item.image ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 32 }}>
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={180}
+                        height={135}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          filter: 'brightness(0.9)',
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="font-mono text-lg font-bold"
+                      style={{ color: 'rgba(255,255,255,0.5)', height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      {item.icon}
+                    </div>
+                  )}
                   <div
                     className="mt-1 truncate"
                     style={{
@@ -352,6 +371,19 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                     <span style={{ color: 'rgba(255,255,255,0.5)' }}>
                       {match.map}
                     </span>
+                    {match.runner && (
+                      <span
+                        style={{
+                          color: RUNNER_VISUALS[match.runner].accent,
+                          fontSize: '0.55rem',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          opacity: 0.8,
+                        }}
+                      >
+                        {RUNNER_VISUALS[match.runner].name}
+                      </span>
+                    )}
                   </div>
                   <span style={{ color: 'rgba(255,255,255,0.6)' }}>
                     {match.kills}/{match.deaths}/{match.assists}

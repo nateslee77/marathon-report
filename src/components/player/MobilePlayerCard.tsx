@@ -8,7 +8,7 @@ import { formatKD, formatPercentage } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { useApp } from '@/context/AppContext';
-import { getBadgeById } from '@/lib/badges';
+import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 
 interface MobilePlayerCardProps {
   player: DetailedPlayer;
@@ -139,6 +139,9 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
                 </div>
               </div>
               <div className="flex items-center gap-1.5 flex-shrink-0">
+                {player.membership === 'pinnacle' && (
+                  <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
+                )}
                 <RankBadge rank={player.competitiveRank} size="sm" />
                 <span
                   className="font-mono text-sm font-bold"
@@ -219,15 +222,32 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
                 key={item.slot}
                 className="flex-shrink-0 text-center"
                 style={{
-                  width: 56,
+                  width: 64,
                   background: 'rgba(255,255,255,0.025)',
                   border: '1px solid rgba(255,255,255,0.04)',
                   padding: '5px 2px',
                 }}
               >
-                <div className="font-mono text-xs font-bold" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  {item.icon}
-                </div>
+                {item.image ? (
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 24 }}>
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={180}
+                      height={135}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        filter: 'brightness(0.9)',
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="font-mono text-xs font-bold" style={{ color: 'rgba(255,255,255,0.45)', height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {item.icon}
+                  </div>
+                )}
                 <div className="mt-0.5 truncate" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)' }}>
                   {item.name}
                 </div>

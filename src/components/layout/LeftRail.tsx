@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
+import { detailedPlayers } from '@/lib/mock-data';
 import { formatKD, formatPercentage } from '@/lib/utils';
 import { SearchBar } from '@/components/search/SearchBar';
 
 export function LeftRail() {
-  const { recentPlayers } = useApp();
+  const { recentPlayers, user, selectedAvatar } = useApp();
 
   return (
     <aside
@@ -28,7 +29,7 @@ export function LeftRail() {
         <Link href="/" className="flex items-center gap-3 focus-accent">
           <Image
             src="/images/Marathon_Bungie_Icon.svg"
-            alt="Marathon Report"
+            alt="Marathon Intel"
             width={36}
             height={36}
             style={{ flexShrink: 0 }}
@@ -39,7 +40,7 @@ export function LeftRail() {
                 MARATHON
               </span>
               <span className="text-xl font-bold tracking-tight text-text-tertiary">
-                {' '}REPORT
+                {' '}INTEL
               </span>
             </div>
             <div className="mt-0.5 text-xs text-text-tertiary tracking-widest uppercase">
@@ -70,14 +71,28 @@ export function LeftRail() {
                   className="block game-card p-3 group"
                 >
                   <div className="flex items-center gap-3">
-                    <div
-                      className="w-9 h-9 flex-shrink-0 bg-background-base border border-border flex items-center justify-center transition-colors"
-                      style={{ transition: 'border-color 150ms' }}
-                    >
-                      <span className="text-xs text-text-tertiary font-mono">
-                        {player.name.charAt(0)}
-                      </span>
-                    </div>
+                    {(() => {
+                      const avatarSrc = user?.id === player.id ? selectedAvatar : detailedPlayers[player.id]?.avatar;
+                      return avatarSrc ? (
+                        <Image
+                          src={avatarSrc}
+                          alt={player.name}
+                          width={36}
+                          height={36}
+                          className="flex-shrink-0"
+                          style={{ width: 36, height: 36, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }}
+                        />
+                      ) : (
+                        <div
+                          className="w-9 h-9 flex-shrink-0 bg-background-base border border-border flex items-center justify-center transition-colors"
+                          style={{ transition: 'border-color 150ms' }}
+                        >
+                          <span className="text-xs text-text-tertiary font-mono">
+                            {player.name.charAt(0)}
+                          </span>
+                        </div>
+                      );
+                    })()}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span className="text-sm text-text-primary font-medium truncate transition-colors group-hover:!text-[#c2ff0b]">

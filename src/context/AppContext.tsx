@@ -11,6 +11,8 @@ interface AuthUser {
   avatar: string;
 }
 
+export type AvatarBorderStyle = 'none' | 'pulse-glow' | 'spinning-gradient' | 'shimmer-sweep' | 'breathing-ring' | 'electric-arc';
+
 interface AppContextType {
   recentPlayers: SearchPlayer[];
   addRecentPlayer: (player: SearchPlayer) => void;
@@ -23,9 +25,11 @@ interface AppContextType {
   setEquippedBadges: (badges: string[]) => void;
   selectedAvatar: string;
   setSelectedAvatar: (avatar: string) => void;
+  avatarBorderStyle: AvatarBorderStyle;
+  setAvatarBorderStyle: (style: AvatarBorderStyle) => void;
 }
 
-const DEFAULT_AVATAR = '/images/sushi pfp.png';
+const DEFAULT_AVATAR = '/images/avatars/avatar6.png';
 
 const AppContext = createContext<AppContextType>({
   recentPlayers: [],
@@ -39,14 +43,51 @@ const AppContext = createContext<AppContextType>({
   setEquippedBadges: () => {},
   selectedAvatar: DEFAULT_AVATAR,
   setSelectedAvatar: () => {},
+  avatarBorderStyle: 'none',
+  setAvatarBorderStyle: () => {},
 });
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [recentPlayers, setRecentPlayers] = useState<SearchPlayer[]>([]);
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [cardThemeColor, setCardThemeColor] = useState<string | null>(null);
-  const [equippedBadges, setEquippedBadges] = useState<string[]>(SUSHI_DEFAULT_BADGES);
-  const [selectedAvatar, setSelectedAvatar] = useState<string>(DEFAULT_AVATAR);
+  const [cardThemeColor, setCardThemeColorState] = useState<string | null>(null);
+  const [equippedBadges, setEquippedBadgesState] = useState<string[]>(SUSHI_DEFAULT_BADGES);
+  const [selectedAvatar, setSelectedAvatarState] = useState<string>(DEFAULT_AVATAR);
+  const [avatarBorderStyle, setAvatarBorderStyleState] = useState<AvatarBorderStyle>('none');
+
+  // Load persisted values on mount
+  useEffect(() => {
+    const savedAvatar = localStorage.getItem('marathon-avatar');
+    if (savedAvatar) setSelectedAvatarState(savedAvatar);
+    const savedBorder = localStorage.getItem('marathon-avatar-border') as AvatarBorderStyle | null;
+    if (savedBorder) setAvatarBorderStyleState(savedBorder);
+    const savedTheme = localStorage.getItem('marathon-theme-color');
+    if (savedTheme) setCardThemeColorState(savedTheme);
+    const savedBadges = localStorage.getItem('marathon-badges');
+    if (savedBadges) {
+      try { setEquippedBadgesState(JSON.parse(savedBadges)); } catch {}
+    }
+  }, []);
+
+  const setSelectedAvatar = useCallback((avatar: string) => {
+    setSelectedAvatarState(avatar);
+    localStorage.setItem('marathon-avatar', avatar);
+  }, []);
+
+  const setAvatarBorderStyle = useCallback((style: AvatarBorderStyle) => {
+    setAvatarBorderStyleState(style);
+    localStorage.setItem('marathon-avatar-border', style);
+  }, []);
+
+  const setCardThemeColor = useCallback((color: string) => {
+    setCardThemeColorState(color);
+    localStorage.setItem('marathon-theme-color', color);
+  }, []);
+
+  const setEquippedBadges = useCallback((badges: string[]) => {
+    setEquippedBadgesState(badges);
+    localStorage.setItem('marathon-badges', JSON.stringify(badges));
+  }, []);
 
   const addRecentPlayer = useCallback((player: SearchPlayer) => {
     setRecentPlayers((prev) => {
@@ -71,7 +112,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [selectedAvatar]);
 
   return (
-    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar }}>
+    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle }}>
       {children}
     </AppContext.Provider>
   );

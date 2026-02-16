@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Match } from '@/types';
+import { RUNNER_VISUALS } from '@/lib/runners';
 import { getResultBadgeClasses, getTimeAgo, formatKD, cn } from '@/lib/utils';
 
 interface MatchRowProps {
@@ -29,10 +30,20 @@ export function MatchRow({ match }: MatchRowProps) {
           </span>
         </div>
 
-        {/* Map & Mode */}
+        {/* Map & Mode & Runner */}
         <div className="col-span-3">
           <div className="text-text-primary font-medium">{match.map}</div>
-          <div className="text-text-tertiary text-xs">{match.mode}</div>
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-text-tertiary">{match.mode}</span>
+            {match.runner && (
+              <span
+                className="font-mono font-semibold uppercase"
+                style={{ color: RUNNER_VISUALS[match.runner].accent, fontSize: '0.6rem' }}
+              >
+                {RUNNER_VISUALS[match.runner].name}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Stats */}

@@ -71,21 +71,27 @@ export function RankBadge({ rank, size = 'md' }: RankBadgeProps) {
   const padding = size === 'sm' ? '1px 6px' : size === 'md' ? '2px 8px' : '3px 10px';
 
   return (
-    <div
-      className="inline-flex items-center gap-1"
-      style={{
-        color: visual.color,
-        background: visual.bgColor,
-        border: `1px solid ${visual.borderColor}`,
-        padding,
-        fontSize,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        fontWeight: 600,
-      }}
-    >
-      <RankIcon rank={rank} size={iconSize} />
-      {visual.label}
+    <div className="badge-tooltip-wrap" style={{ position: 'relative', display: 'inline-flex' }}>
+      <div
+        className="inline-flex items-center gap-1"
+        style={{
+          color: visual.color,
+          background: visual.bgColor,
+          border: `1px solid ${visual.borderColor}`,
+          padding,
+          fontSize,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          fontWeight: 600,
+        }}
+      >
+        <RankIcon rank={rank} size={iconSize} />
+        {visual.label}
+      </div>
+      <div className="badge-tooltip" style={{ color: visual.color }}>
+        <div style={{ fontWeight: 700, fontSize: '0.65rem', marginBottom: 2 }}>Season 1 {visual.label}</div>
+        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.6rem', lineHeight: 1.35, fontWeight: 400 }}>Current competitive rank</div>
+      </div>
     </div>
   );
 }

@@ -32,6 +32,7 @@ export interface LoadoutItem {
   slot: 'primary' | 'sidearm' | 'equipment' | 'core';
   name: string;
   icon: string;
+  image?: string;
 }
 
 // ── Stats ──
@@ -57,6 +58,7 @@ export interface MiniMatch {
   kills: number;
   deaths: number;
   assists: number;
+  runner?: RunnerType;
 }
 
 // ── Detailed player (for triple-card view) ──
@@ -124,6 +126,7 @@ export interface Match {
   mode: GameMode;
   result: MatchResult;
   duration: string;
+  runner?: RunnerType;
   team1: MatchPlayer[];
   team2: MatchPlayer[];
   personalStats?: {

@@ -359,8 +359,7 @@
 
 .badge-ice {
   animation: badge-ice-glow 2s ease-in-out infinite;
-  background: linear-gradient(135deg, rgba(136,221,255,0.15) 0%, rgba(200,240,255,0.08) 30%, rgba(136,221,255,0.2) 60%, rgba(200,240,255,0.05) 100%) !important;
-  background-size: 200% 200% !important;
+  background: rgba(0,0,0,0.85) !important;
 }
 
 /* ── Fire badge animation ── */
@@ -379,5 +378,88 @@
 
 .badge-fire {
   animation: badge-fire-glow 1.5s ease-in-out infinite, badge-fire-flicker 0.8s ease-in-out infinite;
-  background: linear-gradient(180deg, rgba(255,68,0,0.2) 0%, rgba(255,100,0,0.1) 50%, rgba(255,34,0,0.2) 100%) !important;
+  background: rgba(0,0,0,0.85) !important;
+}
+
+/* ═══════════════════════════════════════
+   AVATAR BORDER ANIMATIONS
+   ═══════════════════════════════════════ */
+
+/* Pulse Glow */
+@keyframes avatar-pulse-glow {
+  0%, 100% { box-shadow: 0 0 4px var(--border-color), 0 0 8px var(--border-color-dim); }
+  50% { box-shadow: 0 0 12px var(--border-color), 0 0 24px var(--border-color-dim), 0 0 36px var(--border-color-dim2); }
+}
+.avatar-border-pulse-glow {
+  animation: avatar-pulse-glow 2s ease-in-out infinite;
+}
+
+/* Spinning Gradient */
+@keyframes avatar-spin-gradient {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.avatar-border-spinning-gradient {
+  border: 2px solid transparent !important;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  animation: avatar-spin-conic 2s linear infinite;
+}
+@keyframes avatar-spin-conic {
+  0% { border-color: var(--border-color); box-shadow: 0 0 8px var(--border-color-dim); }
+  25% { border-color: var(--border-color-light); box-shadow: 0 0 12px var(--border-color-dim); }
+  50% { border-color: var(--border-color); box-shadow: 0 0 16px var(--border-color-dim2); }
+  75% { border-color: var(--border-color-light); box-shadow: 0 0 12px var(--border-color-dim); }
+  100% { border-color: var(--border-color); box-shadow: 0 0 8px var(--border-color-dim); }
+}
+
+/* Shimmer Sweep */
+@keyframes avatar-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.avatar-border-shimmer-sweep {
+  box-shadow: 0 0 8px var(--border-color-dim);
+  position: relative;
+  overflow: visible;
+}
+.avatar-border-shimmer-sweep::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(90deg, transparent 0%, var(--border-color-dim) 40%, var(--border-color) 50%, var(--border-color-dim) 60%, transparent 100%);
+  background-size: 200% 100%;
+  animation: avatar-shimmer 2.5s linear infinite;
+  z-index: -1;
+}
+
+/* Breathing Ring */
+@keyframes avatar-breathing {
+  0%, 100% { border-color: var(--border-color-dim2); box-shadow: 0 0 4px var(--border-color-dim2); opacity: 0.6; }
+  50% { border-color: var(--border-color); box-shadow: 0 0 16px var(--border-color-dim); opacity: 1; }
+}
+.avatar-border-breathing-ring {
+  animation: avatar-breathing 3s ease-in-out infinite;
+}
+
+/* Electric Arc */
+@keyframes avatar-electric {
+  0%, 100% { box-shadow: 0 0 4px var(--border-color), 0 0 8px var(--border-color-dim); }
+  10% { box-shadow: 0 0 6px var(--border-color), 2px -2px 12px var(--border-color-dim), -3px 1px 8px var(--border-color-dim2); }
+  20% { box-shadow: 0 0 4px var(--border-color), -1px 3px 10px var(--border-color-dim); }
+  30% { box-shadow: 0 0 10px var(--border-color), 3px 0px 16px var(--border-color), -2px -3px 12px var(--border-color-dim); }
+  40% { box-shadow: 0 0 4px var(--border-color-dim); }
+  50% { box-shadow: 0 0 8px var(--border-color), 0 3px 14px var(--border-color-dim), 2px -1px 10px var(--border-color-dim2); }
+  60% { box-shadow: 0 0 4px var(--border-color); }
+  70% { box-shadow: 0 0 12px var(--border-color), -3px 2px 18px var(--border-color), 1px -2px 8px var(--border-color-dim); }
+  80% { box-shadow: 0 0 6px var(--border-color-dim); }
+  90% { box-shadow: 0 0 8px var(--border-color), 2px 2px 14px var(--border-color-dim); }
+}
+.avatar-border-electric-arc {
+  animation: avatar-electric 1.5s ease-in-out infinite;
 }

@@ -28,197 +28,208 @@ export default function HomePage() {
         className="relative flex flex-col"
         style={{ padding: '0' }}
       >
-        {/* Hero image container — clamped on mobile, full on desktop */}
-        <div className="relative h-[32vh] min-h-[200px] max-h-[280px] md:h-auto md:min-h-[calc(100vh-48px)] md:max-h-none flex flex-col">
-          {/* Background image */}
-          <div
+        {/* Hero image container — responsive, shows full image */}
+        <div className="relative">
+          {/* The image drives the height; it scales with container width */}
+          <Image
+            src="/images/newherobanner.png"
+            alt="Marathon Intel Hero"
+            width={1920}
+            height={1080}
+            priority
             style={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 0,
-              backgroundImage: 'url(/images/904f23205038723.66b3a6eecd27b.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: '46% 30%',
-              backgroundRepeat: 'no-repeat',
-              pointerEvents: 'none',
+              width: '100%',
+              height: 'auto',
+              display: 'block',
             }}
           />
+
           {/* Dark overlay for readability + bottom fade */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              zIndex: 0,
-              background: 'linear-gradient(180deg, rgba(10,10,10,0.35) 0%, rgba(10,10,10,0.5) 50%, rgba(10,10,10,0.92) 85%, rgba(10,10,10,1) 100%)',
+              zIndex: 1,
+              background: 'linear-gradient(180deg, rgba(10,10,10,0.25) 0%, rgba(10,10,10,0.35) 40%, rgba(10,10,10,0.85) 80%, rgba(10,10,10,1) 100%)',
               pointerEvents: 'none',
             }}
           />
 
-          {/* ── Desktop Sign In / User Menu (top right) — hidden on mobile (header handles it) ── */}
-          <div className="hidden md:flex relative z-50 justify-end px-6 pt-6">
-            {!user ? (
-              <button
-                onClick={signIn}
-                style={{
-                  padding: '8px 20px',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  color: '#e5e5e5',
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  cursor: 'pointer',
-                  transition: 'all 150ms',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(194,255,11,0.3)';
-                  e.currentTarget.style.color = '#c2ff0b';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                  e.currentTarget.style.color = '#e5e5e5';
-                }}
-              >
-                Sign In
-              </button>
-            ) : (
-              <div ref={menuRef} style={{ position: 'relative' }}>
+          {/* ── Overlay content — positioned over the image ── */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            {/* ── Desktop Sign In / User Menu (top right) ── */}
+            <div className="hidden md:flex relative justify-end px-6 pt-6">
+              {!user ? (
                 <button
-                  onClick={() => setMenuOpen((v) => !v)}
+                  onClick={signIn}
                   style={{
-                    width: 44,
-                    height: 44,
-                    padding: 0,
-                    background: 'transparent',
-                    border: '2px solid rgba(194,255,11,0.4)',
+                    padding: '8px 20px',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                    color: '#e5e5e5',
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.1)',
                     cursor: 'pointer',
-                    overflow: 'hidden',
                     transition: 'all 150ms',
                   }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(194,255,11,0.3)';
+                    e.currentTarget.style.color = '#c2ff0b';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                    e.currentTarget.style.color = '#e5e5e5';
+                  }}
                 >
-                  <Image
-                    src={user.avatar}
-                    alt={user.name}
-                    width={44}
-                    height={44}
-                    style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
+                  Sign In
                 </button>
-
-                {menuOpen && (
-                  <div
-                    className="animate-slide-down"
+              ) : (
+                <div ref={menuRef} style={{ position: 'relative' }}>
+                  <button
+                    onClick={() => setMenuOpen((v) => !v)}
                     style={{
-                      position: 'absolute',
-                      top: 'calc(100% + 8px)',
-                      right: 0,
-                      width: 220,
-                      background: 'linear-gradient(180deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
-                      zIndex: 50,
+                      width: 44,
+                      height: 44,
+                      padding: 0,
+                      background: 'transparent',
+                      border: '2px solid rgba(194,255,11,0.4)',
+                      cursor: 'pointer',
+                      overflow: 'hidden',
+                      transition: 'all 150ms',
                     }}
                   >
-                    <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                      <div className="font-semibold text-sm" style={{ color: '#e5e5e5' }}>
-                        {user.name}
+                    <Image
+                      src={user.avatar}
+                      alt={user.name}
+                      width={44}
+                      height={44}
+                      style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  </button>
+
+                  {menuOpen && (
+                    <div
+                      className="animate-slide-down"
+                      style={{
+                        position: 'absolute',
+                        top: 'calc(100% + 8px)',
+                        right: 0,
+                        width: 220,
+                        background: 'linear-gradient(180deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        boxShadow: '0 12px 32px rgba(0,0,0,0.6)',
+                        zIndex: 50,
+                      }}
+                    >
+                      <div style={{ padding: '14px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div className="font-semibold text-sm" style={{ color: '#e5e5e5' }}>
+                          {user.name}
+                        </div>
+                        <div className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                          {user.tag}
+                        </div>
                       </div>
-                      <div className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                        {user.tag}
+                      <div style={{ padding: '6px 0' }}>
+                        <Link
+                          href={`/player/${user.id}/details`}
+                          onClick={() => setMenuOpen(false)}
+                          className="block"
+                          style={{
+                            padding: '8px 16px',
+                            fontSize: '0.8rem',
+                            color: '#a1a1a1',
+                            textDecoration: 'none',
+                            transition: 'all 100ms',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#e5e5e5';
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = '#a1a1a1';
+                            e.currentTarget.style.background = 'transparent';
+                          }}
+                        >
+                          Profile
+                        </Link>
+                        <Link
+                          href="/settings"
+                          onClick={() => setMenuOpen(false)}
+                          className="block"
+                          style={{
+                            padding: '8px 16px',
+                            fontSize: '0.8rem',
+                            color: '#a1a1a1',
+                            textDecoration: 'none',
+                            transition: 'all 100ms',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#e5e5e5';
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = '#a1a1a1';
+                            e.currentTarget.style.background = 'transparent';
+                          }}
+                        >
+                          Settings
+                        </Link>
+                      </div>
+                      <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '6px 0' }}>
+                        <button
+                          onClick={() => { signOut(); setMenuOpen(false); }}
+                          className="block w-full text-left"
+                          style={{
+                            padding: '8px 16px',
+                            fontSize: '0.8rem',
+                            color: '#ff4444',
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            transition: 'all 100ms',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(255,68,68,0.06)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'transparent';
+                          }}
+                        >
+                          Sign Out
+                        </button>
                       </div>
                     </div>
-                    <div style={{ padding: '6px 0' }}>
-                      <Link
-                        href={`/player/${user.id}/details`}
-                        onClick={() => setMenuOpen(false)}
-                        className="block"
-                        style={{
-                          padding: '8px 16px',
-                          fontSize: '0.8rem',
-                          color: '#a1a1a1',
-                          textDecoration: 'none',
-                          transition: 'all 100ms',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = '#e5e5e5';
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = '#a1a1a1';
-                          e.currentTarget.style.background = 'transparent';
-                        }}
-                      >
-                        Profile
-                      </Link>
-                      <Link
-                        href="/settings"
-                        onClick={() => setMenuOpen(false)}
-                        className="block"
-                        style={{
-                          padding: '8px 16px',
-                          fontSize: '0.8rem',
-                          color: '#a1a1a1',
-                          textDecoration: 'none',
-                          transition: 'all 100ms',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.color = '#e5e5e5';
-                          e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.color = '#a1a1a1';
-                          e.currentTarget.style.background = 'transparent';
-                        }}
-                      >
-                        Settings
-                      </Link>
-                    </div>
-                    <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', padding: '6px 0' }}>
-                      <button
-                        onClick={() => { signOut(); setMenuOpen(false); }}
-                        className="block w-full text-left"
-                        style={{
-                          padding: '8px 16px',
-                          fontSize: '0.8rem',
-                          color: '#ff4444',
-                          background: 'transparent',
-                          border: 'none',
-                          cursor: 'pointer',
-                          transition: 'all 100ms',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(255,68,68,0.06)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'transparent';
-                        }}
-                      >
-                        Sign Out
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* ── Hero text — centered over the image ── */}
+            <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-6">
+              <div className="text-center max-w-2xl mx-auto w-full">
+                <div className="stat-label mb-2 md:mb-4 tracking-widest" style={{ color: '#c2ff0b' }}>
+                  Player Intelligence Platform
+                </div>
+
+                <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-2 md:mb-4 text-balance">
+                  Marathon Intel
+                </h1>
+
+                <p className="hidden md:block text-base text-text-secondary max-w-md mx-auto mb-10">
+                  Search for any player in the left panel to view detailed performance
+                  metrics, match history, fireteam analytics, and more.
+                </p>
               </div>
-            )}
-          </div>
-
-          {/* ── Hero content ── */}
-          <div className="relative z-10 flex-1 flex flex-col items-center justify-end pb-6 md:justify-center md:py-20 max-w-[1400px] mx-auto w-full px-4 md:px-6">
-            <div className="text-center max-w-2xl mx-auto w-full">
-              {/* Tagline */}
-              <div className="stat-label mb-2 md:mb-4 tracking-widest" style={{ color: '#c2ff0b' }}>
-                Player Intelligence Platform
-              </div>
-
-              <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-2 md:mb-4 text-balance">
-                Marathon Report
-              </h1>
-
-              <p className="hidden md:block text-base text-text-secondary max-w-md mx-auto mb-10">
-                Search for any player in the left panel to view detailed performance
-                metrics, match history, fireteam analytics, and more.
-              </p>
             </div>
           </div>
         </div>
@@ -385,6 +396,75 @@ export default function HomePage() {
                     </span>
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Buy Me a Coffee — mobile only (left rail handles desktop) ── */}
+        <div className="md:hidden px-4 pb-6">
+          <div className="game-card p-4">
+            <div className="flex items-start gap-3">
+              <div style={{ flexShrink: 0, marginTop: 2 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M17 8h1a4 4 0 0 1 0 8h-1" stroke="#ffaa00" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" stroke="#ffaa00" strokeWidth="1.5" fill="rgba(255,170,0,0.1)" />
+                  <line x1="6" y1="2" x2="6" y2="5" stroke="#ffaa00" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="10" y1="2" x2="10" y2="5" stroke="#ffaa00" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="14" y1="2" x2="14" y2="5" stroke="#ffaa00" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div style={{ fontSize: '0.75rem', color: '#e5e5e5', fontWeight: 500, marginBottom: 4 }}>
+                  Support the page & receive a
+                </div>
+                <div className="flex items-center gap-1 mb-3">
+                  <span
+                    style={{
+                      fontSize: '0.55rem',
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      fontWeight: 600,
+                      color: '#ffaa00',
+                      background: 'rgba(255,170,0,0.1)',
+                      border: '1px solid rgba(255,170,0,0.3)',
+                      padding: '1px 6px',
+                    }}
+                  >
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="#ffaa00" style={{ display: 'inline', marginRight: 2, verticalAlign: '-1px' }}>
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    Donator
+                  </span>
+                  <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.35)' }}>badge</span>
+                </div>
+                <a
+                  href="https://buymeacoffee.com/sushiboba"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '6px 16px',
+                    fontSize: '0.65rem',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    color: '#1a1a1a',
+                    background: '#ffaa00',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textDecoration: 'none',
+                    transition: 'all 150ms',
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                    <path d="M17 8h1a4 4 0 0 1 0 8h-1" stroke="#1a1a1a" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" stroke="#1a1a1a" strokeWidth="2" fill="rgba(26,26,26,0.15)" />
+                  </svg>
+                  Buy me a coffee
+                </a>
               </div>
             </div>
           </div>

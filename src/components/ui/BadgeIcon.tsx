@@ -22,15 +22,15 @@ function Tooltip({ badge, children }: { badge: Badge; children: React.ReactNode 
       <div className="badge-tooltip" style={{ color: badge.color }}>
         <div style={{ fontWeight: 700, fontSize: '0.65rem', marginBottom: 2 }}>{badge.name}</div>
         <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.6rem', lineHeight: 1.35, fontWeight: 400 }}>{badge.description}</div>
-        {badge.category !== 'free' && (
+        {badge.category === 'pinnacle' && (
           <div style={{
             marginTop: 4,
             fontSize: '0.5rem',
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
-            color: badge.category === 'premium' ? '#c2ff0b' : '#00ccff',
+            color: '#ffcc00',
           }}>
-            {badge.category === 'premium' ? 'Premium Pass' : 'Runner'}
+            Pinnacle Member
           </div>
         )}
       </div>
@@ -57,8 +57,8 @@ export function BadgeIcon({ badge, size = 'md', variant = 'icon', showNumber }: 
             textTransform: 'uppercase',
             fontWeight: 600,
             color: badge.color,
-            background: `${badge.color}30`,
-            border: `1px solid ${badge.color}55`,
+            background: 'rgba(0,0,0,0.85)',
+            border: `1px solid ${badge.color}88`,
             padding: s.tagPad,
             position: 'relative',
             overflow: 'hidden',
@@ -118,8 +118,8 @@ export function BadgeIcon({ badge, size = 'md', variant = 'icon', showNumber }: 
           fontWeight: 700,
           fontFamily: 'monospace',
           color: badge.color,
-          border: `1.5px solid ${badge.color}66`,
-          background: `${badge.color}28`,
+          border: `1.5px solid ${badge.color}88`,
+          background: 'rgba(0,0,0,0.85)',
           position: 'relative',
           flexShrink: 0,
         }}

@@ -2,8 +2,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
-import { mockSearchPlayers } from '@/lib/mock-data';
+import { mockSearchPlayers, detailedPlayers } from '@/lib/mock-data';
 import { SearchPlayer } from '@/types';
 import { formatKD } from '@/lib/utils';
 
@@ -14,7 +15,7 @@ interface SearchBarProps {
 export function SearchBar({ variant = 'rail' }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const [isFocused, setIsFocused] = useState(false);
-  const { addRecentPlayer } = useApp();
+  const { addRecentPlayer, user, selectedAvatar } = useApp();
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -101,11 +102,25 @@ export function SearchBar({ variant = 'rail' }: SearchBarProps) {
               onClick={() => selectPlayer(player)}
               className="search-suggestion w-full text-left"
             >
-              <div className="w-8 h-8 flex-shrink-0 bg-background-surface border border-border flex items-center justify-center">
-                <span className="text-xs text-text-tertiary font-mono">
-                  {player.name.charAt(0)}
-                </span>
-              </div>
+              {(() => {
+                const avatarSrc = user?.id === player.id ? selectedAvatar : detailedPlayers[player.id]?.avatar;
+                return avatarSrc ? (
+                  <Image
+                    src={avatarSrc}
+                    alt={player.name}
+                    width={32}
+                    height={32}
+                    className="flex-shrink-0"
+                    style={{ width: 32, height: 32, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }}
+                  />
+                ) : (
+                  <div className="w-8 h-8 flex-shrink-0 bg-background-surface border border-border flex items-center justify-center">
+                    <span className="text-xs text-text-tertiary font-mono">
+                      {player.name.charAt(0)}
+                    </span>
+                  </div>
+                );
+              })()}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-text-primary font-medium truncate">

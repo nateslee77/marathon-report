@@ -17,18 +17,18 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 42,
     competitiveRank: 'Diamond',
     membership: 'pinnacle',
-    avatar: '/images/sushi pfp.png',
+    avatar: '/images/avatars/avatar6.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 8),
     loadout: [
-      { slot: 'primary', name: 'Overrun AR', icon: 'R' },
-      { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S' },
+      { slot: 'primary', name: 'Overrun AR', icon: 'R', image: '/images/weapons/overrun-ar-180x135.png' },
+      { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S', image: '/images/weapons/ce-tactical-sidearm-180x135.png' },
       { slot: 'equipment', name: 'Frag Grenade', icon: 'G' },
       { slot: 'core', name: 'Guerrilla', icon: 'C' },
     ],
     recentMatchSummary: [
-      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 18, deaths: 6, assists: 4 },
-      { result: 'EXTRACTED', map: 'Perimeter', kills: 15, deaths: 7, assists: 3 },
-      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 13, deaths: 11, assists: 5 },
+      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 18, deaths: 6, assists: 4, runner: 'assassin' },
+      { result: 'EXTRACTED', map: 'Perimeter', kills: 15, deaths: 7, assists: 3, runner: 'assassin' },
+      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 13, deaths: 11, assists: 5, runner: 'thief' },
     ],
     careerHighlights: [
       { label: 'Highest Kill Game', value: '67 kills' },
@@ -56,18 +56,18 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 38,
     competitiveRank: 'Platinum',
     membership: 'runner-pass',
-    avatar: '/images/avatars/novablade.svg',
+    avatar: '/images/avatars/avatar2.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 12),
     loadout: [
-      { slot: 'primary', name: 'Bully SMG', icon: 'S' },
-      { slot: 'sidearm', name: 'Magnum MC', icon: 'M' },
+      { slot: 'primary', name: 'Bully SMG', icon: 'S', image: '/images/weapons/bully-smg-180x135.png' },
+      { slot: 'sidearm', name: 'Magnum MC', icon: 'M', image: '/images/weapons/magnum-mc-180x135.png' },
       { slot: 'equipment', name: 'Heat Grenade', icon: 'G' },
       { slot: 'core', name: 'No Good Deed', icon: 'C' },
     ],
     recentMatchSummary: [
-      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 12, deaths: 8, assists: 7 },
-      { result: 'EXTRACTED', map: 'Perimeter', kills: 14, deaths: 6, assists: 5 },
-      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 9, deaths: 10, assists: 4 },
+      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 12, deaths: 8, assists: 7, runner: 'triage' },
+      { result: 'EXTRACTED', map: 'Perimeter', kills: 14, deaths: 6, assists: 5, runner: 'triage' },
+      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 9, deaths: 10, assists: 4, runner: 'recon' },
     ],
     careerHighlights: [
       { label: 'Highest Kill Game', value: '27 kills' },
@@ -95,18 +95,18 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 35,
     competitiveRank: 'Gold',
     membership: 'free',
-    avatar: '/images/avatars/ironsight.svg',
+    avatar: '/images/avatars/avatar3.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 27),
     loadout: [
-      { slot: 'primary', name: 'WSTR Combat Shotgun', icon: 'S' },
-      { slot: 'sidearm', name: 'Hardline PR', icon: 'P' },
+      { slot: 'primary', name: 'WSTR Combat Shotgun', icon: 'S', image: '/images/weapons/wstr-combat-shotgun-180x135.png' },
+      { slot: 'sidearm', name: 'Hardline PR', icon: 'P', image: '/images/weapons/hardline-pr-180x135.png' },
       { slot: 'equipment', name: 'Bubble Shield', icon: 'B' },
       { slot: 'core', name: 'Protector V2', icon: 'C' },
     ],
     recentMatchSummary: [
-      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 9, deaths: 9, assists: 5 },
-      { result: 'EXTRACTED', map: 'Perimeter', kills: 10, deaths: 7, assists: 7 },
-      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 8, deaths: 12, assists: 3 },
+      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 9, deaths: 9, assists: 5, runner: 'rook' },
+      { result: 'EXTRACTED', map: 'Perimeter', kills: 10, deaths: 7, assists: 7, runner: 'rook' },
+      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 8, deaths: 12, assists: 3, runner: 'destroyer' },
     ],
     careerHighlights: [
       { label: 'Highest Kill Game', value: '24 kills' },
@@ -134,18 +134,18 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 41,
     competitiveRank: 'Gold',
     membership: 'runner-pass',
-    avatar: '/images/avatars/shadowreaper.svg',
+    avatar: '/images/avatars/avatar4.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 15),
     loadout: [
-      { slot: 'primary', name: 'Demolition HMG', icon: 'H' },
-      { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S' },
+      { slot: 'primary', name: 'Demolition HMG', icon: 'H', image: '/images/weapons/demolition-hmg-180x135.png' },
+      { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S', image: '/images/weapons/ce-tactical-sidearm-180x135.png' },
       { slot: 'equipment', name: 'Claymore Mine', icon: 'M' },
       { slot: 'core', name: 'Bullrush', icon: 'C' },
     ],
     recentMatchSummary: [
-      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 11, deaths: 13, assists: 6 },
-      { result: 'ELIMINATED', map: 'Perimeter', kills: 14, deaths: 10, assists: 4 },
-      { result: 'EXTRACTED', map: 'Perimeter', kills: 16, deaths: 8, assists: 5 },
+      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 11, deaths: 13, assists: 6, runner: 'destroyer' },
+      { result: 'ELIMINATED', map: 'Perimeter', kills: 14, deaths: 10, assists: 4, runner: 'destroyer' },
+      { result: 'EXTRACTED', map: 'Perimeter', kills: 16, deaths: 8, assists: 5, runner: 'vandal' },
     ],
     careerHighlights: [
       { label: 'Highest Kill Game', value: '28 kills' },
@@ -172,18 +172,18 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 33,
     competitiveRank: 'Silver',
     membership: 'free',
-    avatar: '/images/avatars/voidwalker.svg',
+    avatar: '/images/avatars/avatar5.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 42),
     loadout: [
-      { slot: 'primary', name: 'V22 Volt Thrower', icon: 'V' },
-      { slot: 'sidearm', name: 'V11 Punch', icon: 'P' },
+      { slot: 'primary', name: 'V22 Volt Thrower', icon: 'V', image: '/images/weapons/v22-volt-thrower-180x135.png' },
+      { slot: 'sidearm', name: 'V11 Punch', icon: 'P', image: '/images/weapons/v11-punch-180x135.png' },
       { slot: 'equipment', name: 'EMP Grenade', icon: 'E' },
       { slot: 'core', name: 'Adrenal Core', icon: 'C' },
     ],
     recentMatchSummary: [
-      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 8, deaths: 12, assists: 4 },
-      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 10, deaths: 9, assists: 6 },
-      { result: 'ELIMINATED', map: 'Perimeter', kills: 9, deaths: 11, assists: 3 },
+      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 8, deaths: 12, assists: 4, runner: 'vandal' },
+      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 10, deaths: 9, assists: 6, runner: 'vandal' },
+      { result: 'ELIMINATED', map: 'Perimeter', kills: 9, deaths: 11, assists: 3, runner: 'recon' },
     ],
     careerHighlights: [
       { label: 'Highest Kill Game', value: '22 kills' },
@@ -209,18 +209,18 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 39,
     competitiveRank: 'Platinum',
     membership: 'pinnacle',
-    avatar: '/images/avatars/phantomedge.svg',
+    avatar: '/images/avatars/avatar6.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 5),
     loadout: [
-      { slot: 'primary', name: 'Longshot', icon: 'L' },
-      { slot: 'sidearm', name: 'Hardline PR', icon: 'P' },
+      { slot: 'primary', name: 'Longshot', icon: 'L', image: '/images/weapons/longshot-180x135.png' },
+      { slot: 'sidearm', name: 'Hardline PR', icon: 'P', image: '/images/weapons/hardline-pr-180x135.png' },
       { slot: 'equipment', name: 'Proximity Sensor', icon: 'S' },
       { slot: 'core', name: 'Cluster Payload', icon: 'C' },
     ],
     recentMatchSummary: [
-      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 15, deaths: 7, assists: 8 },
-      { result: 'EXTRACTED', map: 'Perimeter', kills: 12, deaths: 6, assists: 10 },
-      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 11, deaths: 10, assists: 6 },
+      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 15, deaths: 7, assists: 8, runner: 'recon' },
+      { result: 'EXTRACTED', map: 'Perimeter', kills: 12, deaths: 6, assists: 10, runner: 'recon' },
+      { result: 'ELIMINATED', map: 'Dire Marsh', kills: 11, deaths: 10, assists: 6, runner: 'assassin' },
     ],
     careerHighlights: [
       { label: 'Highest Kill Game', value: '26 kills' },
@@ -247,18 +247,18 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 44,
     competitiveRank: 'Pinnacle',
     membership: 'pinnacle',
-    avatar: '/images/avatars/quantumfist.svg',
+    avatar: '/images/avatars/avatar7.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 2),
     loadout: [
-      { slot: 'primary', name: 'BRRT Smg', icon: 'B' },
-      { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S' },
+      { slot: 'primary', name: 'BRRT Smg', icon: 'B', image: '/images/weapons/brrt-smg-180x135.png' },
+      { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S', image: '/images/weapons/ce-tactical-sidearm-180x135.png' },
       { slot: 'equipment', name: 'Smoke Grenade', icon: 'G' },
       { slot: 'core', name: 'Case the Joint', icon: 'C' },
     ],
     recentMatchSummary: [
-      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 14, deaths: 6, assists: 5 },
-      { result: 'EXTRACTED', map: 'Perimeter', kills: 16, deaths: 7, assists: 4 },
-      { result: 'EXTRACTED', map: 'Perimeter', kills: 13, deaths: 8, assists: 7 },
+      { result: 'EXTRACTED', map: 'Dire Marsh', kills: 14, deaths: 6, assists: 5, runner: 'thief' },
+      { result: 'EXTRACTED', map: 'Perimeter', kills: 16, deaths: 7, assists: 4, runner: 'thief' },
+      { result: 'EXTRACTED', map: 'Perimeter', kills: 13, deaths: 8, assists: 7, runner: 'assassin' },
     ],
     careerHighlights: [
       { label: 'Highest Kill Game', value: '29 kills' },
@@ -307,7 +307,7 @@ export const mockSearchPlayers: SearchPlayer[] = [
 
 export const mockMatches: Match[] = [
   {
-    id: 'match-001', date: new Date(Date.now() - 1000 * 60 * 45), map: 'Dire Marsh', mode: 'Extraction', result: 'EXTRACTED', duration: '12:34',
+    id: 'match-001', date: new Date(Date.now() - 1000 * 60 * 45), map: 'Dire Marsh', mode: 'Extraction', result: 'EXTRACTED', duration: '12:34', runner: 'assassin',
     team1: [
       { playerId: 'player-001', playerName: 'Sushi', kills: 18, deaths: 6, assists: 4, damage: 3240, objectiveScore: 1200, isTopPerformer: true },
       { playerId: 'player-002', playerName: 'NovaBlade', kills: 12, deaths: 8, assists: 7, damage: 2180, objectiveScore: 890 },
@@ -321,7 +321,7 @@ export const mockMatches: Match[] = [
     personalStats: { kills: 18, deaths: 6, assists: 4, damage: 3240 }, squadMembers: ['NovaBlade', 'IronSight'],
   },
   {
-    id: 'match-002', date: new Date(Date.now() - 1000 * 60 * 90), map: 'Perimeter', mode: 'Team Deathmatch', result: 'EXTRACTED', duration: '9:18',
+    id: 'match-002', date: new Date(Date.now() - 1000 * 60 * 90), map: 'Perimeter', mode: 'Extraction', result: 'EXTRACTED', duration: '9:18', runner: 'assassin',
     team1: [
       { playerId: 'player-001', playerName: 'Sushi', kills: 15, deaths: 7, assists: 3, damage: 2890, objectiveScore: 0 },
       { playerId: 'player-002', playerName: 'NovaBlade', kills: 14, deaths: 6, assists: 5, damage: 2640, objectiveScore: 0, isTopPerformer: true },
@@ -335,7 +335,7 @@ export const mockMatches: Match[] = [
     personalStats: { kills: 15, deaths: 7, assists: 3, damage: 2890 }, squadMembers: ['NovaBlade', 'QuantumFist'],
   },
   {
-    id: 'match-003', date: new Date(Date.now() - 1000 * 60 * 150), map: 'Dire Marsh', mode: 'Extraction', result: 'ELIMINATED', duration: '14:52',
+    id: 'match-003', date: new Date(Date.now() - 1000 * 60 * 150), map: 'Dire Marsh', mode: 'Extraction', result: 'ELIMINATED', duration: '14:52', runner: 'thief',
     team1: [
       { playerId: 'player-001', playerName: 'Sushi', kills: 13, deaths: 11, assists: 5, damage: 2760, objectiveScore: 980 },
       { playerId: 'player-011', playerName: 'TitanFury', kills: 9, deaths: 10, assists: 4, damage: 1880, objectiveScore: 720 },
@@ -349,7 +349,7 @@ export const mockMatches: Match[] = [
     personalStats: { kills: 13, deaths: 11, assists: 5, damage: 2760 }, squadMembers: ['TitanFury', 'LunarStrike'],
   },
   {
-    id: 'match-004', date: new Date(Date.now() - 1000 * 60 * 240), map: 'Perimeter', mode: 'Control', result: 'EXTRACTED', duration: '11:23',
+    id: 'match-004', date: new Date(Date.now() - 1000 * 60 * 240), map: 'Perimeter', mode: 'Extraction', result: 'EXTRACTED', duration: '11:23', runner: 'assassin',
     team1: [
       { playerId: 'player-001', playerName: 'Sushi', kills: 17, deaths: 8, assists: 6, damage: 3080, objectiveScore: 1580, isTopPerformer: true },
       { playerId: 'player-002', playerName: 'NovaBlade', kills: 13, deaths: 9, assists: 9, damage: 2470, objectiveScore: 1420 },
@@ -363,7 +363,7 @@ export const mockMatches: Match[] = [
     personalStats: { kills: 17, deaths: 8, assists: 6, damage: 3080 }, squadMembers: ['NovaBlade', 'IronSight'],
   },
   {
-    id: 'match-005', date: new Date(Date.now() - 1000 * 60 * 320), map: 'Dire Marsh', mode: 'Team Deathmatch', result: 'ELIMINATED', duration: '8:47',
+    id: 'match-005', date: new Date(Date.now() - 1000 * 60 * 320), map: 'Dire Marsh', mode: 'Extraction', result: 'ELIMINATED', duration: '8:47', runner: 'vandal',
     team1: [
       { playerId: 'player-001', playerName: 'Sushi', kills: 11, deaths: 9, assists: 2, damage: 2240, objectiveScore: 0 },
       { playerId: 'player-019', playerName: 'CyberHawk', kills: 8, deaths: 11, assists: 3, damage: 1780, objectiveScore: 0 },

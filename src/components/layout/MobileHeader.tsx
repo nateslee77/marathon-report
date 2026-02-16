@@ -44,12 +44,12 @@ export function MobileHeader() {
         </span>
         <Image
           src="/images/Marathon_Bungie_Icon.svg"
-          alt="Marathon Report"
+          alt="Marathon Intel"
           width={20}
           height={20}
         />
         <span className="text-sm font-bold tracking-tight text-text-tertiary">
-          REPORT
+          INTEL
         </span>
       </Link>
 

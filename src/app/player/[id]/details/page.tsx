@@ -14,7 +14,7 @@ import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { StatsFilter } from '@/types';
 import { useApp } from '@/context/AppContext';
-import { getBadgeById } from '@/lib/badges';
+import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 
 interface DetailsPageProps {
   params: {
@@ -26,7 +26,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   const player = detailedPlayers[params.id] || detailedPlayers['player-001'];
   const runner = RUNNER_VISUALS[player.runner];
   const stats = player.stats.overall;
-  const { user, equippedBadges, cardThemeColor } = useApp();
+  const { user, equippedBadges, cardThemeColor, avatarBorderStyle } = useApp();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -50,6 +50,16 @@ export default function DetailsPage({ params }: DetailsPageProps) {
         return `linear-gradient(135deg, ${dark} 0%, ${mid} 45%, ${light} 55%, ${dark} 100%)`;
       })()
     : runner.emblemGradient;
+
+  const borderClass = isOwnProfile && avatarBorderStyle !== 'none'
+    ? `avatar-border-${avatarBorderStyle}`
+    : '';
+  const borderVars = {
+    '--border-color': effectiveAccent,
+    '--border-color-dim': effectiveAccent + '88',
+    '--border-color-dim2': effectiveAccent + '44',
+    '--border-color-light': effectiveAccent + 'cc',
+  } as React.CSSProperties;
 
   const displayBadges = isOwnProfile
     ? equippedBadges.map(getBadgeById).filter(Boolean)
@@ -125,14 +135,17 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             <Image
               src={player.avatar}
               alt={player.name}
-              width={56}
-              height={56}
-              className="md:w-[72px] md:h-[72px]"
+              width={72}
+              height={72}
+              className={`md:w-[96px] md:h-[96px] ${borderClass}`}
               style={{
                 flexShrink: 0,
+                width: 72,
+                height: 72,
                 border: `2px solid ${effectiveAccent}55`,
                 borderRadius: 0,
                 objectFit: 'cover',
+                ...borderVars,
               }}
             />
             <div className="min-w-0">
@@ -155,21 +168,8 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             <span className="hidden md:inline" style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem' }}>
               {runner.role}
             </span>
-            {player.membership !== 'free' && (
-              <span
-                style={{
-                  fontSize: '0.55rem',
-                  letterSpacing: '0.06em',
-                  textTransform: 'uppercase',
-                  fontWeight: 700,
-                  color: player.membership === 'pinnacle' ? '#ffcc00' : '#c2ff0b',
-                  background: player.membership === 'pinnacle' ? 'rgba(255,204,0,0.1)' : 'rgba(194,255,11,0.1)',
-                  border: `1px solid ${player.membership === 'pinnacle' ? 'rgba(255,204,0,0.3)' : 'rgba(194,255,11,0.3)'}`,
-                  padding: '2px 6px',
-                }}
-              >
-                {player.membership === 'pinnacle' ? 'Pinnacle' : 'Runner Pass'}
-              </span>
+            {player.membership === 'pinnacle' && (
+              <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
             )}
             <span className="hidden md:inline-block" style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
             <span className="font-mono text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
@@ -244,12 +244,29 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                   padding: '8px 4px',
                 }}
               >
-                <div
-                  className="font-mono text-xl md:text-2xl font-bold mb-1 md:mb-2"
-                  style={{ color: effectiveAccent + '88' }}
-                >
-                  {item.icon}
-                </div>
+                {item.image ? (
+                  <div className="flex justify-center items-center h-8 md:h-12 mb-1 md:mb-1">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={180}
+                      height={135}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                        filter: 'brightness(0.9)',
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="font-mono text-xl md:text-2xl font-bold mb-1 md:mb-2 h-8 md:h-12 flex items-center justify-center"
+                    style={{ color: effectiveAccent + '88' }}
+                  >
+                    {item.icon}
+                  </div>
+                )}
                 <div className="text-xs md:text-sm font-medium truncate" style={{ color: '#e5e5e5' }}>
                   {item.name}
                 </div>
