@@ -34,6 +34,7 @@ export const authOptions: NextAuthOptions = {
       token: {
         url: 'https://www.bungie.net/platform/app/oauth/token/',
         async request({ params }) {
+          console.log('Token exchange starting, code:', params.code?.slice(0, 10) + '...');
           const response = await fetch(
             'https://www.bungie.net/platform/app/oauth/token/',
             {
@@ -46,11 +47,15 @@ export const authOptions: NextAuthOptions = {
                 code: params.code as string,
                 client_id: process.env.BUNGIE_CLIENT_ID!,
                 client_secret: process.env.BUNGIE_CLIENT_SECRET!,
-                redirect_uri: `${SITE_URL}/api/auth/callback/bungie`,
               }),
             }
           );
           const tokens = await response.json();
+          console.log('Token exchange response status:', response.status);
+          console.log('Token exchange response keys:', Object.keys(tokens));
+          if (tokens.error) {
+            console.error('Token exchange error:', JSON.stringify(tokens));
+          }
           return { tokens };
         },
       },
