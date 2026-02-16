@@ -10,6 +10,7 @@ export const authOptions: NextAuthOptions = {
       type: 'oauth',
       clientId: process.env.BUNGIE_CLIENT_ID!,
       clientSecret: process.env.BUNGIE_CLIENT_SECRET!,
+      checks: ['none'],
       authorization: {
         url: 'https://www.bungie.net/en/OAuth/Authorize',
         params: {
@@ -18,7 +19,7 @@ export const authOptions: NextAuthOptions = {
       },
       token: {
         url: 'https://www.bungie.net/platform/app/oauth/token/',
-        async request({ client, params, checks, provider }) {
+        async request({ params }) {
           const response = await fetch(
             'https://www.bungie.net/platform/app/oauth/token/',
             {
