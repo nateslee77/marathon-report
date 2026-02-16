@@ -37,13 +37,16 @@ const MONETIZATION_TIERS = [
 ];
 
 const AVAILABLE_AVATARS = [
-  { id: 'avatar1', src: '/images/avatars/avatar1.png' },
-  { id: 'avatar2', src: '/images/avatars/avatar2.png' },
-  { id: 'avatar3', src: '/images/avatars/avatar3.png' },
-  { id: 'avatar4', src: '/images/avatars/avatar4.png' },
-  { id: 'avatar5', src: '/images/avatars/avatar5.png' },
-  { id: 'avatar6', src: '/images/avatars/avatar6.png' },
-  { id: 'avatar7', src: '/images/avatars/avatar7.png' },
+  { id: 'avatar1', src: '/images/avatars/avatar1.png', pinnacle: false },
+  { id: 'avatar2', src: '/images/avatars/avatar2.png', pinnacle: false },
+  { id: 'avatar3', src: '/images/avatars/avatar3.png', pinnacle: false },
+  { id: 'avatar4', src: '/images/avatars/avatar4.png', pinnacle: false },
+  { id: 'avatar5', src: '/images/avatars/avatar5.png', pinnacle: false },
+  { id: 'avatar6', src: '/images/avatars/avatar6.png', pinnacle: false },
+  { id: 'avatar7', src: '/images/avatars/avatar7.png', pinnacle: false },
+  { id: 'gif-void', src: '/images/avatars/Void5.gif', pinnacle: true },
+  { id: 'gif-runner1', src: '/images/avatars/tumblr_b7a9b8817a5a0d1664fc67e38d62cc82_031e176b_500.gif', pinnacle: true },
+  { id: 'gif-runner2', src: '/images/avatars/tumblr_bb26ed40249f0ff18a0c83c305396a25_35c77092_540.gif', pinnacle: true },
 ];
 
 const CUSTOMIZATION_OPTIONS = [
@@ -123,13 +126,22 @@ export default function SettingsPage() {
         </div>
         <div className="p-5">
           <div className="flex items-center gap-5 mb-5">
-            <Image
-              src={user.avatar}
-              alt={user.name}
-              width={64}
-              height={64}
-              style={{ width: 64, height: 64, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
-            />
+            {user.avatar.endsWith('.gif') ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={user.avatar}
+                alt={user.name}
+                style={{ width: 64, height: 64, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
+              />
+            ) : (
+              <Image
+                src={user.avatar}
+                alt={user.name}
+                width={64}
+                height={64}
+                style={{ width: 64, height: 64, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
+              />
+            )}
             <div>
               <div className="font-bold text-lg text-text-primary">{user.name}</div>
               <div className="font-mono text-sm text-text-tertiary">{user.tag}</div>
@@ -141,9 +153,10 @@ export default function SettingsPage() {
             <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
               Choose Avatar
             </div>
-            <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-3">
               {AVAILABLE_AVATARS.map((avatar) => {
                 const isSelected = selectedAvatar === avatar.src;
+                const isGif = avatar.src.endsWith('.gif');
                 return (
                   <button
                     key={avatar.id}
@@ -159,8 +172,25 @@ export default function SettingsPage() {
                       cursor: 'pointer',
                       padding: 6,
                       transition: 'all 150ms',
+                      overflow: 'hidden',
                     }}
                   >
+                    {avatar.pinnacle && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 3,
+                          left: 3,
+                          fontSize: '0.5rem',
+                          color: '#ffcc00',
+                          lineHeight: 1,
+                          zIndex: 2,
+                        }}
+                        title="Pinnacle Exclusive"
+                      >
+                        ★
+                      </div>
+                    )}
                     {isSelected && (
                       <div
                         style={{
@@ -181,13 +211,22 @@ export default function SettingsPage() {
                         </svg>
                       </div>
                     )}
-                    <Image
-                      src={avatar.src}
-                      alt={avatar.id}
-                      width={72}
-                      height={72}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
+                    {isGif ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={avatar.src}
+                        alt={avatar.id}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <Image
+                        src={avatar.src}
+                        alt={avatar.id}
+                        width={72}
+                        height={72}
+                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      />
+                    )}
                   </button>
                 );
               })}

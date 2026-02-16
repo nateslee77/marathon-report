@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { detailedPlayers } from '@/lib/mock-data';
 import { formatKD, formatPercentage } from '@/lib/utils';
 import { SearchBar } from '@/components/search/SearchBar';
@@ -74,7 +75,7 @@ export function LeftRail() {
                     {(() => {
                       const avatarSrc = user?.id === player.id ? selectedAvatar : detailedPlayers[player.id]?.avatar;
                       return avatarSrc ? (
-                        <Image
+                        <PlayerAvatar
                           src={avatarSrc}
                           alt={player.name}
                           width={36}

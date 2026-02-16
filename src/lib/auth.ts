@@ -4,24 +4,6 @@ import { supabaseAdmin } from './supabase';
 const SITE_URL = process.env.NEXTAUTH_URL || 'https://www.marathonintel.com';
 
 export const authOptions: NextAuthOptions = {
-  debug: true,
-  logger: {
-    error(code, metadata) {
-      const err = metadata instanceof Error ? metadata : (metadata as any)?.error;
-      console.error('NextAuth Error:', code);
-      if (err instanceof Error) {
-        console.error('Error message:', err.message);
-        console.error('Error stack:', err.stack);
-      }
-      console.error('Error metadata:', JSON.stringify(metadata, Object.getOwnPropertyNames(metadata || {}), 2));
-    },
-    warn(code) {
-      console.warn('NextAuth Warning:', code);
-    },
-    debug(code, metadata) {
-      console.log('NextAuth Debug:', code, JSON.stringify(metadata, null, 2));
-    },
-  },
   providers: [
     {
       id: 'bungie',
@@ -42,7 +24,6 @@ export const authOptions: NextAuthOptions = {
       token: {
         url: 'https://www.bungie.net/platform/app/oauth/token/',
         async request({ params }) {
-          console.log('Token exchange starting, code:', params.code?.slice(0, 10) + '...');
           const response = await fetch(
             'https://www.bungie.net/platform/app/oauth/token/',
             {
@@ -59,8 +40,6 @@ export const authOptions: NextAuthOptions = {
             }
           );
           const tokens = await response.json();
-          console.log('Token exchange response status:', response.status);
-          console.log('Token exchange response keys:', Object.keys(tokens));
           if (tokens.error) {
             console.error('Token exchange error:', JSON.stringify(tokens));
           }
@@ -103,7 +82,7 @@ export const authOptions: NextAuthOptions = {
     },
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user }) {
       if (!user.bungieMembershipId) {
         return false;
       }
@@ -114,27 +93,43 @@ export const authOptions: NextAuthOptions = {
       }
 
       try {
-        const { error } = await supabaseAdmin.from('users').upsert(
-          {
+        // Check if user already exists to avoid overwriting their preferences
+        const { data: existing } = await supabaseAdmin
+          .from('users')
+          .select('id')
+          .eq('id', user.bungieMembershipId)
+          .single();
+
+        if (existing) {
+          // Returning user — only update display name
+          await supabaseAdmin
+            .from('users')
+            .update({
+              display_name: user.name,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', user.bungieMembershipId);
+        } else {
+          // New user — insert with default preferences
+          const { error } = await supabaseAdmin.from('users').insert({
             id: user.bungieMembershipId,
             bungie_membership_id: user.bungieMembershipId,
             display_name: user.name,
-          },
-          {
-            onConflict: 'id',
-          }
-        );
+            selected_avatar: '',
+            card_theme_color: '#cccccc',
+            avatar_border_style: 'none',
+            equipped_badges: [],
+            is_pinnacle: false,
+          });
 
-        if (error) {
-          console.error('Supabase upsert error:', error);
-          // Still allow sign-in even if Supabase fails
-          return true;
+          if (error) {
+            console.error('Supabase insert error:', error);
+          }
         }
 
         return true;
       } catch (error) {
         console.error('Sign-in error:', error);
-        // Still allow sign-in even if Supabase fails
         return true;
       }
     },

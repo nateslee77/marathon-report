@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useSession, signIn as nextAuthSignIn, signOut as nextAuthSignOut } from 'next-auth/react';
 import { useApp } from '@/context/AppContext';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 
 export function MobileHeader() {
   const { data: session } = useSession();
@@ -101,7 +102,7 @@ export function MobileHeader() {
                 border: '1px solid rgba(194,255,11,0.3)',
                 overflow: 'hidden',
               }}>
-                <Image
+                <PlayerAvatar
                   src={selectedAvatar}
                   alt={session.user.name || 'User'}
                   width={32}

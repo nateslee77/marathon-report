@@ -526,7 +526,8 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
 
 // Helper to get a player's fireteam
 export function getFireteam(playerId: string): DetailedPlayer[] {
-  const primary = detailedPlayers[playerId] || detailedPlayers['player-001'];
+  const primary = detailedPlayers[playerId];
+  if (!primary) return [];
   const teammates = Object.values(detailedPlayers).filter((p) => p.id !== primary.id);
   return [primary, ...teammates.slice(0, 2)];
 }

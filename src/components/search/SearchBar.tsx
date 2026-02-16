@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { mockSearchPlayers, detailedPlayers } from '@/lib/mock-data';
 import { SearchPlayer } from '@/types';
 import { formatKD } from '@/lib/utils';
@@ -105,7 +106,7 @@ export function SearchBar({ variant = 'rail' }: SearchBarProps) {
               {(() => {
                 const avatarSrc = user?.id === player.id ? selectedAvatar : detailedPlayers[player.id]?.avatar;
                 return avatarSrc ? (
-                  <Image
+                  <PlayerAvatar
                     src={avatarSrc}
                     alt={player.name}
                     width={32}

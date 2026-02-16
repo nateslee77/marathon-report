@@ -7,6 +7,7 @@ import { RUNNER_VISUALS } from '@/lib/runners';
 import { formatKD, formatPercentage, cn } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
@@ -142,7 +143,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             }}
           >
             <div className="flex items-center gap-2.5">
-              <Image
+              <PlayerAvatar
                 src={player.avatar}
                 alt={player.name}
                 width={48}
@@ -287,52 +288,58 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             >
               Loadout
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {player.loadout.map((item) => (
-                <div
-                  key={item.slot}
-                  className="text-center"
-                  style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.04)',
-                    padding: '6px 2px',
-                  }}
-                >
-                  {item.image ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 32 }}>
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={180}
-                        height={135}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain',
-                          filter: 'brightness(0.9)',
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className="font-mono text-lg font-bold"
-                      style={{ color: 'rgba(255,255,255,0.5)', height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    >
-                      {item.icon}
-                    </div>
-                  )}
+            {player.loadout.length === 0 ? (
+              <div className="flex items-center justify-center py-4" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                <span className="font-mono" style={{ fontSize: '0.65rem' }}>No loadout configured</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 gap-2">
+                {player.loadout.map((item) => (
                   <div
-                    className="mt-1 truncate"
+                    key={item.slot}
+                    className="text-center"
                     style={{
-                      fontSize: '0.55rem',
-                      color: 'rgba(255,255,255,0.3)',
+                      background: 'rgba(255,255,255,0.03)',
+                      border: '1px solid rgba(255,255,255,0.04)',
+                      padding: '6px 2px',
                     }}
                   >
-                    {item.name}
+                    {item.image ? (
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 32 }}>
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={180}
+                          height={135}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                            filter: 'brightness(0.9)',
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className="font-mono text-lg font-bold"
+                        style={{ color: 'rgba(255,255,255,0.5)', height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        {item.icon}
+                      </div>
+                    )}
+                    <div
+                      className="mt-1 truncate"
+                      style={{
+                        fontSize: '0.55rem',
+                        color: 'rgba(255,255,255,0.3)',
+                      }}
+                    >
+                      {item.name}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── Mini Recent Matches ── */}
@@ -348,50 +355,56 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             >
               Recent
             </div>
-            <div className="space-y-1.5">
-              {player.recentMatchSummary.map((match, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between font-mono text-xs"
-                  style={{
-                    padding: '4px 8px',
-                    background: 'rgba(255,255,255,0.02)',
-                    border: '1px solid rgba(255,255,255,0.03)',
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      style={{
-                        color: match.result === 'EXTRACTED' ? '#c2ff0b' : '#ff4444',
-                        fontWeight: 700,
-                        fontSize: '0.65rem',
-                      }}
-                    >
-                      {match.result === 'EXTRACTED' ? 'E' : 'D'}
-                    </span>
-                    <span style={{ color: 'rgba(255,255,255,0.5)' }}>
-                      {match.map}
-                    </span>
-                    {match.runner && (
+            {player.recentMatchSummary.length === 0 ? (
+              <div className="flex items-center justify-center py-4" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                <span className="font-mono" style={{ fontSize: '0.65rem' }}>No recent matches</span>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {player.recentMatchSummary.map((match, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between font-mono text-xs"
+                    style={{
+                      padding: '4px 8px',
+                      background: 'rgba(255,255,255,0.02)',
+                      border: '1px solid rgba(255,255,255,0.03)',
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
                       <span
                         style={{
-                          color: RUNNER_VISUALS[match.runner].accent,
-                          fontSize: '0.55rem',
-                          fontWeight: 600,
-                          textTransform: 'uppercase',
-                          opacity: 0.8,
+                          color: match.result === 'EXTRACTED' ? '#c2ff0b' : '#ff4444',
+                          fontWeight: 700,
+                          fontSize: '0.65rem',
                         }}
                       >
-                        {RUNNER_VISUALS[match.runner].name}
+                        {match.result === 'EXTRACTED' ? 'E' : 'D'}
                       </span>
-                    )}
+                      <span style={{ color: 'rgba(255,255,255,0.5)' }}>
+                        {match.map}
+                      </span>
+                      {match.runner && (
+                        <span
+                          style={{
+                            color: RUNNER_VISUALS[match.runner].accent,
+                            fontSize: '0.55rem',
+                            fontWeight: 600,
+                            textTransform: 'uppercase',
+                            opacity: 0.8,
+                          }}
+                        >
+                          {RUNNER_VISUALS[match.runner].name}
+                        </span>
+                      )}
+                    </div>
+                    <span style={{ color: 'rgba(255,255,255,0.6)' }}>
+                      {match.kills}/{match.deaths}/{match.assists}
+                    </span>
                   </div>
-                  <span style={{ color: 'rgba(255,255,255,0.6)' }}>
-                    {match.kills}/{match.deaths}/{match.assists}
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── Click hint ── */}

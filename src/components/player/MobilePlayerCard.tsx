@@ -7,6 +7,7 @@ import { RUNNER_VISUALS } from '@/lib/runners';
 import { formatKD, formatPercentage } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
+import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
@@ -108,7 +109,7 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
           <div style={{ position: 'absolute', bottom: 8, left: 12, right: 12 }}>
             <div className="flex items-end justify-between">
               <div className="flex items-center gap-2 min-w-0">
-                <Image
+                <PlayerAvatar
                   src={player.avatar}
                   alt={player.name}
                   width={36}
@@ -217,76 +218,88 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
 
         {/* ── Loadout ── */}
         <div style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar">
-            {player.loadout.map((item) => (
-              <div
-                key={item.slot}
-                className="flex-shrink-0 text-center"
-                style={{
-                  width: 64,
-                  background: 'rgba(255,255,255,0.025)',
-                  border: '1px solid rgba(255,255,255,0.04)',
-                  padding: '5px 2px',
-                }}
-              >
-                {item.image ? (
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 24 }}>
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      width={180}
-                      height={135}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                        filter: 'brightness(0.9)',
-                      }}
-                    />
+          {player.loadout.length === 0 ? (
+            <div className="flex items-center justify-center py-3" style={{ color: 'rgba(255,255,255,0.2)' }}>
+              <span className="font-mono" style={{ fontSize: '0.6rem' }}>No loadout configured</span>
+            </div>
+          ) : (
+            <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+              {player.loadout.map((item) => (
+                <div
+                  key={item.slot}
+                  className="flex-shrink-0 text-center"
+                  style={{
+                    width: 64,
+                    background: 'rgba(255,255,255,0.025)',
+                    border: '1px solid rgba(255,255,255,0.04)',
+                    padding: '5px 2px',
+                  }}
+                >
+                  {item.image ? (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 24 }}>
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={180}
+                        height={135}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'contain',
+                          filter: 'brightness(0.9)',
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="font-mono text-xs font-bold" style={{ color: 'rgba(255,255,255,0.45)', height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      {item.icon}
+                    </div>
+                  )}
+                  <div className="mt-0.5 truncate" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)' }}>
+                    {item.name}
                   </div>
-                ) : (
-                  <div className="font-mono text-xs font-bold" style={{ color: 'rgba(255,255,255,0.45)', height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {item.icon}
-                  </div>
-                )}
-                <div className="mt-0.5 truncate" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)' }}>
-                  {item.name}
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* ── Recent Matches ── */}
         <div style={{ padding: '8px 12px 10px' }}>
-          <div className="space-y-1">
-            {player.recentMatchSummary.slice(0, 3).map((match, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between font-mono text-[0.65rem]"
-                style={{
-                  padding: '3px 6px',
-                  background: 'rgba(255,255,255,0.015)',
-                  border: '1px solid rgba(255,255,255,0.03)',
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    style={{
-                      color: match.result === 'EXTRACTED' ? '#c2ff0b' : '#ff4444',
-                      fontWeight: 700,
-                    }}
-                  >
-                    {match.result === 'EXTRACTED' ? 'EXT' : 'KIA'}
+          {player.recentMatchSummary.length === 0 ? (
+            <div className="flex items-center justify-center py-3" style={{ color: 'rgba(255,255,255,0.2)' }}>
+              <span className="font-mono" style={{ fontSize: '0.6rem' }}>No recent matches</span>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {player.recentMatchSummary.slice(0, 3).map((match, i) => (
+                <div
+                  key={i}
+                  className="flex items-center justify-between font-mono text-[0.65rem]"
+                  style={{
+                    padding: '3px 6px',
+                    background: 'rgba(255,255,255,0.015)',
+                    border: '1px solid rgba(255,255,255,0.03)',
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      style={{
+                        color: match.result === 'EXTRACTED' ? '#c2ff0b' : '#ff4444',
+                        fontWeight: 700,
+                      }}
+                    >
+                      {match.result === 'EXTRACTED' ? 'EXT' : 'KIA'}
+                    </span>
+                    <span style={{ color: 'rgba(255,255,255,0.4)' }}>{match.map}</span>
+                  </div>
+                  <span style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    {match.kills}/{match.deaths}/{match.assists}
                   </span>
-                  <span style={{ color: 'rgba(255,255,255,0.4)' }}>{match.map}</span>
                 </div>
-                <span style={{ color: 'rgba(255,255,255,0.5)' }}>
-                  {match.kills}/{match.deaths}/{match.assists}
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </Link>
