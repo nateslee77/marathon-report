@@ -677,6 +677,62 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* ── FAQ ── */}
+      <div className="game-card">
+        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>FAQ</h2>
+        </div>
+        <div className="p-5 space-y-1">
+          {[
+            {
+              q: 'When will real stats be available?',
+              a: 'As soon as the Marathon API is publicly available after launch. We\'ll start pulling live data on day one. Until then, all stats shown are placeholder data.',
+            },
+            {
+              q: 'Is this affiliated with Bungie?',
+              a: 'No. Marathon Intel is an independent, fan-made project. We are not affiliated with, endorsed by, or connected to Bungie in any way.',
+            },
+            {
+              q: 'How do I get Pinnacle?',
+              a: 'Pinnacle is a one-time $9.99 purchase that unlocks exclusive avatars, animated borders, badge customization, custom hex theme colors, and more. You can upgrade from the Plans section above.',
+            },
+            {
+              q: 'How do I sign in?',
+              a: 'Click "Sign in with Bungie" on the home page. You\'ll be redirected to Bungie.net to authorize your account. We only read your public profile — we never access your credentials.',
+            },
+            {
+              q: 'Will my customizations be saved?',
+              a: 'Yes. Your avatar, theme color, badges, and border style are saved to your account and will persist across devices as long as you\'re signed in.',
+            },
+          ].map((item) => (
+            <details
+              key={item.q}
+              className="group"
+              style={{
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.04)',
+              }}
+            >
+              <summary
+                className="cursor-pointer select-none flex items-center justify-between px-4 py-3"
+                style={{ listStyle: 'none' }}
+              >
+                <span className="text-sm font-medium" style={{ color: '#e5e5e5' }}>{item.q}</span>
+                <span
+                  className="transition-transform duration-200 group-open:rotate-45"
+                  style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.1rem', lineHeight: 1, flexShrink: 0, marginLeft: 12 }}
+                >
+                  +
+                </span>
+              </summary>
+              <div className="px-4 pb-3" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+                {item.a}
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+
       {/* Spacer */}
       <div style={{ height: 24 }} />
     </div>
