@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { SearchBar } from '@/components/search/SearchBar';
 import { DesktopAuthButton } from '@/components/auth/DesktopAuthButton';
 import { WeaponMetaTracker } from '@/components/weapons/WeaponMetaTracker';
+import { TiltShineCard } from '@/components/cards/TiltShineCard';
 
 export default function HomePage() {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -216,6 +217,205 @@ export default function HomePage() {
               </div>
               <div className="stat-label mt-0.5">Updates</div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Runner Meta Cards ── */}
+      <div
+        className="relative z-10"
+        style={{ padding: '0 0 16px', background: '#0a0a0a' }}
+      >
+        <div className="max-w-[1400px] mx-auto px-4">
+          <div
+            className="px-4 md:px-5 py-3 flex items-center justify-between mb-3"
+          >
+            <div className="flex items-center gap-2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="#c2ff0b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="9" cy="7" r="4" stroke="#c2ff0b" strokeWidth="1.5" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke="#c2ff0b" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="#c2ff0b" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
+                Runner Meta
+              </h2>
+            </div>
+            <span
+              className="hidden md:inline"
+              style={{
+                fontSize: '0.55rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.3)',
+              }}
+            >
+              Hover to inspect
+            </span>
+            <span
+              className="md:hidden"
+              style={{
+                fontSize: '0.55rem',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'rgba(255,255,255,0.3)',
+              }}
+            >
+              Swipe →
+            </span>
+          </div>
+          {/* Scrollable on mobile, grid on desktop */}
+          <div
+            className="flex md:grid md:grid-cols-7 gap-3 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 snap-x snap-mandatory md:snap-none"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
+            {[
+              { name: 'RECON', image: '/images/avatars/avatar1.png', usage: 22.1 },
+              { name: 'VANDAL', image: '/images/avatars/avatar2.png', usage: 18.7 },
+              { name: 'THIEF', image: '/images/avatars/thief.jpg', usage: 15.3 },
+              { name: 'DESTROYER', image: '/images/avatars/avatar4.png', usage: 13.8 },
+              { name: 'ROOK', image: '/images/avatars/Rook.webp', usage: 11.2, zoom: true },
+              { name: 'VOID', image: '/images/avatars/avatar6.png', usage: 10.5 },
+              { name: 'TRIAGE', image: '/images/avatars/triage.jpg', usage: 8.4 },
+            ].sort((a, b) => b.usage - a.usage).map((runner) => (
+              <div
+                key={runner.name}
+                className="snap-center flex-shrink-0 md:flex-shrink"
+                style={{ width: 180 }}
+              >
+                {/* Desktop: tilt effect with hover overlay */}
+                <div className="hidden md:block">
+                  <TiltShineCard>
+                    <div className="group/card flex flex-col items-center">
+                      <div
+                        style={{
+                          width: '100%',
+                          aspectRatio: '3 / 4',
+                          position: 'relative',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <Image
+                          src={runner.image}
+                          alt={runner.name}
+                          fill
+                          className="transition-all duration-300 group-hover/card:brightness-[0.6] group-hover/card:saturate-[0.7]"
+                          style={{ objectFit: 'cover', transform: runner.zoom ? 'scale(1.2)' : undefined, objectPosition: runner.zoom ? '40% 68%' : undefined }}
+                        />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: '30%',
+                            background: 'linear-gradient(to bottom, rgba(12,12,12,0.95) 0%, rgba(12,12,12,0) 100%)',
+                            pointerEvents: 'none',
+                            zIndex: 1,
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: '40%',
+                            background: 'linear-gradient(to top, rgba(12,12,12,0.95) 0%, rgba(12,12,12,0) 100%)',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                        {/* Hover info overlay */}
+                        <div
+                          className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
+                          style={{ zIndex: 3, pointerEvents: 'none' }}
+                        >
+                          <div
+                            className="font-semibold"
+                            style={{ fontSize: '0.75rem', color: '#c2ff0b', letterSpacing: '0.1em', textTransform: 'uppercase' }}
+                          >
+                            {runner.name}
+                          </div>
+                          <div
+                            className="font-mono font-bold mt-1"
+                            style={{ fontSize: '1rem', color: '#fff' }}
+                          >
+                            {runner.usage}%
+                          </div>
+                          <div
+                            style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2 }}
+                          >
+                            Usage Rate
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="w-full px-3 pb-3 text-center"
+                        style={{ marginTop: -24, position: 'relative', zIndex: 2 }}
+                      >
+                        <div
+                          className="font-semibold truncate"
+                          style={{ fontSize: '0.65rem', color: '#e5e5e5', letterSpacing: '0.05em' }}
+                        >
+                          {runner.name}
+                        </div>
+                      </div>
+                    </div>
+                  </TiltShineCard>
+                </div>
+                {/* Mobile: static card, no tilt, always show name + usage */}
+                <div className="md:hidden">
+                  <TiltShineCard disabled>
+                    <div className="flex flex-col items-center">
+                      <div
+                        style={{
+                          width: '100%',
+                          aspectRatio: '3 / 4',
+                          position: 'relative',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <Image
+                          src={runner.image}
+                          alt={runner.name}
+                          fill
+                          style={{ objectFit: 'cover', transform: runner.zoom ? 'scale(1.2)' : undefined, objectPosition: runner.zoom ? '40% 68%' : undefined }}
+                        />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: '40%',
+                            background: 'linear-gradient(to top, rgba(12,12,12,0.95) 0%, rgba(12,12,12,0) 100%)',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                      </div>
+                      <div
+                        className="w-full px-3 pb-3 text-center"
+                        style={{ marginTop: -24, position: 'relative', zIndex: 2 }}
+                      >
+                        <div
+                          className="font-semibold truncate"
+                          style={{ fontSize: '0.65rem', color: '#e5e5e5', letterSpacing: '0.05em' }}
+                        >
+                          {runner.name}
+                        </div>
+                        <div
+                          className="font-mono font-bold"
+                          style={{ fontSize: '0.6rem', color: '#c2ff0b' }}
+                        >
+                          {runner.usage}%
+                        </div>
+                      </div>
+                    </div>
+                  </TiltShineCard>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
