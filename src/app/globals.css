@@ -463,3 +463,23 @@
 .avatar-border-electric-arc {
   animation: avatar-electric 1.5s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════
+   WEAPON META — top 3 hover effect
+   ═══════════════════════════════════════ */
+.meta-weapon-card {
+  transition: box-shadow 300ms ease, border-color 300ms ease;
+}
+
+.meta-weapon-card img {
+  transition: transform 300ms ease !important;
+}
+
+.meta-weapon-hover:hover {
+  box-shadow: 0 0 24px rgba(194, 255, 11, 0.15), 0 0 40px rgba(194, 255, 11, 0.06);
+  border-color: rgba(194, 255, 11, 0.3) !important;
+}
+
+.meta-weapon-hover:hover img {
+  transform: scale(1.15) !important;
+}

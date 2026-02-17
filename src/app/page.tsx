@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { SearchBar } from '@/components/search/SearchBar';
 import { DesktopAuthButton } from '@/components/auth/DesktopAuthButton';
+import { WeaponMetaTracker } from '@/components/weapons/WeaponMetaTracker';
 
 export default function HomePage() {
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -216,6 +217,16 @@ export default function HomePage() {
               <div className="stat-label mt-0.5">Updates</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ── Weapon Meta Tracker ── */}
+      <div
+        className="relative z-10"
+        style={{ padding: '0 16px 16px', background: '#0a0a0a' }}
+      >
+        <div className="max-w-[1400px] mx-auto">
+          <WeaponMetaTracker />
         </div>
       </div>
 
