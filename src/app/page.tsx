@@ -249,20 +249,25 @@ export default function HomePage() {
                   This Week
                 </span>
               </div>
-              <div className="p-3 md:p-5 space-y-1.5 md:space-y-2">
+              <div className="p-3 md:p-5 space-y-1 md:space-y-1.5">
                 {[
-                  { rank: 1, id: 'player-005', name: 'VoidWalker', tag: '#7741', extractions: 147 },
-                  { rank: 2, id: 'player-024', name: 'NeonStrike', tag: '#2209', extractions: 132 },
-                  { rank: 3, id: 'player-025', name: 'PhantomAce', tag: '#5518', extractions: 124 },
-                  { rank: 4, id: 'player-026', name: 'GhostRecon', tag: '#8834', extractions: 118 },
-                  { rank: 5, id: 'player-027', name: 'SteelNova', tag: '#1190', extractions: 109 },
+                  { rank: 1, id: 'player-005', name: 'VoidWalker', tag: '#7741', avatar: '/images/avatars/avatar5.png', extractions: 147, twitch: true },
+                  { rank: 2, id: 'player-024', name: 'NeonStrike', tag: '#2209', avatar: '/images/avatars/avatar6.png', extractions: 132, youtube: true },
+                  { rank: 3, id: 'player-025', name: 'PhantomAce', tag: '#5518', avatar: '/images/avatars/avatar1.png', extractions: 124, twitch: true },
+                  { rank: 4, id: 'player-026', name: 'GhostRecon', tag: '#8834', avatar: '/images/avatars/avatar3.png', extractions: 118 },
+                  { rank: 5, id: 'player-027', name: 'SteelNova', tag: '#1190', avatar: '/images/avatars/avatar4.png', extractions: 109, youtube: true },
+                  { rank: 6, id: 'player-028', name: 'IronClad', tag: '#4402', avatar: '/images/avatars/avatar2.png', extractions: 101 },
+                  { rank: 7, id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png', extractions: 94, twitch: true },
+                  { rank: 8, id: 'player-002', name: 'IronSight', tag: '#4521', avatar: '/images/avatars/avatar2.png', extractions: 87 },
+                  { rank: 9, id: 'player-003', name: 'NovaBlade', tag: '#0093', avatar: '/images/avatars/avatar3.png', extractions: 81 },
+                  { rank: 10, id: 'player-004', name: 'QuantumFist', tag: '#8877', avatar: '/images/avatars/avatar4.png', extractions: 76, youtube: true },
                 ].map((entry) => (
                   <Link
                     key={entry.rank}
                     href={`/player/${entry.id}`}
                     className="flex items-center justify-between font-mono text-xs md:text-sm transition-all hover:scale-[1.02]"
                     style={{
-                      padding: '6px 10px',
+                      padding: '5px 10px',
                       background: entry.rank <= 3 ? 'rgba(194,255,11,0.04)' : 'rgba(255,255,255,0.02)',
                       border: `1px solid ${entry.rank <= 3 ? 'rgba(194,255,11,0.12)' : 'rgba(255,255,255,0.04)'}`,
                     }}
@@ -273,14 +278,32 @@ export default function HomePage() {
                         style={{
                           color: entry.rank <= 3 ? '#c2ff0b' : 'rgba(255,255,255,0.3)',
                           width: 16,
+                          textAlign: 'right',
                         }}
                       >
                         {entry.rank}
                       </span>
+                      <Image
+                        src={entry.avatar}
+                        alt={entry.name}
+                        width={22}
+                        height={22}
+                        style={{ borderRadius: 0, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }}
+                      />
                       <span className="truncate" style={{ color: '#e5e5e5' }}>{entry.name}</span>
                       <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
                         {entry.tag}
                       </span>
+                      {entry.twitch && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+                        </svg>
+                      )}
+                      {entry.youtube && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                      )}
                     </div>
                     <span className="font-bold tabular-nums flex-shrink-0" style={{ color: '#c2ff0b' }}>
                       {entry.extractions}
@@ -313,20 +336,25 @@ export default function HomePage() {
                   All Time
                 </span>
               </div>
-              <div className="p-3 md:p-5 space-y-1.5 md:space-y-2">
+              <div className="p-3 md:p-5 space-y-1 md:space-y-1.5">
                 {[
-                  { rank: 1, id: 'player-024', name: 'NeonStrike', tag: '#2209', extractions: 8421 },
-                  { rank: 2, id: 'player-005', name: 'VoidWalker', tag: '#7741', extractions: 7893 },
-                  { rank: 3, id: 'player-028', name: 'IronClad', tag: '#4402', extractions: 7214 },
-                  { rank: 4, id: 'player-029', name: 'CyberWraith', tag: '#6615', extractions: 6988 },
-                  { rank: 5, id: 'player-025', name: 'PhantomAce', tag: '#5518', extractions: 6541 },
+                  { rank: 1, id: 'player-024', name: 'NeonStrike', tag: '#2209', avatar: '/images/avatars/avatar6.png', extractions: 8421, youtube: true },
+                  { rank: 2, id: 'player-005', name: 'VoidWalker', tag: '#7741', avatar: '/images/avatars/avatar5.png', extractions: 7893, twitch: true },
+                  { rank: 3, id: 'player-028', name: 'IronClad', tag: '#4402', avatar: '/images/avatars/avatar2.png', extractions: 7214 },
+                  { rank: 4, id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png', extractions: 6988, twitch: true },
+                  { rank: 5, id: 'player-025', name: 'PhantomAce', tag: '#5518', avatar: '/images/avatars/avatar1.png', extractions: 6541 },
+                  { rank: 6, id: 'player-027', name: 'SteelNova', tag: '#1190', avatar: '/images/avatars/avatar4.png', extractions: 6102, youtube: true },
+                  { rank: 7, id: 'player-026', name: 'GhostRecon', tag: '#8834', avatar: '/images/avatars/avatar3.png', extractions: 5834 },
+                  { rank: 8, id: 'player-004', name: 'QuantumFist', tag: '#8877', avatar: '/images/avatars/avatar4.png', extractions: 5421 },
+                  { rank: 9, id: 'player-003', name: 'NovaBlade', tag: '#0093', avatar: '/images/avatars/avatar3.png', extractions: 5102, twitch: true },
+                  { rank: 10, id: 'player-002', name: 'IronSight', tag: '#4521', avatar: '/images/avatars/avatar2.png', extractions: 4876 },
                 ].map((entry) => (
                   <Link
                     key={entry.rank}
                     href={`/player/${entry.id}`}
                     className="flex items-center justify-between font-mono text-xs md:text-sm transition-all hover:scale-[1.02]"
                     style={{
-                      padding: '6px 10px',
+                      padding: '5px 10px',
                       background: entry.rank <= 3 ? 'rgba(255,170,0,0.04)' : 'rgba(255,255,255,0.02)',
                       border: `1px solid ${entry.rank <= 3 ? 'rgba(255,170,0,0.12)' : 'rgba(255,255,255,0.04)'}`,
                     }}
@@ -337,14 +365,32 @@ export default function HomePage() {
                         style={{
                           color: entry.rank <= 3 ? '#ffaa00' : 'rgba(255,255,255,0.3)',
                           width: 16,
+                          textAlign: 'right',
                         }}
                       >
                         {entry.rank}
                       </span>
+                      <Image
+                        src={entry.avatar}
+                        alt={entry.name}
+                        width={22}
+                        height={22}
+                        style={{ borderRadius: 0, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }}
+                      />
                       <span className="truncate" style={{ color: '#e5e5e5' }}>{entry.name}</span>
                       <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
                         {entry.tag}
                       </span>
+                      {entry.twitch && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+                        </svg>
+                      )}
+                      {entry.youtube && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                      )}
                     </div>
                     <span className="font-bold tabular-nums flex-shrink-0" style={{ color: '#ffaa00' }}>
                       {entry.extractions.toLocaleString()}
