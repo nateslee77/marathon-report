@@ -8,6 +8,7 @@ import { formatKD, formatPercentage, cn } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
+import { ShellLoadout } from '@/components/player/ShellLoadout';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
@@ -329,10 +330,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                     )}
                     <div
                       className="mt-1 truncate"
-                      style={{
-                        fontSize: '0.55rem',
-                        color: 'rgba(255,255,255,0.3)',
-                      }}
+                      style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)' }}
                     >
                       {item.name}
                     </div>
@@ -340,6 +338,31 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* ── Shell Loadout ── */}
+          <div
+            className="relative px-4 py-4 flex flex-col items-center"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+          >
+            <div
+              className="mb-3 self-start"
+              style={{
+                fontSize: '0.575rem',
+                letterSpacing: '0.1em',
+                color: 'rgba(255,255,255,0.25)',
+                textTransform: 'uppercase',
+              }}
+            >
+              Shell Loadout
+            </div>
+            <ShellLoadout
+              runner={player.runner}
+              effectiveAccent={effectiveAccent}
+              slotSize={55}
+              shellSize={260}
+              extraTopPadding={14}
+            />
           </div>
 
           {/* ── Mini Recent Matches ── */}
@@ -381,9 +404,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                       >
                         {match.result === 'EXTRACTED' ? 'E' : 'D'}
                       </span>
-                      <span style={{ color: 'rgba(255,255,255,0.5)' }}>
-                        {match.map}
-                      </span>
+                      <span style={{ color: 'rgba(255,255,255,0.5)' }}>{match.map}</span>
                       {match.runner && (
                         <span
                           style={{

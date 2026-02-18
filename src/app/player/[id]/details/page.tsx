@@ -14,6 +14,7 @@ import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { StatsFilter, DetailedPlayer } from '@/types';
+import { ShellLoadout } from '@/components/player/ShellLoadout';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { buildDefaultPlayer } from '@/lib/default-player';
@@ -242,11 +243,49 @@ export default function DetailsPage({ params }: DetailsPageProps) {
         </div>
       </div>
 
-      {/* ── Loadout + Career Highlights ── */}
-      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-        {/* Loadout */}
+      {/* ── Shell Loadout (left) + Loadout / Career Highlights (right, stacked) ── */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1.35fr 1fr',
+          gridTemplateRows: 'auto auto',
+          gap: '1.5rem',
+          alignItems: 'stretch',
+        }}
+      >
+        {/* Shell Loadout — col 1, spans both rows */}
         <div
           style={{
+            gridColumn: '1',
+            gridRow: '1 / 3',
+            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div
+            className="px-4 md:px-5 py-3 md:py-3.5"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Shell Loadout</h2>
+          </div>
+          <div className="flex-1 flex items-center justify-center p-4 md:p-8">
+            <ShellLoadout
+              runner={player.runner}
+              effectiveAccent={effectiveAccent}
+              slotSize={98}
+              shellSize={300}
+            />
+          </div>
+        </div>
+
+        {/* Loadout — col 2, row 1 */}
+        <div
+          style={{
+            gridColumn: '2',
+            gridRow: '1',
             background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
             border: '1px solid rgba(255,255,255,0.06)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
@@ -256,9 +295,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             className="px-4 md:px-5 py-3 md:py-3.5"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
-              Loadout
-            </h2>
+            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Loadout</h2>
           </div>
           <div className="p-3 md:p-5">
             {player.loadout.length === 0 ? (
@@ -278,18 +315,13 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                     }}
                   >
                     {item.image ? (
-                      <div className="flex justify-center items-center h-8 md:h-12 mb-1 md:mb-1">
+                      <div className="flex justify-center items-center h-8 md:h-12 mb-1">
                         <Image
                           src={item.image}
                           alt={item.name}
                           width={180}
                           height={135}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain',
-                            filter: 'brightness(0.9)',
-                          }}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'brightness(0.9)' }}
                         />
                       </div>
                     ) : (
@@ -300,18 +332,8 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                         {item.icon}
                       </div>
                     )}
-                    <div className="text-xs md:text-sm font-medium truncate" style={{ color: '#e5e5e5' }}>
-                      {item.name}
-                    </div>
-                    <div
-                      className="mt-0.5 md:mt-1"
-                      style={{
-                        fontSize: '0.5rem',
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(255,255,255,0.25)',
-                      }}
-                    >
+                    <div className="text-xs md:text-sm font-medium truncate" style={{ color: '#e5e5e5' }}>{item.name}</div>
+                    <div className="mt-0.5 md:mt-1" style={{ fontSize: '0.5rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
                       {item.slot}
                     </div>
                   </div>
@@ -321,9 +343,11 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           </div>
         </div>
 
-        {/* Career Highlights */}
+        {/* Career Highlights — col 2, row 2 */}
         <div
           style={{
+            gridColumn: '2',
+            gridRow: '2',
             background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
             border: '1px solid rgba(255,255,255,0.06)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
@@ -333,9 +357,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             className="px-4 md:px-5 py-3 md:py-3.5"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
-              Career Highlights
-            </h2>
+            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Career Highlights</h2>
           </div>
           <div className="p-3 md:p-5 space-y-2 md:space-y-4">
             {player.careerHighlights.length === 0 ? (
@@ -347,26 +369,10 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                 <div
                   key={highlight.label}
                   className="flex items-center justify-between"
-                  style={{
-                    padding: '6px 10px',
-                    background: 'rgba(255,255,255,0.02)',
-                    border: '1px solid rgba(255,255,255,0.04)',
-                  }}
+                  style={{ padding: '6px 10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
                 >
-                  <span
-                    style={{
-                      fontSize: '0.7rem',
-                      color: 'rgba(255,255,255,0.5)',
-                    }}
-                  >
-                    {highlight.label}
-                  </span>
-                  <span
-                    className="font-mono font-bold tabular-nums text-sm"
-                    style={{ color: effectiveAccent }}
-                  >
-                    {highlight.value}
-                  </span>
+                  <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{highlight.label}</span>
+                  <span className="font-mono font-bold tabular-nums text-sm" style={{ color: effectiveAccent }}>{highlight.value}</span>
                 </div>
               ))
             )}

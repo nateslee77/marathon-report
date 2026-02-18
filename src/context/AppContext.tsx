@@ -27,6 +27,7 @@ interface AppContextType {
   setSelectedAvatar: (avatar: string) => void;
   avatarBorderStyle: AvatarBorderStyle;
   setAvatarBorderStyle: (style: AvatarBorderStyle) => void;
+  isPinnacle: boolean;
 }
 
 const DEFAULT_AVATAR = '/images/avatars/default.svg';
@@ -45,6 +46,7 @@ const AppContext = createContext<AppContextType>({
   setSelectedAvatar: () => {},
   avatarBorderStyle: 'none',
   setAvatarBorderStyle: () => {},
+  isPinnacle: false,
 });
 
 /** Save a single preference to Supabase (fire-and-forget). */
@@ -66,6 +68,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [equippedBadges, setEquippedBadgesState] = useState<string[]>([]);
   const [selectedAvatar, setSelectedAvatarState] = useState<string>(DEFAULT_AVATAR);
   const [avatarBorderStyle, setAvatarBorderStyleState] = useState<AvatarBorderStyle>('none');
+  const [isPinnacle, setIsPinnacle] = useState(false);
   const hasFetchedPrefs = useRef(false);
 
   // Load persisted values from localStorage on mount (immediate cache)
@@ -80,6 +83,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (savedBadges) {
       try { setEquippedBadgesState(JSON.parse(savedBadges)); } catch {}
     }
+    if (localStorage.getItem('marathon-pinnacle') === 'true') setIsPinnacle(true);
   }, []);
 
   // When signed in, fetch preferences from Supabase (source of truth)
@@ -110,6 +114,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
         if (Array.isArray(prefs.equipped_badges) && prefs.equipped_badges.length > 0) {
           setEquippedBadgesState(prefs.equipped_badges);
           localStorage.setItem('marathon-badges', JSON.stringify(prefs.equipped_badges));
+        }
+        if (prefs.is_pinnacle) {
+          setIsPinnacle(true);
+          localStorage.setItem('marathon-pinnacle', 'true');
         }
       })
       .catch(() => {
@@ -185,7 +193,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [selectedAvatar]);
 
   return (
-    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle }}>
+    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle }}>
       {children}
     </AppContext.Provider>
   );
