@@ -10,9 +10,9 @@ interface BadgeIconProps {
 }
 
 const SIZES = {
-  sm: { box: 20, font: '0.55rem', iconImg: 13, numSize: 10, numFont: '0.4rem', tagFont: '0.5rem', tagIcon: 7, tagPad: '1px 5px' },
-  md: { box: 28, font: '0.75rem', iconImg: 18, numSize: 13, numFont: '0.5rem', tagFont: '0.55rem', tagIcon: 8, tagPad: '2px 7px' },
-  lg: { box: 36, font: '1rem', iconImg: 23, numSize: 16, numFont: '0.55rem', tagFont: '0.6rem', tagIcon: 10, tagPad: '2px 8px' },
+  sm: { box: 20, font: '0.55rem', iconImg: 16, numSize: 10, numFont: '0.4rem', tagFont: '0.5rem', tagIcon: 11, tagPad: '1px 5px' },
+  md: { box: 28, font: '0.75rem', iconImg: 22, numSize: 13, numFont: '0.5rem', tagFont: '0.55rem', tagIcon: 14, tagPad: '2px 7px' },
+  lg: { box: 36, font: '1rem', iconImg: 28, numSize: 16, numFont: '0.55rem', tagFont: '0.6rem', tagIcon: 17, tagPad: '2px 8px' },
 };
 
 function Tooltip({ badge, children }: { badge: Badge; children: React.ReactNode }) {
@@ -57,7 +57,7 @@ export function BadgeIcon({ badge, size = 'md', variant = 'icon', showNumber }: 
             textTransform: 'uppercase',
             fontWeight: 600,
             color: badge.color,
-            background: 'rgba(0,0,0,0.85)',
+            background: badge.badgeBg ?? 'rgba(0,0,0,0.85)',
             border: `1px solid ${badge.color}88`,
             padding: s.tagPad,
             position: 'relative',
@@ -124,7 +124,7 @@ export function BadgeIcon({ badge, size = 'md', variant = 'icon', showNumber }: 
           fontFamily: 'monospace',
           color: badge.color,
           border: `1.5px solid ${badge.color}88`,
-          background: 'rgba(0,0,0,0.85)',
+          background: badge.badgeBg ?? 'rgba(0,0,0,0.85)',
           position: 'relative',
           flexShrink: 0,
         }}

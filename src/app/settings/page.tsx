@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
 import { AVAILABLE_BADGES, FACTION_BADGES, getBadgeById } from '@/lib/badges';
-import { FACTIONS } from '@/lib/factions';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 
 const THEME_COLORS = [
@@ -19,6 +18,13 @@ const THEME_COLORS = [
   { name: 'Pink', value: '#ff0088' },
   { name: 'Lime', value: '#c2ff0b' },
   { name: 'White', value: '#cccccc' },
+  // Faction colors
+  { name: 'CYBERACME', value: '#00ff00' },
+  { name: 'SEKIGUCHI', value: '#43e9a0' },
+  { name: 'TRAXUS', value: '#ff4b00' },
+  { name: 'ARACHNE', value: '#df0008' },
+  { name: 'NUCALORIC', value: '#ff0961' },
+  { name: 'MIDA', value: '#665ead' },
 ];
 
 const MONETIZATION_TIERS = [
@@ -48,12 +54,12 @@ const AVAILABLE_AVATARS = [
   { id: 'thief', src: '/images/avatars/thief.jpg', pinnacle: false },
   { id: 'triage', src: '/images/avatars/triage.jpg', pinnacle: false },
   // Faction avatars — free for all users
-  { id: 'faction-cyberacme', src: '/images/faction logo/cyberacme.png', pinnacle: false, faction: 'cyberacme' },
-  { id: 'faction-sekiguchi', src: '/images/faction logo/sekiguchi.png', pinnacle: false, faction: 'sekiguchi' },
-  { id: 'faction-traxus', src: '/images/faction logo/traxus.png', pinnacle: false, faction: 'traxus' },
-  { id: 'faction-arachne', src: '/images/faction logo/arachne.png', pinnacle: false, faction: 'arachne' },
-  { id: 'faction-nucaloric', src: '/images/faction logo/nucaloric.png', pinnacle: false, faction: 'nucaloric' },
-  { id: 'faction-mida', src: '/images/faction logo/mida.png', pinnacle: false, faction: 'mida' },
+  { id: 'faction-cyberacme', src: '/images/faction logo/cyberacme.png', pinnacle: false, bg: '#000000' },
+  { id: 'faction-sekiguchi', src: '/images/faction logo/sekiguchi.png', pinnacle: false, bg: '#ffffff' },
+  { id: 'faction-traxus', src: '/images/faction logo/traxus.png', pinnacle: false, bg: '#000000' },
+  { id: 'faction-arachne', src: '/images/faction logo/arachne.png', pinnacle: false, bg: '#000000' },
+  { id: 'faction-nucaloric', src: '/images/faction logo/nucaloric.png', pinnacle: false, bg: '#ffffff' },
+  { id: 'faction-mida', src: '/images/faction logo/mida.png', pinnacle: false, bg: '#000000' },
   // Pinnacle avatars
   { id: 'gif-void', src: '/images/avatars/pinnacle avatars/Void5.gif', pinnacle: true },
   { id: 'gif-runner1', src: '/images/avatars/pinnacle avatars/tumblr_b7a9b8817a5a0d1664fc67e38d62cc82_031e176b_500.gif', pinnacle: true },
@@ -76,7 +82,7 @@ const BORDER_STYLES = [
 ];
 
 export default function SettingsPage() {
-  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle, selectedFaction, setSelectedFaction } = useApp();
+  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle } = useApp();
   const [selectedColor, setSelectedColor] = useState(cardThemeColor || '#8844ff');
   const [replacingSlot, setReplacingSlot] = useState<number | null>(null);
   const [borderPickerOpen, setBorderPickerOpen] = useState(false);
@@ -182,8 +188,7 @@ export default function SettingsPage() {
                 const isSelected = selectedAvatar === avatar.src;
                 const isGif = avatar.src.endsWith('.gif');
                 const isLocked = avatar.pinnacle && !isPinnacle;
-                const isFactionAvatar = 'faction' in avatar;
-                const factionData = isFactionAvatar ? FACTIONS.find((f) => f.id === (avatar as any).faction) : null;
+                const avatarBg = 'bg' in avatar ? (avatar as any).bg as string : null;
                 return (
                   <button
                     key={avatar.id}
@@ -192,11 +197,11 @@ export default function SettingsPage() {
                       position: 'relative',
                       width: '100%',
                       aspectRatio: '1',
-                      background: isFactionAvatar ? '#0a0a0a' : isSelected ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)',
+                      background: avatarBg ?? (isSelected ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)'),
                       border: isSelected
-                        ? `2px solid ${factionData ? factionData.primaryColor : selectedColor}88`
-                        : isFactionAvatar && factionData
-                        ? `1px solid ${factionData.primaryColor}33`
+                        ? `2px solid ${selectedColor}88`
+                        : avatarBg
+                        ? '1px solid rgba(255,255,255,0.12)'
                         : '1px solid rgba(255,255,255,0.08)',
                       cursor: isLocked ? 'not-allowed' : 'pointer',
                       padding: 6,
@@ -279,111 +284,6 @@ export default function SettingsPage() {
               })}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* ── Faction ── */}
-      <div className="game-card">
-        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-          <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>Faction</h2>
-          <p className="text-xs text-text-tertiary mt-1">Choose your faction. Applies faction theme color and enables faction avatar &amp; badge.</p>
-        </div>
-        <div className="p-5">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {FACTIONS.map((faction) => {
-              const isSelected = selectedFaction === faction.id;
-              return (
-                <button
-                  key={faction.id}
-                  onClick={() => {
-                    if (isSelected) {
-                      setSelectedFaction(null);
-                    } else {
-                      setSelectedFaction(faction.id);
-                      setSelectedColor(faction.primaryColor);
-                      setCardThemeColor(faction.primaryColor);
-                    }
-                  }}
-                  style={{
-                    position: 'relative',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 10,
-                    padding: '16px 10px',
-                    background: isSelected ? `${faction.primaryColor}12` : 'rgba(255,255,255,0.02)',
-                    border: isSelected ? `2px solid ${faction.primaryColor}` : `1px solid ${faction.primaryColor}33`,
-                    cursor: 'pointer',
-                    transition: 'all 150ms',
-                  }}
-                >
-                  {isSelected && (
-                    <div style={{
-                      position: 'absolute',
-                      top: 6,
-                      right: 6,
-                      width: 16,
-                      height: 16,
-                      background: faction.primaryColor,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </div>
-                  )}
-                  <div style={{
-                    width: 48,
-                    height: 48,
-                    background: '#0a0a0a',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 6,
-                  }}>
-                    <Image
-                      src={faction.logoSrc}
-                      alt={faction.name}
-                      width={48}
-                      height={48}
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </div>
-                  <div style={{
-                    fontSize: '0.6rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
-                    color: faction.primaryColor,
-                    fontFamily: 'monospace',
-                  }}>
-                    {faction.name}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-          {selectedFaction && (
-            <button
-              onClick={() => setSelectedFaction(null)}
-              style={{
-                marginTop: 12,
-                padding: '4px 12px',
-                fontSize: '0.6rem',
-                color: 'rgba(255,255,255,0.35)',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.1)',
-                cursor: 'pointer',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Clear Faction
-            </button>
-          )}
         </div>
       </div>
 

@@ -501,7 +501,7 @@ export default function HomePage() {
                         height={22}
                         style={{ borderRadius: 0, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }}
                       />
-                      <span className="truncate" style={{ color: '#e5e5e5' }}>{entry.name}</span>
+                      <span className="truncate font-sans" style={{ color: '#e5e5e5' }}>{entry.name}</span>
                       <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
                         {entry.tag}
                       </span>
@@ -588,7 +588,7 @@ export default function HomePage() {
                         height={22}
                         style={{ borderRadius: 0, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }}
                       />
-                      <span className="truncate" style={{ color: '#e5e5e5' }}>{entry.name}</span>
+                      <span className="truncate font-sans" style={{ color: '#e5e5e5' }}>{entry.name}</span>
                       <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>
                         {entry.tag}
                       </span>

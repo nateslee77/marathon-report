@@ -199,9 +199,6 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             <span className="font-mono text-xs md:text-sm font-bold" style={{ color: effectiveAccent }}>
               {runner.name}
             </span>
-            <span className="hidden md:inline" style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem' }}>
-              {runner.role}
-            </span>
             {(player.membership === 'pinnacle' || (isOwnProfile && isPinnacle)) && (
               <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
             )}

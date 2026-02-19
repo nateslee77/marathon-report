@@ -3,7 +3,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { useSession } from 'next-auth/react';
 import { SearchPlayer } from '@/types';
-import { FactionId } from '@/lib/factions';
 
 interface AuthUser {
   id: string;
@@ -30,8 +29,6 @@ interface AppContextType {
   setAvatarBorderStyle: (style: AvatarBorderStyle) => void;
   isPinnacle: boolean;
   refreshPremiumStatus: () => Promise<void>;
-  selectedFaction: FactionId | null;
-  setSelectedFaction: (faction: FactionId | null) => void;
 }
 
 const DEFAULT_AVATAR = '/images/avatars/default.svg';
@@ -52,8 +49,6 @@ const AppContext = createContext<AppContextType>({
   setAvatarBorderStyle: () => {},
   isPinnacle: false,
   refreshPremiumStatus: async () => {},
-  selectedFaction: null,
-  setSelectedFaction: () => {},
 });
 
 /** Save a single preference to Supabase (fire-and-forget). */
@@ -76,7 +71,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [selectedAvatar, setSelectedAvatarState] = useState<string>(DEFAULT_AVATAR);
   const [avatarBorderStyle, setAvatarBorderStyleState] = useState<AvatarBorderStyle>('none');
   const [isPinnacle, setIsPinnacle] = useState(false);
-  const [selectedFaction, setSelectedFactionState] = useState<FactionId | null>(null);
   const hasFetchedPrefs = useRef(false);
 
   // Load persisted values from localStorage on mount (immediate cache)
@@ -92,8 +86,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       try { setEquippedBadgesState(JSON.parse(savedBadges)); } catch {}
     }
     if (localStorage.getItem('marathon-pinnacle') === 'true') setIsPinnacle(true);
-    const savedFaction = localStorage.getItem('marathon-faction') as FactionId | null;
-    if (savedFaction) setSelectedFactionState(savedFaction);
   }, []);
 
   // When signed in, fetch preferences from Supabase (source of truth)
@@ -131,10 +123,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         } else {
           localStorage.removeItem('marathon-pinnacle');
         }
-        if (prefs.selected_faction) {
-          setSelectedFactionState(prefs.selected_faction as FactionId);
-          localStorage.setItem('marathon-faction', prefs.selected_faction);
-        }
       })
       .catch(() => {
         // Fall back to localStorage values already loaded
@@ -170,16 +158,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setEquippedBadgesState(badges);
     localStorage.setItem('marathon-badges', JSON.stringify(badges));
     savePreferenceToSupabase({ equipped_badges: badges });
-  }, []);
-
-  const setSelectedFaction = useCallback((faction: FactionId | null) => {
-    setSelectedFactionState(faction);
-    if (faction) {
-      localStorage.setItem('marathon-faction', faction);
-    } else {
-      localStorage.removeItem('marathon-faction');
-    }
-    savePreferenceToSupabase({ selected_faction: faction ?? null });
   }, []);
 
   const refreshPremiumStatus = useCallback(async () => {
@@ -231,7 +209,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [selectedAvatar]);
 
   return (
-    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle, refreshPremiumStatus, selectedFaction, setSelectedFaction }}>
+    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle, refreshPremiumStatus }}>
       {children}
     </AppContext.Provider>
   );

@@ -176,10 +176,10 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 {runner.name}
               </span>
               <span
-                className="text-xs"
-                style={{ color: 'rgba(255,255,255,0.25)' }}
+                className="font-mono text-xs"
+                style={{ color: 'rgba(255,255,255,0.3)' }}
               >
-                {runner.role}
+                Lvl {player.level}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -292,7 +292,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                           }}
                         >
                           {item.image && (
-                            <div style={{ width: '100%', aspectRatio: '16 / 7', position: 'relative', marginBottom: 4 }}>
+                            <div style={{ width: '100%', height: 48, position: 'relative', marginBottom: 3 }}>
                               <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
                             </div>
                           )}

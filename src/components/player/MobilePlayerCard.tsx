@@ -136,7 +136,7 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
                     >
                       {runner.name}
                     </span>
-                    <span className="text-[0.55rem] text-white/25">{runner.role}</span>
+                    <span className="font-mono text-[0.55rem] text-white/30">Lvl {player.level}</span>
                   </div>
                 </div>
               </div>

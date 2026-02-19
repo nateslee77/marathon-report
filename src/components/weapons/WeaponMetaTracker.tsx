@@ -295,7 +295,7 @@ export function WeaponMetaTracker() {
                     />
                   </div>
                   <span
-                    className="truncate"
+                    className="truncate font-sans"
                     style={{ color: '#e5e5e5', cursor: 'pointer' }}
                     onClick={() => setPreviewWeapon({ name: weapon.name, image: weapon.image })}
                   >
@@ -437,7 +437,7 @@ export function WeaponMetaTracker() {
                         style={{ objectFit: 'cover' }}
                       />
                     </div>
-                    <span className="truncate" style={{ color: weapon.rank <= 3 ? '#e5e5e5' : '#a1a1a1' }}>
+                    <span className="truncate font-sans" style={{ color: weapon.rank <= 3 ? '#e5e5e5' : '#a1a1a1' }}>
                       {weapon.name}
                     </span>
                   </div>

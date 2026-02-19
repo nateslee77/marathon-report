@@ -9,7 +9,6 @@ const PREFERENCE_COLUMNS = [
   'avatar_border_style',
   'equipped_badges',
   'is_pinnacle',
-  'selected_faction',
 ] as const;
 
 export async function GET() {
