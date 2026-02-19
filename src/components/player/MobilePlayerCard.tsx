@@ -222,46 +222,67 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
             <div className="flex items-center justify-center py-3" style={{ color: 'rgba(255,255,255,0.2)' }}>
               <span className="font-mono" style={{ fontSize: '0.6rem' }}>No loadout configured</span>
             </div>
-          ) : (
-            <div className="flex gap-2 overflow-x-auto hide-scrollbar">
-              {player.loadout.map((item) => (
-                <div
-                  key={item.slot}
-                  className="flex-shrink-0 text-center"
-                  style={{
-                    width: 64,
-                    background: '#0a0a0a',
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    padding: '5px 2px',
-                  }}
-                >
-                  {item.image ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 24 }}>
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width={180}
-                        height={135}
+          ) : (() => {
+            const WEAPON_SLOTS = ['primary', 'sidearm', 'weapon3'];
+            const weapons = player.loadout.filter(i => WEAPON_SLOTS.includes(i.slot));
+            const gadgets = player.loadout.filter(i => !WEAPON_SLOTS.includes(i.slot));
+            return (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {/* Weapons — horizontal grid */}
+                {weapons.length > 0 && (
+                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(${weapons.length}, 1fr)`, gap: 3 }}>
+                    {weapons.map((item) => (
+                      <div
+                        key={item.slot}
                         style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'contain',
-                          filter: 'brightness(0.9)',
+                          background: '#0a0a0a',
+                          border: '1px solid rgba(255,255,255,0.06)',
+                          padding: '5px 4px 4px',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
                         }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="font-mono text-xs font-bold" style={{ color: 'rgba(255,255,255,0.45)', height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      {item.icon}
-                    </div>
-                  )}
-                  <div className="mt-0.5 truncate" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)' }}>
-                    {item.name}
+                      >
+                        {item.image ? (
+                          <div style={{ width: '100%', height: 32, position: 'relative', marginBottom: 3 }}>
+                            <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
+                          </div>
+                        ) : (
+                          <div style={{ height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem', color: `${effectiveAccent}66`, marginBottom: 3 }}>
+                            {item.icon}
+                          </div>
+                        )}
+                        <div className="truncate w-full text-center" style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.35)' }}>{item.name}</div>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                )}
+                {/* Gadgets — compact horizontal row */}
+                {gadgets.length > 0 && (
+                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(${gadgets.length}, 1fr)`, gap: 3 }}>
+                    {gadgets.map((item) => (
+                      <div
+                        key={item.slot}
+                        style={{
+                          background: '#0a0a0a',
+                          border: '1px solid rgba(255,255,255,0.06)',
+                          padding: '4px 6px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 5,
+                        }}
+                      >
+                        <div style={{ fontSize: '0.85rem', lineHeight: 1, flexShrink: 0, color: `${effectiveAccent}99` }}>
+                          {item.icon}
+                        </div>
+                        <div className="truncate" style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.35)' }}>{item.name}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* ── Recent Matches ── */}

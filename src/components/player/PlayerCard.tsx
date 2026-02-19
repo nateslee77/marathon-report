@@ -278,51 +278,55 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               const weapons = player.loadout.filter(i => WEAPON_SLOTS.includes(i.slot));
               const gadgets = player.loadout.filter(i => !WEAPON_SLOTS.includes(i.slot));
               return (
-                <div style={{ display: 'flex', gap: 5, alignItems: 'flex-start' }}>
-                  {/* Weapons — 1×3 left column */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                  {/* Weapons — horizontal 3-column grid */}
                   {weapons.length > 0 && (
-                    <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${weapons.length}, 1fr)`, gap: 4 }}>
                       {weapons.map((item) => (
                         <div
                           key={item.slot}
                           style={{
                             background: '#0a0a0a',
                             border: `1px solid ${effectiveAccent}18`,
-                            padding: '6px 8px 5px',
+                            padding: '6px 6px 5px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
                           }}
                         >
-                          {item.image && (
-                            <div style={{ width: '100%', height: 48, position: 'relative', marginBottom: 3 }}>
+                          {item.image ? (
+                            <div style={{ width: '100%', height: 44, position: 'relative', marginBottom: 4 }}>
                               <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
                             </div>
+                          ) : (
+                            <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: effectiveAccent + '66', marginBottom: 4 }}>
+                              {item.icon}
+                            </div>
                           )}
-                          <div className="truncate" style={{ fontSize: '0.52rem', color: '#e5e5e5', fontWeight: 600 }}>{item.name}</div>
+                          <div className="truncate w-full text-center" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>{item.name}</div>
                         </div>
                       ))}
                     </div>
                   )}
-                  {/* Gear — 2×1 right column, small squares */}
+                  {/* Gadgets — compact horizontal row below weapons */}
                   {gadgets.length > 0 && (
-                    <div style={{ flex: '0 0 28%', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${gadgets.length}, 1fr)`, gap: 4 }}>
                       {gadgets.map((item) => (
                         <div
                           key={item.slot}
                           style={{
                             background: '#0a0a0a',
                             border: `1px solid ${effectiveAccent}18`,
-                            padding: '5px 4px',
-                            textAlign: 'center',
-                            aspectRatio: '1 / 1',
+                            padding: '5px 6px',
                             display: 'flex',
-                            flexDirection: 'column',
                             alignItems: 'center',
-                            justifyContent: 'center',
+                            gap: 6,
                           }}
                         >
-                          <div style={{ fontSize: '1.1rem', lineHeight: 1, marginBottom: 3, color: effectiveAccent + '88' }}>
+                          <div style={{ fontSize: '1rem', lineHeight: 1, flexShrink: 0, color: effectiveAccent + '99' }}>
                             {item.icon}
                           </div>
-                          <div className="truncate w-full" style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.3)' }}>{item.name}</div>
+                          <div className="truncate" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>{item.name}</div>
                         </div>
                       ))}
                     </div>
