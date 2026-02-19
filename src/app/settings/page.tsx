@@ -29,7 +29,7 @@ const MONETIZATION_TIERS = [
   },
   {
     name: 'Pinnacle',
-    price: '$9.99',
+    price: '$4.99',
     priceNote: 'one-time',
     features: ['Get cool customization options', 'Add social links to your profile', 'All Pinnacle badges unlocked', 'Exclusive avatars', 'Card theme customization', 'Animated rank badge', 'Custom profile banner', 'Support the developer :)'],
     accent: '#ffaa00',
@@ -67,11 +67,12 @@ const BORDER_STYLES = [
 ];
 
 export default function SettingsPage() {
-  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle } = useApp();
+  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle } = useApp();
   const [selectedColor, setSelectedColor] = useState(cardThemeColor || '#8844ff');
   const [replacingSlot, setReplacingSlot] = useState<number | null>(null);
   const [borderPickerOpen, setBorderPickerOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [upgradeLoading, setUpgradeLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -88,6 +89,17 @@ export default function SettingsPage() {
         <div className="text-text-tertiary text-sm">Loading...</div>
       </div>
     );
+  }
+
+  async function handleUpgrade() {
+    setUpgradeLoading(true);
+    try {
+      const res = await fetch('/api/stripe/create-checkout', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } finally {
+      setUpgradeLoading(false);
+    }
   }
 
   if (!user) {
@@ -160,10 +172,11 @@ export default function SettingsPage() {
               {AVAILABLE_AVATARS.map((avatar) => {
                 const isSelected = selectedAvatar === avatar.src;
                 const isGif = avatar.src.endsWith('.gif');
+                const isLocked = avatar.pinnacle && !isPinnacle;
                 return (
                   <button
                     key={avatar.id}
-                    onClick={() => setSelectedAvatar(avatar.src)}
+                    onClick={() => { if (!isLocked) setSelectedAvatar(avatar.src); }}
                     style={{
                       position: 'relative',
                       width: '100%',
@@ -172,13 +185,14 @@ export default function SettingsPage() {
                       border: isSelected
                         ? `2px solid ${selectedColor}88`
                         : '1px solid rgba(255,255,255,0.08)',
-                      cursor: 'pointer',
+                      cursor: isLocked ? 'not-allowed' : 'pointer',
                       padding: 6,
                       transition: 'all 150ms',
                       overflow: 'hidden',
+                      opacity: isLocked ? 0.5 : 1,
                     }}
                   >
-                    {avatar.pinnacle && (
+                    {avatar.pinnacle && !isLocked && (
                       <div
                         style={{
                           position: 'absolute',
@@ -192,6 +206,22 @@ export default function SettingsPage() {
                         title="Pinnacle Exclusive"
                       >
                         ★
+                      </div>
+                    )}
+                    {isLocked && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 3,
+                          left: 3,
+                          fontSize: '0.6rem',
+                          color: '#ffcc00',
+                          lineHeight: 1,
+                          zIndex: 2,
+                        }}
+                        title="Pinnacle Exclusive — upgrade to unlock"
+                      >
+                        🔒
                       </div>
                     )}
                     {isSelected && (
@@ -295,17 +325,23 @@ export default function SettingsPage() {
             <input
               type="text"
               value={selectedColor}
-              disabled
+              disabled={!isPinnacle}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedColor(val);
+                if (/^#[0-9a-fA-F]{6}$/.test(val)) setCardThemeColor(val);
+              }}
               className="font-mono text-sm px-3 py-1.5"
               style={{
                 background: 'rgba(255,255,255,0.02)',
                 border: '1px solid rgba(255,255,255,0.06)',
-                color: 'rgba(255,255,255,0.3)',
+                color: isPinnacle ? '#e5e5e5' : 'rgba(255,255,255,0.3)',
                 width: 120,
-                cursor: 'not-allowed',
+                cursor: isPinnacle ? 'text' : 'not-allowed',
+                opacity: isPinnacle ? 1 : 0.5,
               }}
             />
-            <div style={{ width: 24, height: 24, background: selectedColor, border: '1px solid rgba(255,255,255,0.1)', opacity: 0.4 }} />
+            <div style={{ width: 24, height: 24, background: selectedColor, border: '1px solid rgba(255,255,255,0.1)', opacity: isPinnacle ? 1 : 0.4 }} />
           </div>
         </div>
       </div>
@@ -347,7 +383,7 @@ export default function SettingsPage() {
                 </div>
                 <button
                   onClick={() => {
-                    if (option.hasSubPicker) setBorderPickerOpen(!borderPickerOpen);
+                    if (option.hasSubPicker && isPinnacle) setBorderPickerOpen(!borderPickerOpen);
                   }}
                   style={{
                     padding: '4px 14px',
@@ -355,13 +391,13 @@ export default function SettingsPage() {
                     fontWeight: 600,
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
-                    color: '#c2ff0b',
-                    background: 'rgba(194,255,11,0.08)',
-                    border: '1px solid rgba(194,255,11,0.2)',
-                    cursor: 'pointer',
+                    color: isPinnacle ? '#c2ff0b' : 'rgba(255,255,255,0.2)',
+                    background: isPinnacle ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)',
+                    border: isPinnacle ? '1px solid rgba(194,255,11,0.2)' : '1px solid rgba(255,255,255,0.06)',
+                    cursor: isPinnacle ? 'pointer' : 'not-allowed',
                   }}
                 >
-                  Edit
+                  {isPinnacle ? 'Edit' : '🔒 Locked'}
                 </button>
               </div>
 
@@ -496,8 +532,10 @@ export default function SettingsPage() {
             {AVAILABLE_BADGES.map((badge) => {
               const equippedIndex = equippedBadges.indexOf(badge.id);
               const isEquipped = equippedIndex >= 0;
+              const isBadgeLocked = badge.pinnacleExclusive && !isPinnacle;
 
               function handleClick() {
+                if (isBadgeLocked) return;
                 if (replacingSlot !== null) {
                   const newBadges = [...equippedBadges];
                   const existingIdx = newBadges.indexOf(badge.id);
@@ -532,9 +570,10 @@ export default function SettingsPage() {
                       ? `2px solid ${badge.color}55`
                       : '1px solid rgba(255,255,255,0.06)',
                     position: 'relative',
-                    cursor: 'pointer',
+                    cursor: isBadgeLocked ? 'not-allowed' : 'pointer',
                     transition: 'all 200ms',
                     textAlign: 'left' as const,
+                    opacity: isBadgeLocked ? 0.5 : 1,
                   }}
                 >
                   {/* Equipped number */}
@@ -560,7 +599,7 @@ export default function SettingsPage() {
                     </div>
                   )}
 
-                  {/* Pinnacle crown indicator */}
+                  {/* Pinnacle crown/lock indicator */}
                   {badge.pinnacleExclusive && (
                     <div
                       style={{
@@ -571,9 +610,9 @@ export default function SettingsPage() {
                         color: '#ffcc00',
                         lineHeight: 1,
                       }}
-                      title="Pinnacle Exclusive"
+                      title={isBadgeLocked ? 'Pinnacle Exclusive — upgrade to unlock' : 'Pinnacle Exclusive'}
                     >
-                      ★
+                      {isBadgeLocked ? '🔒' : '★'}
                     </div>
                   )}
 
@@ -603,79 +642,122 @@ export default function SettingsPage() {
       <div>
         <h2 className="text-lg font-semibold text-text-primary mb-4">Plans</h2>
         <div className="grid md:grid-cols-2 gap-4">
-          {MONETIZATION_TIERS.map((tier) => (
-            <div
-              key={tier.name}
-              className="game-card flex flex-col"
-              style={{
-                border: tier.accent
-                  ? `1px solid ${tier.accent}33`
-                  : '1px solid rgba(255,255,255,0.06)',
-              }}
-            >
-              <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-text-primary">{tier.name}</span>
-                  {tier.current && (
-                    <span
-                      style={{
-                        fontSize: '0.55rem',
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        color: '#c2ff0b',
-                        border: '1px solid rgba(194,255,11,0.3)',
-                        padding: '1px 6px',
-                        background: 'rgba(194,255,11,0.08)',
-                      }}
-                    >
-                      Current
+          {MONETIZATION_TIERS.map((tier) => {
+            const isFree = tier.name === 'Free';
+            const isPinnacleTier = tier.name === 'Pinnacle';
+            return (
+              <div
+                key={tier.name}
+                className="game-card flex flex-col"
+                style={{
+                  border: isPinnacleTier && isPinnacle
+                    ? '1px solid rgba(194,255,11,0.3)'
+                    : tier.accent
+                    ? `1px solid ${tier.accent}33`
+                    : '1px solid rgba(255,255,255,0.06)',
+                }}
+              >
+                <div className="px-5 py-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-text-primary">{tier.name}</span>
+                    {isFree && !isPinnacle && (
+                      <span
+                        style={{
+                          fontSize: '0.55rem',
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          color: '#c2ff0b',
+                          border: '1px solid rgba(194,255,11,0.3)',
+                          padding: '1px 6px',
+                          background: 'rgba(194,255,11,0.08)',
+                        }}
+                      >
+                        Current
+                      </span>
+                    )}
+                    {isPinnacleTier && isPinnacle && (
+                      <span
+                        style={{
+                          fontSize: '0.55rem',
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          color: '#c2ff0b',
+                          border: '1px solid rgba(194,255,11,0.3)',
+                          padding: '1px 6px',
+                          background: 'rgba(194,255,11,0.08)',
+                        }}
+                      >
+                        Active ✓
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-baseline gap-2 mt-1">
+                    <span className="font-mono text-xl font-bold" style={{ color: isPinnacleTier && isPinnacle ? '#c2ff0b' : tier.accent || '#888' }}>
+                      {tier.price}
                     </span>
-                  )}
+                    {'priceNote' in tier && (
+                      <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        {(tier as any).priceNote}
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-baseline gap-2 mt-1">
-                  <span className="font-mono text-xl font-bold" style={{ color: tier.accent || '#888' }}>
-                    {tier.price}
-                  </span>
-                  {'priceNote' in tier && (
-                    <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      {(tier as any).priceNote}
-                    </span>
-                  )}
+                <div className="p-5 flex-1">
+                  <ul className="space-y-2">
+                    {tier.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2 text-xs text-text-secondary">
+                        <span style={{ color: isPinnacleTier && isPinnacle ? '#c2ff0b' : tier.accent || '#555', marginTop: 1 }}>+</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
+                {isPinnacleTier && (
+                  <div className="px-5 pb-5">
+                    {isPinnacle ? (
+                      <div
+                        style={{
+                          width: '100%',
+                          padding: '8px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          color: '#c2ff0b',
+                          background: 'rgba(194,255,11,0.08)',
+                          border: '1px solid rgba(194,255,11,0.3)',
+                          textAlign: 'center',
+                        }}
+                      >
+                        Pinnacle Active ✓
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleUpgrade}
+                        disabled={upgradeLoading}
+                        style={{
+                          width: '100%',
+                          padding: '8px',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          color: tier.accent,
+                          background: `${tier.accent}11`,
+                          border: `1px solid ${tier.accent}44`,
+                          cursor: upgradeLoading ? 'not-allowed' : 'pointer',
+                          transition: 'all 150ms',
+                          opacity: upgradeLoading ? 0.7 : 1,
+                        }}
+                      >
+                        {upgradeLoading ? 'Redirecting…' : 'Upgrade'}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
-              <div className="p-5 flex-1">
-                <ul className="space-y-2">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-xs text-text-secondary">
-                      <span style={{ color: tier.accent || '#555', marginTop: 1 }}>+</span>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {!tier.current && (
-                <div className="px-5 pb-5">
-                  <button
-                    style={{
-                      width: '100%',
-                      padding: '8px',
-                      fontSize: '0.75rem',
-                      fontWeight: 600,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      color: tier.accent,
-                      background: `${tier.accent}11`,
-                      border: `1px solid ${tier.accent}44`,
-                      cursor: 'pointer',
-                      transition: 'all 150ms',
-                    }}
-                  >
-                    Upgrade
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -696,7 +778,7 @@ export default function SettingsPage() {
             },
             {
               q: 'How do I get Pinnacle?',
-              a: 'Pinnacle is a one-time $9.99 purchase that unlocks exclusive avatars, animated borders, badge customization, custom hex theme colors, and more. You can upgrade from the Plans section above.',
+              a: 'Pinnacle is a one-time $4.99 purchase that unlocks exclusive avatars, animated borders, badge customization, custom hex theme colors, and more. You can upgrade from the Plans section above.',
             },
             {
               q: 'How do I sign in?',

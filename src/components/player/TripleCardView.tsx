@@ -16,6 +16,10 @@ export function TripleCardView({ players }: TripleCardViewProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const touchStartX = useRef<number>(0);
+  const scrollStartLeft = useRef<number>(0);
+  const isDragging = useRef<boolean>(false);
+
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -24,7 +28,6 @@ export function TripleCardView({ players }: TripleCardViewProps) {
     const children = Array.from(container.children) as HTMLElement[];
     const scrollLeft = el.scrollLeft;
 
-    // Find which child is closest to the scroll position
     let cumulative = 0;
     let closest = 0;
     for (let i = 0; i < children.length; i++) {
@@ -37,12 +40,74 @@ export function TripleCardView({ players }: TripleCardViewProps) {
     setActiveIndex(Math.min(closest, allPlayers.length));
   }, [allPlayers.length]);
 
+  const getSnapPoints = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return [];
+    const container = el.firstElementChild as HTMLElement | null;
+    if (!container) return [];
+    const children = Array.from(container.children) as HTMLElement[];
+    const points: number[] = [];
+    let cumulative = 0;
+    for (const child of children) {
+      points.push(cumulative);
+      cumulative += child.offsetWidth;
+    }
+    return points;
+  }, []);
+
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX;
+      scrollStartLeft.current = el.scrollLeft;
+      isDragging.current = true;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDragging.current) return;
+      e.preventDefault();
+      const delta = touchStartX.current - e.touches[0].clientX;
+      el.scrollLeft = scrollStartLeft.current + delta;
+    };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!isDragging.current) return;
+      isDragging.current = false;
+
+      const delta = touchStartX.current - e.changedTouches[0].clientX;
+      const threshold = 40;
+      const snapPoints = getSnapPoints();
+      if (!snapPoints.length) return;
+
+      let currentIndex = 0;
+      for (let i = 0; i < snapPoints.length; i++) {
+        if (scrollStartLeft.current >= snapPoints[i] - 1) currentIndex = i;
+      }
+
+      let targetIndex = currentIndex;
+      if (delta > threshold) {
+        targetIndex = Math.min(currentIndex + 1, snapPoints.length - 1);
+      } else if (delta < -threshold) {
+        targetIndex = Math.max(currentIndex - 1, 0);
+      }
+
+      el.scrollTo({ left: snapPoints[targetIndex], behavior: 'smooth' });
+    };
+
     el.addEventListener('scroll', handleScroll, { passive: true });
-    return () => el.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    return () => {
+      el.removeEventListener('scroll', handleScroll);
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+    };
+  }, [handleScroll, getSnapPoints]);
 
   return (
     <>
@@ -78,13 +143,9 @@ export function TripleCardView({ players }: TripleCardViewProps) {
               scrollSnapAlign: 'start',
             }}
           >
-            {primary && <MobilePlayerCard player={primary} isCenter />}
-            {teammate1 && <MobilePlayerCard player={teammate1} />}
-            {teammate2 && <MobilePlayerCard player={teammate2} />}
-
-            {/* Swipe hint */}
+            {/* Swipe hint — top */}
             <div
-              className="flex items-center justify-end gap-1.5 pt-1 pr-1"
+              className="flex items-center justify-end gap-1.5 pb-1 pr-1"
               style={{
                 fontSize: '0.55rem',
                 letterSpacing: '0.12em',
@@ -92,12 +153,16 @@ export function TripleCardView({ players }: TripleCardViewProps) {
                 color: 'rgba(255,255,255,0.25)',
               }}
             >
-              <span>Swipe</span>
+              <span>Swipe for details</span>
               <span style={{ color: '#c2ff0b', fontSize: '0.7rem' }}>&rarr;</span>
             </div>
+
+            {primary && <MobilePlayerCard player={primary} isCenter />}
+            {teammate1 && <MobilePlayerCard player={teammate1} />}
+            {teammate2 && <MobilePlayerCard player={teammate2} />}
           </div>
 
-          {/* Full detail cards in carousel — centered via padding */}
+          {/* Full detail cards in carousel */}
           {allPlayers.map((player, i) => (
             <div
               key={player.id}
@@ -117,7 +182,6 @@ export function TripleCardView({ players }: TripleCardViewProps) {
         {/* Dot indicators */}
         {allPlayers.length > 0 && (
           <div className="flex justify-center gap-1.5 pb-3 sticky left-0" style={{ width: '100vw' }}>
-            {/* Index 0 = stacked view, 1-3 = individual cards */}
             {[...Array(allPlayers.length + 1)].map((_, i) => (
               <div
                 key={i}

@@ -28,6 +28,7 @@ interface AppContextType {
   avatarBorderStyle: AvatarBorderStyle;
   setAvatarBorderStyle: (style: AvatarBorderStyle) => void;
   isPinnacle: boolean;
+  refreshPremiumStatus: () => Promise<void>;
 }
 
 const DEFAULT_AVATAR = '/images/avatars/default.svg';
@@ -47,6 +48,7 @@ const AppContext = createContext<AppContextType>({
   avatarBorderStyle: 'none',
   setAvatarBorderStyle: () => {},
   isPinnacle: false,
+  refreshPremiumStatus: async () => {},
 });
 
 /** Save a single preference to Supabase (fire-and-forget). */
@@ -156,6 +158,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     savePreferenceToSupabase({ equipped_badges: badges });
   }, []);
 
+  const refreshPremiumStatus = useCallback(async () => {
+    const res = await fetch('/api/user/preferences');
+    if (!res.ok) return;
+    const prefs = await res.json();
+    if (prefs.is_pinnacle) {
+      setIsPinnacle(true);
+      localStorage.setItem('marathon-pinnacle', 'true');
+    }
+  }, []);
+
   const addRecentPlayer = useCallback((player: SearchPlayer) => {
     setRecentPlayers((prev) => {
       const filtered = prev.filter((p) => p.id !== player.id);
@@ -193,7 +205,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [selectedAvatar]);
 
   return (
-    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle }}>
+    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle, refreshPremiumStatus }}>
       {children}
     </AppContext.Provider>
   );
