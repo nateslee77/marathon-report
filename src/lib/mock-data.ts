@@ -2,7 +2,8 @@ import { DetailedPlayer, Match, RecentlyPlayedWithPlayer, WeaponStats, SearchPla
 
 // Equipped badges for players
 export const playerBadges: Record<string, string[]> = {
-  'player-001': ['donator', 'marathon-veteran', 'team-player'],
+  'player-001': ['faction-arachne', 'donator', 'marathon-veteran', 'team-player'],
+  'player-002': ['faction-nucaloric'],
   'player-005': ['neon-edge', 'marathon-veteran', 'speed-demon'], // VoidWalker
   'player-007': ['holographic', 'pathfinder'], // QuantumFist
   'player-024': ['frostbite', 'trailblazer'], // NeonStrike
@@ -30,8 +31,9 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 42,
     competitiveRank: 'Diamond',
     membership: 'pinnacle',
-    avatar: '/images/avatars/avatar6.png',
+    avatar: '/images/faction logo/arachne.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 8),
+    themeColor: '#df0008',
     loadout: [
       { slot: 'primary', name: 'Overrun AR', icon: 'R', image: '/images/weapons meta pics/OVERRUN AR.png' },
       { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S', image: '/images/weapons meta pics/CE TACTICAL SIDEARM.png' },
@@ -70,7 +72,8 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     level: 38,
     competitiveRank: 'Platinum',
     membership: 'runner-pass',
-    avatar: '/images/avatars/avatar2.png',
+    avatar: '/images/faction logo/nucaloric.png',
+    themeColor: '#ff0961',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 12),
     loadout: [
       { slot: 'primary', name: 'Bully SMG', icon: 'S', image: '/images/weapons meta pics/BULLY SMG.png' },

@@ -22,8 +22,9 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
   const { user, cardThemeColor, equippedBadges, avatarBorderStyle, isPinnacle } = useApp();
   const isOwnCard = user?.id === player.id;
   const runner = RUNNER_VISUALS[player.runner];
-  const effectiveAccent = isOwnCard && cardThemeColor ? cardThemeColor : runner.accent;
-  const useCustomTheme = isOwnCard && !!cardThemeColor;
+  const playerThemeColor = isOwnCard && cardThemeColor ? cardThemeColor : player.themeColor;
+  const effectiveAccent = playerThemeColor ?? runner.accent;
+  const useCustomTheme = !!playerThemeColor;
 
   // Generate emblem gradient from the effective accent color
   function hexToRgb(hex: string) {
@@ -34,7 +35,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
   }
   const emblemGradient = useCustomTheme
     ? (() => {
-        const { r, g, b } = hexToRgb(cardThemeColor);
+        const { r, g, b } = hexToRgb(effectiveAccent);
         const dark = `rgb(${Math.round(r * 0.3)},${Math.round(g * 0.3)},${Math.round(b * 0.3)})`;
         const mid = `rgb(${r},${g},${b})`;
         const light = `rgb(${Math.min(255, Math.round(r * 1.3))},${Math.min(255, Math.round(g * 1.3))},${Math.min(255, Math.round(b * 1.3))})`;
@@ -161,7 +162,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
         {/* ── Runner Background Layer ── */}
         <div
           className="relative flex-1 flex flex-col"
-          style={{ background: runner.bgGradient }}
+          style={{ background: useCustomTheme ? `radial-gradient(ellipse at 50% 20%, ${effectiveAccent}22 0%, transparent 55%)` : runner.bgGradient }}
         >
           {/* Runner + Platform + Rating row */}
           <div
@@ -227,30 +228,6 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* ── Performance Bar ── */}
-          <div className="relative px-4 py-2">
-            <div
-              style={{
-                height: 3,
-                width: '100%',
-                background: 'rgba(255,255,255,0.04)',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  width: `${stats.extractionRate}%`,
-                  background: `linear-gradient(90deg, ${effectiveAccent}55 0%, ${effectiveAccent} 100%)`,
-                }}
-              />
-            </div>
           </div>
 
           {/* ── Loadout Preview ── */}

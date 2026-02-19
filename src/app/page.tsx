@@ -462,15 +462,15 @@ export default function HomePage() {
               </div>
               <div className="p-3 md:p-5 space-y-1 md:space-y-1.5">
                 {[
-                  { rank: 1, id: 'player-005', name: 'VoidWalker', tag: '#7741', avatar: '/images/avatars/avatar5.png', extractions: 147, twitch: true },
-                  { rank: 2, id: 'player-024', name: 'NeonStrike', tag: '#2209', avatar: '/images/avatars/avatar6.png', extractions: 132, youtube: true },
-                  { rank: 3, id: 'player-025', name: 'PhantomAce', tag: '#5518', avatar: '/images/avatars/avatar1.png', extractions: 124, twitch: true },
-                  { rank: 4, id: 'player-026', name: 'GhostRecon', tag: '#8834', avatar: '/images/avatars/avatar3.png', extractions: 118 },
-                  { rank: 5, id: 'player-027', name: 'SteelNova', tag: '#1190', avatar: '/images/avatars/avatar4.png', extractions: 109, youtube: true },
-                  { rank: 6, id: 'player-028', name: 'IronClad', tag: '#4402', avatar: '/images/avatars/avatar2.png', extractions: 101 },
-                  { rank: 7, id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png', extractions: 94, twitch: true },
-                  { rank: 8, id: 'player-002', name: 'IronSight', tag: '#4521', avatar: '/images/avatars/avatar2.png', extractions: 87 },
-                  { rank: 9, id: 'player-003', name: 'NovaBlade', tag: '#0093', avatar: '/images/avatars/avatar3.png', extractions: 81 },
+                  { rank: 1, id: 'player-001', name: 'Sushi', tag: '#7742', avatar: '/images/faction logo/arachne.png', extractions: 201, twitch: true },
+                  { rank: 2, id: 'player-002', name: 'NovaBlade', tag: '#1234', avatar: '/images/faction logo/nucaloric.png', extractions: 178, youtube: true },
+                  { rank: 3, id: 'player-005', name: 'VoidWalker', tag: '#7741', avatar: '/images/avatars/avatar5.png', extractions: 147, twitch: true },
+                  { rank: 4, id: 'player-024', name: 'NeonStrike', tag: '#2209', avatar: '/images/avatars/avatar6.png', extractions: 132, youtube: true },
+                  { rank: 5, id: 'player-025', name: 'PhantomAce', tag: '#5518', avatar: '/images/avatars/avatar1.png', extractions: 124, twitch: true },
+                  { rank: 6, id: 'player-026', name: 'GhostRecon', tag: '#8834', avatar: '/images/avatars/avatar3.png', extractions: 118 },
+                  { rank: 7, id: 'player-027', name: 'SteelNova', tag: '#1190', avatar: '/images/avatars/avatar4.png', extractions: 109, youtube: true },
+                  { rank: 8, id: 'player-028', name: 'IronClad', tag: '#4402', avatar: '/images/avatars/avatar2.png', extractions: 101 },
+                  { rank: 9, id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png', extractions: 94, twitch: true },
                   { rank: 10, id: 'player-004', name: 'QuantumFist', tag: '#8877', avatar: '/images/avatars/avatar4.png', extractions: 76, youtube: true },
                 ].map((entry) => (
                   <Link
@@ -549,16 +549,16 @@ export default function HomePage() {
               </div>
               <div className="p-3 md:p-5 space-y-1 md:space-y-1.5">
                 {[
-                  { rank: 1, id: 'player-024', name: 'NeonStrike', tag: '#2209', avatar: '/images/avatars/avatar6.png', extractions: 8421, youtube: true },
-                  { rank: 2, id: 'player-005', name: 'VoidWalker', tag: '#7741', avatar: '/images/avatars/avatar5.png', extractions: 7893, twitch: true },
-                  { rank: 3, id: 'player-028', name: 'IronClad', tag: '#4402', avatar: '/images/avatars/avatar2.png', extractions: 7214 },
-                  { rank: 4, id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png', extractions: 6988, twitch: true },
-                  { rank: 5, id: 'player-025', name: 'PhantomAce', tag: '#5518', avatar: '/images/avatars/avatar1.png', extractions: 6541 },
-                  { rank: 6, id: 'player-027', name: 'SteelNova', tag: '#1190', avatar: '/images/avatars/avatar4.png', extractions: 6102, youtube: true },
-                  { rank: 7, id: 'player-026', name: 'GhostRecon', tag: '#8834', avatar: '/images/avatars/avatar3.png', extractions: 5834 },
-                  { rank: 8, id: 'player-004', name: 'QuantumFist', tag: '#8877', avatar: '/images/avatars/avatar4.png', extractions: 5421 },
-                  { rank: 9, id: 'player-003', name: 'NovaBlade', tag: '#0093', avatar: '/images/avatars/avatar3.png', extractions: 5102, twitch: true },
-                  { rank: 10, id: 'player-002', name: 'IronSight', tag: '#4521', avatar: '/images/avatars/avatar2.png', extractions: 4876 },
+                  { rank: 1, id: 'player-001', name: 'Sushi', tag: '#7742', avatar: '/images/faction logo/arachne.png', extractions: 11204, twitch: true },
+                  { rank: 2, id: 'player-002', name: 'NovaBlade', tag: '#1234', avatar: '/images/faction logo/nucaloric.png', extractions: 9847, youtube: true },
+                  { rank: 3, id: 'player-024', name: 'NeonStrike', tag: '#2209', avatar: '/images/avatars/avatar6.png', extractions: 8421, youtube: true },
+                  { rank: 4, id: 'player-005', name: 'VoidWalker', tag: '#7741', avatar: '/images/avatars/avatar5.png', extractions: 7893, twitch: true },
+                  { rank: 5, id: 'player-028', name: 'IronClad', tag: '#4402', avatar: '/images/avatars/avatar2.png', extractions: 7214 },
+                  { rank: 6, id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png', extractions: 6988, twitch: true },
+                  { rank: 7, id: 'player-025', name: 'PhantomAce', tag: '#5518', avatar: '/images/avatars/avatar1.png', extractions: 6541 },
+                  { rank: 8, id: 'player-027', name: 'SteelNova', tag: '#1190', avatar: '/images/avatars/avatar4.png', extractions: 6102, youtube: true },
+                  { rank: 9, id: 'player-026', name: 'GhostRecon', tag: '#8834', avatar: '/images/avatars/avatar3.png', extractions: 5834 },
+                  { rank: 10, id: 'player-004', name: 'QuantumFist', tag: '#8877', avatar: '/images/avatars/avatar4.png', extractions: 5421 },
                 ].map((entry) => (
                   <Link
                     key={entry.rank}

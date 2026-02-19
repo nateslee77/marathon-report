@@ -67,7 +67,8 @@ export default function DetailsPage({ params }: DetailsPageProps) {
 
   const runner = RUNNER_VISUALS[player.runner];
   const stats = player.stats.overall;
-  const effectiveAccent = isOwnProfile && cardThemeColor ? cardThemeColor : runner.accent;
+  const playerThemeColor = isOwnProfile && cardThemeColor ? cardThemeColor : player.themeColor;
+  const effectiveAccent = playerThemeColor ?? runner.accent;
 
   function hexToRgb(hex: string) {
     const r = parseInt(hex.slice(1, 3), 16);
@@ -75,9 +76,9 @@ export default function DetailsPage({ params }: DetailsPageProps) {
     const b = parseInt(hex.slice(5, 7), 16);
     return { r, g, b };
   }
-  const emblemGradient = isOwnProfile && cardThemeColor
+  const emblemGradient = playerThemeColor
     ? (() => {
-        const { r, g, b } = hexToRgb(cardThemeColor);
+        const { r, g, b } = hexToRgb(playerThemeColor);
         const dark = `rgb(${Math.round(r * 0.3)},${Math.round(g * 0.3)},${Math.round(b * 0.3)})`;
         const mid = `rgb(${r},${g},${b})`;
         const light = `rgb(${Math.min(255, Math.round(r * 1.3))},${Math.min(255, Math.round(g * 1.3))},${Math.min(255, Math.round(b * 1.3))})`;
@@ -120,14 +121,16 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           border: `1px solid ${effectiveAccent}22`,
         }}
       >
-        {/* Runner bg gradient */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: runner.bgGradient,
-          }}
-        />
+        {/* Runner bg gradient — suppressed when player has a custom theme color */}
+        {!playerThemeColor && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: runner.bgGradient,
+            }}
+          />
+        )}
         {/* Shell at top-right of emblem, reflected */}
         <div
           className="absolute top-0 right-0 bottom-0"
@@ -220,7 +223,6 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           <div className="grid grid-cols-3 md:flex md:gap-6 gap-y-3 mt-4">
             {[
               { label: 'K/D', value: formatKD(stats.kd) },
-              { label: 'Extract Rate', value: formatPercentage(stats.winRate) },
               { label: 'KDA', value: formatKD(stats.kda) },
               { label: 'Matches', value: String(stats.matchesPlayed) },
               { label: 'Extraction', value: formatPercentage(stats.extractionRate) },

@@ -79,6 +79,7 @@ export interface DetailedPlayer {
   membership: MembershipTier;
   avatar: string;
   lastUpdated: Date;
+  themeColor?: string;
   loadout: LoadoutItem[];
   recentMatchSummary: MiniMatch[];
   careerHighlights: { label: string; value: string }[];
