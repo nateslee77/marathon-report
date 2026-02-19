@@ -155,23 +155,31 @@ export default function SettingsPage() {
         </div>
         <div className="p-5">
           <div className="flex items-center gap-5 mb-5">
-            {user.avatar.endsWith('.gif') ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={user.avatar}
-                alt={user.name}
-                style={{ width: 80, height: 80, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
-              />
-            ) : (
-              <Image
-                src={user.avatar}
-                alt={user.name}
-                width={160}
-                height={160}
-                quality={90}
-                style={{ width: 80, height: 80, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
-              />
-            )}
+            {(() => {
+              const previewAvatarData = AVAILABLE_AVATARS.find((a) => a.src === selectedAvatar);
+              const previewBg = previewAvatarData && 'bg' in previewAvatarData ? (previewAvatarData as any).bg as string : null;
+              return user.avatar.endsWith('.gif') ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  style={{ width: 80, height: 80, border: `2px solid ${selectedColor}55`, objectFit: 'cover', flexShrink: 0 }}
+                />
+              ) : previewBg ? (
+                <div style={{ width: 80, height: 80, background: previewBg, border: `2px solid ${selectedColor}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, flexShrink: 0 }}>
+                  <Image src={user.avatar} alt={user.name} width={160} height={160} quality={90} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+              ) : (
+                <Image
+                  src={user.avatar}
+                  alt={user.name}
+                  width={160}
+                  height={160}
+                  quality={90}
+                  style={{ width: 80, height: 80, border: `2px solid ${selectedColor}55`, objectFit: 'cover' }}
+                />
+              );
+            })()}
             <div>
               <div className="font-bold text-lg text-text-primary">{user.name}</div>
               <div className="font-mono text-sm text-text-tertiary">{user.tag}</div>
@@ -197,14 +205,14 @@ export default function SettingsPage() {
                       position: 'relative',
                       width: '100%',
                       aspectRatio: '1',
-                      background: avatarBg ?? (isSelected ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)'),
+                      background: isSelected ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)',
                       border: isSelected
                         ? `2px solid ${selectedColor}88`
                         : avatarBg
                         ? '1px solid rgba(255,255,255,0.12)'
                         : '1px solid rgba(255,255,255,0.08)',
                       cursor: isLocked ? 'not-allowed' : 'pointer',
-                      padding: 6,
+                      padding: avatarBg ? 0 : 6,
                       transition: 'all 150ms',
                       overflow: 'hidden',
                       opacity: isLocked ? 0.5 : 1,
@@ -269,6 +277,25 @@ export default function SettingsPage() {
                         alt={avatar.id}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
+                    ) : avatarBg ? (
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: avatarBg,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 10,
+                      }}>
+                        <Image
+                          src={avatar.src}
+                          alt={avatar.id}
+                          width={200}
+                          height={200}
+                          quality={90}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                      </div>
                     ) : (
                       <Image
                         src={avatar.src}

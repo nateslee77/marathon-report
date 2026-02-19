@@ -203,7 +203,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
           >
             {[
               { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444' },
-              { label: 'EXT%', value: formatPercentage(stats.winRate, 1), color: stats.winRate >= 60 ? effectiveAccent : '#e5e5e5' },
+              { label: 'EXT%', value: formatPercentage(stats.extractionRate, 1), color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
               { label: 'MATCHES', value: String(stats.matchesPlayed), color: '#e5e5e5' },
               { label: 'STREAK', value: String(stats.currentStreak), color: stats.currentStreak >= 3 ? effectiveAccent : '#e5e5e5' },
             ].map((stat) => (
@@ -246,7 +246,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                   top: 0,
                   left: 0,
                   bottom: 0,
-                  width: `${stats.winRate}%`,
+                  width: `${stats.extractionRate}%`,
                   background: `linear-gradient(90deg, ${effectiveAccent}55 0%, ${effectiveAccent} 100%)`,
                 }}
               />

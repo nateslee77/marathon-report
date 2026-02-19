@@ -46,11 +46,6 @@ export function StatsGrid({ stats }: StatsGridProps) {
           value={currentStats.matchesPlayed}
         />
         <StatCard
-          label="Extract Rate"
-          value={formatPercentage(currentStats.winRate)}
-          variant={currentStats.winRate >= 50 ? 'success' : 'default'}
-        />
-        <StatCard
           label="K/D"
           value={formatKD(currentStats.kd)}
           variant={currentStats.kd >= 1.5 ? 'success' : currentStats.kd >= 1.0 ? 'default' : 'danger'}
