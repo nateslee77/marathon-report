@@ -79,6 +79,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
           boxShadow: isCenter
             ? `inset 0 1px 0 ${effectiveAccent}11, 0 0 40px ${effectiveAccent}08, 0 8px 32px rgba(0,0,0,0.5)`
             : `inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 16px rgba(0,0,0,0.4)`,
+          overflow: 'hidden',
         }}
       >
         {/* Equipped badges (overlaid, outside overflow-hidden) */}
@@ -104,20 +105,12 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
         {/* ── Emblem Header ── */}
         <div
           className="relative overflow-hidden"
-          style={{
-            height: 120,
-            background: emblemGradient,
-          }}
+          style={{ height: 120, background: emblemGradient }}
         >
           {/* Shell at top of emblem, reflected on y-axis */}
           <div
             className="absolute top-0 right-0"
-            style={{
-              width: 90,
-              height: 120,
-              opacity: 0.5,
-              transform: 'scaleX(-1)',
-            }}
+            style={{ width: 90, height: 120, opacity: 0.5, transform: 'scaleX(-1)' }}
           >
             <Image
               src={runner.image}
@@ -135,14 +128,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             }}
           />
           {/* Player name overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 12,
-              left: 16,
-              right: 16,
-            }}
-          >
+          <div style={{ position: 'absolute', bottom: 12, left: 16, right: 16 }}>
             <div className="flex items-center gap-2.5">
               <PlayerAvatar
                 src={player.avatar}
@@ -161,16 +147,10 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 }}
               />
               <div className="flex items-baseline gap-2">
-                <span
-                  className="font-bold text-xl tracking-tight"
-                  style={{ color: '#fff' }}
-                >
+                <span className="font-bold text-xl tracking-tight" style={{ color: '#fff' }}>
                   {player.name}
                 </span>
-                <span
-                  className="font-mono text-xs"
-                  style={{ color: 'rgba(255,255,255,0.4)' }}
-                >
+                <span className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
                   {player.tag}
                 </span>
               </div>
