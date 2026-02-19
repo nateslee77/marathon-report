@@ -117,9 +117,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
           setEquippedBadgesState(prefs.equipped_badges);
           localStorage.setItem('marathon-badges', JSON.stringify(prefs.equipped_badges));
         }
+        setIsPinnacle(!!prefs.is_pinnacle);
         if (prefs.is_pinnacle) {
-          setIsPinnacle(true);
           localStorage.setItem('marathon-pinnacle', 'true');
+        } else {
+          localStorage.removeItem('marathon-pinnacle');
         }
       })
       .catch(() => {
@@ -162,9 +164,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const res = await fetch('/api/user/preferences');
     if (!res.ok) return;
     const prefs = await res.json();
+    setIsPinnacle(!!prefs.is_pinnacle);
     if (prefs.is_pinnacle) {
-      setIsPinnacle(true);
       localStorage.setItem('marathon-pinnacle', 'true');
+    } else {
+      localStorage.removeItem('marathon-pinnacle');
     }
   }, []);
 
