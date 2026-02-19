@@ -27,7 +27,7 @@ interface DetailsPageProps {
 }
 
 export default function DetailsPage({ params }: DetailsPageProps) {
-  const { user, equippedBadges, cardThemeColor, avatarBorderStyle, selectedAvatar } = useApp();
+  const { user, equippedBadges, cardThemeColor, avatarBorderStyle, selectedAvatar, isPinnacle } = useApp();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -197,7 +197,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             <span className="hidden md:inline" style={{ color: 'rgba(255,255,255,0.25)', fontSize: '0.7rem' }}>
               {runner.role}
             </span>
-            {player.membership === 'pinnacle' && (
+            {(player.membership === 'pinnacle' || (isOwnProfile && isPinnacle)) && (
               <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
             )}
             <span className="hidden md:inline-block" style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
@@ -293,49 +293,78 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           >
             <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Loadout</h2>
           </div>
-          <div className="p-3 md:p-5">
+          <div className="p-3 md:p-4">
             {player.loadout.length === 0 ? (
               <div className="flex items-center justify-center py-8" style={{ color: 'rgba(255,255,255,0.25)' }}>
                 <span className="font-mono text-sm">No loadout configured</span>
               </div>
-            ) : (
-              <div className="grid grid-cols-4 gap-2 md:gap-3">
-                {player.loadout.map((item) => (
-                  <div
-                    key={item.slot}
-                    className="text-center"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${effectiveAccent}11`,
-                      padding: '8px 4px',
-                    }}
-                  >
-                    {item.image ? (
-                      <div className="flex justify-center items-center h-8 md:h-12 mb-1">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={180}
-                          height={135}
-                          style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'brightness(0.9)' }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className="font-mono text-xl md:text-2xl font-bold mb-1 md:mb-2 h-8 md:h-12 flex items-center justify-center"
-                        style={{ color: effectiveAccent + '88' }}
-                      >
-                        {item.icon}
-                      </div>
-                    )}
-                    <div className="text-xs md:text-sm font-medium truncate" style={{ color: '#e5e5e5' }}>{item.name}</div>
-                    <div className="mt-0.5 md:mt-1" style={{ fontSize: '0.5rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
-                      {item.slot}
+            ) : (() => {
+              const WEAPON_SLOTS = ['primary', 'sidearm', 'weapon3'] as const;
+              const weapons = player.loadout.filter(i => (WEAPON_SLOTS as readonly string[]).includes(i.slot));
+              const gadgets = player.loadout.filter(i => !(WEAPON_SLOTS as readonly string[]).includes(i.slot));
+              const weaponLabel = (slot: string) => {
+                const idx = WEAPON_SLOTS.indexOf(slot as typeof WEAPON_SLOTS[number]);
+                return `WPN ${idx + 1}`;
+              };
+              return (
+                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                  {/* Weapons — 1×3 left column */}
+                  {weapons.length > 0 && (
+                    <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
+                      {weapons.map((item) => (
+                        <div
+                          key={item.slot}
+                          style={{
+                            background: '#0a0a0a',
+                            border: `1px solid ${effectiveAccent}1a`,
+                            padding: '10px 12px 8px',
+                          }}
+                        >
+                          {item.image && (
+                            <div style={{ width: '100%', aspectRatio: '16 / 7', position: 'relative', marginBottom: 8 }}>
+                              <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
+                            </div>
+                          )}
+                          <div style={{ fontSize: '0.65rem', color: '#e5e5e5', fontWeight: 600, marginBottom: 2 }}>{item.name}</div>
+                          <div style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                            {weaponLabel(item.slot)}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  )}
+                  {/* Gear — 2×1 right column, much smaller squares */}
+                  {gadgets.length > 0 && (
+                    <div style={{ flex: '0 0 28%', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {gadgets.map((item) => (
+                        <div
+                          key={item.slot}
+                          style={{
+                            background: '#0a0a0a',
+                            border: `1px solid ${effectiveAccent}1a`,
+                            padding: '8px 6px',
+                            textAlign: 'center',
+                            aspectRatio: '1 / 1',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <div style={{ fontSize: '1.5rem', lineHeight: 1, marginBottom: 5, color: effectiveAccent + '99' }}>
+                            {item.icon}
+                          </div>
+                          <div style={{ fontSize: '0.52rem', color: '#e5e5e5', fontWeight: 500, lineHeight: 1.2 }}>{item.name}</div>
+                          <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
+                            {item.slot}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         </div>
 

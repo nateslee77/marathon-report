@@ -18,7 +18,7 @@ interface MobilePlayerCardProps {
 }
 
 export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardProps) {
-  const { user, cardThemeColor, equippedBadges } = useApp();
+  const { user, cardThemeColor, equippedBadges, isPinnacle } = useApp();
   const isOwnCard = user?.id === player.id;
   const runner = RUNNER_VISUALS[player.runner];
   const effectiveAccent = isOwnCard && cardThemeColor ? cardThemeColor : runner.accent;
@@ -141,7 +141,7 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
                 </div>
               </div>
               <div className="flex items-center gap-1.5 flex-shrink-0">
-                {player.membership === 'pinnacle' && (
+                {(player.membership === 'pinnacle' || (user?.id === player.id && isPinnacle)) && (
                   <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
                 )}
                 <RankBadge rank={player.competitiveRank} size="sm" />
@@ -230,8 +230,8 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
                   className="flex-shrink-0 text-center"
                   style={{
                     width: 64,
-                    background: 'rgba(255,255,255,0.025)',
-                    border: '1px solid rgba(255,255,255,0.04)',
+                    background: '#0a0a0a',
+                    border: '1px solid rgba(255,255,255,0.06)',
                     padding: '5px 2px',
                   }}
                 >

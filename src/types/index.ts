@@ -29,7 +29,7 @@ export interface EmblemInfo {
 // ── Loadout ──
 
 export interface LoadoutItem {
-  slot: 'primary' | 'sidearm' | 'equipment' | 'core';
+  slot: 'primary' | 'sidearm' | 'weapon3' | 'equipment' | 'core';
   name: string;
   icon: string;
   image?: string;

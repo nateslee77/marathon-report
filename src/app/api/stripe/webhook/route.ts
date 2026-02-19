@@ -12,16 +12,20 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-  } catch {
+  } catch (err) {
+    console.error('[webhook] Signature verification failed:', err);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
+
+  console.log('[webhook] Event received:', event.type);
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const userId = session.metadata?.supabase_user_id;
+    console.log('[webhook] userId from metadata:', userId, '| supabaseAdmin:', !!supabaseAdmin);
     if (!userId || !supabaseAdmin) return NextResponse.json({ ok: true });
 
-    await supabaseAdmin.from('users').update({
+    const { error: dbError } = await supabaseAdmin.from('users').update({
       is_pinnacle: true,
       premium_since: new Date().toISOString(),
       stripe_customer_id: session.customer as string | null,
@@ -29,6 +33,8 @@ export async function POST(request: NextRequest) {
       stripe_payment_intent_id: session.payment_intent as string | null,
       updated_at: new Date().toISOString(),
     }).eq('id', userId);
+    if (dbError) console.error('[webhook] Supabase update error:', dbError);
+    else console.log('[webhook] is_pinnacle set for user:', userId);
   }
 
   return NextResponse.json({ ok: true });

@@ -19,7 +19,7 @@ interface PlayerCardProps {
 }
 
 export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
-  const { user, cardThemeColor, equippedBadges, avatarBorderStyle } = useApp();
+  const { user, cardThemeColor, equippedBadges, avatarBorderStyle, isPinnacle } = useApp();
   const isOwnCard = user?.id === player.id;
   const runner = RUNNER_VISUALS[player.runner];
   const effectiveAccent = isOwnCard && cardThemeColor ? cardThemeColor : runner.accent;
@@ -203,7 +203,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {player.membership === 'pinnacle' && (
+              {(player.membership === 'pinnacle' || (user?.id === player.id && isPinnacle)) && (
                 <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
               )}
               <RankBadge rank={player.competitiveRank} size="sm" />
@@ -293,51 +293,63 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               <div className="flex items-center justify-center py-4" style={{ color: 'rgba(255,255,255,0.2)' }}>
                 <span className="font-mono" style={{ fontSize: '0.65rem' }}>No loadout configured</span>
               </div>
-            ) : (
-              <div className="grid grid-cols-4 gap-2">
-                {player.loadout.map((item) => (
-                  <div
-                    key={item.slot}
-                    className="text-center"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.04)',
-                      padding: '6px 2px',
-                    }}
-                  >
-                    {item.image ? (
-                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 32 }}>
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={180}
-                          height={135}
+            ) : (() => {
+              const WEAPON_SLOTS = ['primary', 'sidearm', 'weapon3'];
+              const weapons = player.loadout.filter(i => WEAPON_SLOTS.includes(i.slot));
+              const gadgets = player.loadout.filter(i => !WEAPON_SLOTS.includes(i.slot));
+              return (
+                <div style={{ display: 'flex', gap: 5, alignItems: 'flex-start' }}>
+                  {/* Weapons — 1×3 left column */}
+                  {weapons.length > 0 && (
+                    <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+                      {weapons.map((item) => (
+                        <div
+                          key={item.slot}
                           style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain',
-                            filter: 'brightness(0.9)',
+                            background: '#0a0a0a',
+                            border: `1px solid ${effectiveAccent}18`,
+                            padding: '6px 8px 5px',
                           }}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className="font-mono text-lg font-bold"
-                        style={{ color: 'rgba(255,255,255,0.5)', height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >
-                        {item.icon}
-                      </div>
-                    )}
-                    <div
-                      className="mt-1 truncate"
-                      style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)' }}
-                    >
-                      {item.name}
+                        >
+                          {item.image && (
+                            <div style={{ width: '100%', aspectRatio: '16 / 7', position: 'relative', marginBottom: 4 }}>
+                              <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
+                            </div>
+                          )}
+                          <div className="truncate" style={{ fontSize: '0.52rem', color: '#e5e5e5', fontWeight: 600 }}>{item.name}</div>
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  )}
+                  {/* Gear — 2×1 right column, small squares */}
+                  {gadgets.length > 0 && (
+                    <div style={{ flex: '0 0 28%', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      {gadgets.map((item) => (
+                        <div
+                          key={item.slot}
+                          style={{
+                            background: '#0a0a0a',
+                            border: `1px solid ${effectiveAccent}18`,
+                            padding: '5px 4px',
+                            textAlign: 'center',
+                            aspectRatio: '1 / 1',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <div style={{ fontSize: '1.1rem', lineHeight: 1, marginBottom: 3, color: effectiveAccent + '88' }}>
+                            {item.icon}
+                          </div>
+                          <div className="truncate w-full" style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.3)' }}>{item.name}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
 
           {/* ── Shell Loadout ── */}
