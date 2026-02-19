@@ -120,7 +120,9 @@ export function ShellLoadout({ runner, effectiveAccent, slotSize = 64, shellSize
       paddingBottom: basePad,
       paddingLeft: basePad,
       paddingRight: basePad,
-      display: 'inline-block',
+      display: 'inline-flex',
+      flexDirection: 'column',
+      alignItems: 'center',
     }}>
       {/* ── Top 2-row section: slots on left/right, runner in center ── */}
       <div style={{
@@ -188,15 +190,15 @@ export function ShellLoadout({ runner, effectiveAccent, slotSize = 64, shellSize
           Implants
         </div>
         <div style={{ display: 'flex', gap, justifyContent: 'center' }}>
-          <div>
+          <div style={{ textAlign: 'center' }}>
             <SlotLabel>Head</SlotLabel>
             <SlotBox src={SLOT_IMAGES.head}  label="Head"  tooltip="Head Implant — Empty"  accent={effectiveAccent} size={slotSize} />
           </div>
-          <div>
+          <div style={{ textAlign: 'center' }}>
             <SlotLabel>Torso</SlotLabel>
             <SlotBox src={SLOT_IMAGES.torso} label="Torso" tooltip="Torso Implant — Empty" accent={effectiveAccent} size={slotSize} />
           </div>
-          <div>
+          <div style={{ textAlign: 'center' }}>
             <SlotLabel>Leg</SlotLabel>
             <SlotBox src={SLOT_IMAGES.leg}   label="Leg"   tooltip="Leg Implant — Empty"   accent={effectiveAccent} size={slotSize} />
           </div>

@@ -17,6 +17,7 @@ import { StatsFilter, DetailedPlayer } from '@/types';
 import { ShellLoadout } from '@/components/player/ShellLoadout';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
+import { playerBadges } from '@/lib/mock-data';
 import { buildDefaultPlayer } from '@/lib/default-player';
 
 interface DetailsPageProps {
@@ -91,7 +92,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
 
   const displayBadges = isOwnProfile
     ? equippedBadges.map(getBadgeById).filter(Boolean)
-    : [];
+    : (playerBadges[player.id] || []).map(getBadgeById).filter(Boolean);
 
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in max-w-[1400px] mx-auto px-4 md:px-0 py-4 md:py-0">
@@ -245,19 +246,13 @@ export default function DetailsPage({ params }: DetailsPageProps) {
 
       {/* ── Shell Loadout (left) + Loadout / Career Highlights (right, stacked) ── */}
       <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1.35fr 1fr',
-          gridTemplateRows: 'auto auto',
-          gap: '1.5rem',
-          alignItems: 'stretch',
-        }}
+        className="grid grid-cols-1 md:grid-cols-[1.35fr_1fr] gap-4 md:gap-6"
+        style={{ alignItems: 'stretch' }}
       >
-        {/* Shell Loadout — col 1, spans both rows */}
+        {/* Shell Loadout — col 1, spans both rows on desktop */}
         <div
+          className="md:[grid-row:1/3]"
           style={{
-            gridColumn: '1',
-            gridRow: '1 / 3',
             background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
             border: '1px solid rgba(255,255,255,0.06)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
@@ -271,21 +266,22 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           >
             <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Shell Loadout</h2>
           </div>
-          <div className="flex-1 flex items-center justify-center p-4 md:p-8">
-            <ShellLoadout
-              runner={player.runner}
-              effectiveAccent={effectiveAccent}
-              slotSize={98}
-              shellSize={300}
-            />
+          <div className="flex-1 flex items-center justify-center p-4 md:p-8 overflow-hidden">
+            <div className="scale-[0.72] md:scale-100 origin-center">
+              <ShellLoadout
+                runner={player.runner}
+                effectiveAccent={effectiveAccent}
+                slotSize={98}
+                shellSize={300}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Loadout — col 2, row 1 */}
+        {/* Loadout — col 2, row 1 on desktop */}
         <div
+          className="md:[grid-column:2] md:[grid-row:1]"
           style={{
-            gridColumn: '2',
-            gridRow: '1',
             background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
             border: '1px solid rgba(255,255,255,0.06)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
@@ -343,11 +339,10 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           </div>
         </div>
 
-        {/* Career Highlights — col 2, row 2 */}
+        {/* Career Highlights — col 2, row 2 on desktop */}
         <div
+          className="md:[grid-column:2] md:[grid-row:2]"
           style={{
-            gridColumn: '2',
-            gridRow: '2',
             background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
             border: '1px solid rgba(255,255,255,0.06)',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
