@@ -167,13 +167,13 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
           }}
         >
           {[
-            { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444' },
+            { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444', bold: true },
             { label: 'EXT%', value: formatPercentage(stats.extractionRate, 1), color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
             { label: 'RATING', value: String(player.rating), color: effectiveAccent },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div
-                className="font-mono text-lg font-bold tabular-nums leading-none"
+                className={`font-stat text-lg tabular-nums leading-none ${stat.bold ? 'font-bold' : 'font-semibold'}`}
                 style={{ color: stat.color }}
               >
                 {stat.value}

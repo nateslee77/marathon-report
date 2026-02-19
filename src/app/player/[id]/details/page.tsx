@@ -222,13 +222,13 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           {/* Quick stats — grid on mobile, flex on desktop */}
           <div className="grid grid-cols-3 md:flex md:gap-6 gap-y-3 mt-4">
             {[
-              { label: 'K/D', value: formatKD(stats.kd) },
+              { label: 'K/D', value: formatKD(stats.kd), bold: true },
               { label: 'KDA', value: formatKD(stats.kda) },
               { label: 'Matches', value: String(stats.matchesPlayed) },
               { label: 'Extraction', value: formatPercentage(stats.extractionRate) },
             ].map((s) => (
               <div key={s.label}>
-                <div className="font-mono text-base md:text-xl font-bold tabular-nums" style={{ color: '#fff' }}>
+                <div className={`font-stat text-base md:text-xl tabular-nums ${s.bold ? 'font-bold' : 'font-semibold'}`} style={{ color: '#fff' }}>
                   {s.value}
                 </div>
                 <div

@@ -19,7 +19,7 @@ export function StatCard({ label, value, sublabel, variant = 'default', classNam
   return (
     <div className={cn('game-card p-4', className)}>
       <div className="stat-label mb-2">{label}</div>
-      <div className={cn('text-xl font-mono font-semibold tabular-nums', variantClasses[variant])}>
+      <div className={cn('text-xl font-stat font-semibold tabular-nums', variantClasses[variant])}>
         {value}
       </div>
       {sublabel && (

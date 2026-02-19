@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Rajdhani } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
 import { AppProvider } from '@/context/AppContext';
@@ -11,6 +11,12 @@ import { DesktopAuthButton } from '@/components/auth/DesktopAuthButton';
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
+});
+
+const rajdhani = Rajdhani({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-rajdhani',
 });
 
 export const metadata: Metadata = {
@@ -33,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${inter.variable} ${rajdhani.variable}`}>
       <head>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-VE88YJW5RT"

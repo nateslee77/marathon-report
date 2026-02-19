@@ -37,6 +37,7 @@ const config: Config = {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['"JetBrains Mono"', '"Courier New"', 'monospace'],
+        stat: ['Rajdhani', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'xs': ['0.6875rem', { lineHeight: '1.3', fontWeight: '500', letterSpacing: '0.05em' }],

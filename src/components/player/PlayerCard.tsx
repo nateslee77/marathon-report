@@ -203,14 +203,14 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
           >
             {[
-              { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444' },
+              { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444', bold: true },
               { label: 'EXT%', value: formatPercentage(stats.extractionRate, 1), color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
               { label: 'MATCHES', value: String(stats.matchesPlayed), color: '#e5e5e5' },
               { label: 'STREAK', value: String(stats.currentStreak), color: stats.currentStreak >= 3 ? effectiveAccent : '#e5e5e5' },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div
-                  className="font-mono text-lg font-bold tabular-nums"
+                  className={`font-stat text-lg tabular-nums ${stat.bold ? 'font-bold' : 'font-semibold'}`}
                   style={{ color: stat.color }}
                 >
                   {stat.value}
