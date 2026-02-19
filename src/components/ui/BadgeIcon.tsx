@@ -10,9 +10,9 @@ interface BadgeIconProps {
 }
 
 const SIZES = {
-  sm: { box: 20, font: '0.55rem', numSize: 10, numFont: '0.4rem', tagFont: '0.5rem', tagIcon: 7, tagPad: '1px 5px' },
-  md: { box: 28, font: '0.75rem', numSize: 13, numFont: '0.5rem', tagFont: '0.55rem', tagIcon: 8, tagPad: '2px 7px' },
-  lg: { box: 36, font: '1rem', numSize: 16, numFont: '0.55rem', tagFont: '0.6rem', tagIcon: 10, tagPad: '2px 8px' },
+  sm: { box: 20, font: '0.55rem', iconImg: 13, numSize: 10, numFont: '0.4rem', tagFont: '0.5rem', tagIcon: 7, tagPad: '1px 5px' },
+  md: { box: 28, font: '0.75rem', iconImg: 18, numSize: 13, numFont: '0.5rem', tagFont: '0.55rem', tagIcon: 8, tagPad: '2px 7px' },
+  lg: { box: 36, font: '1rem', iconImg: 23, numSize: 16, numFont: '0.55rem', tagFont: '0.6rem', tagIcon: 10, tagPad: '2px 8px' },
 };
 
 function Tooltip({ badge, children }: { badge: Badge; children: React.ReactNode }) {
@@ -77,7 +77,12 @@ export function BadgeIcon({ badge, size = 'md', variant = 'icon', showNumber }: 
               }}
             />
           )}
-          <span style={{ fontSize: s.tagIcon, lineHeight: 1 }}>{badge.icon}</span>
+          {badge.logoSrc ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={badge.logoSrc} alt={badge.name} style={{ width: s.tagIcon, height: s.tagIcon, objectFit: 'contain', display: 'block', flexShrink: 0 }} />
+          ) : (
+            <span style={{ fontSize: s.tagIcon, lineHeight: 1 }}>{badge.icon}</span>
+          )}
           {badge.name}
           {showNumber !== undefined && (
             <span
@@ -135,7 +140,10 @@ export function BadgeIcon({ badge, size = 'md', variant = 'icon', showNumber }: 
             }}
           />
         )}
-        {badge.icon}
+        {badge.logoSrc ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img src={badge.logoSrc} alt={badge.name} style={{ width: s.iconImg, height: s.iconImg, objectFit: 'contain', display: 'block' }} />
+        ) : badge.icon}
         {showNumber !== undefined && (
           <div
             style={{

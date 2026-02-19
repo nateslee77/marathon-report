@@ -9,6 +9,8 @@ export type MembershipTier = 'free' | 'runner-pass' | 'pinnacle';
 
 export type RunnerType = 'destroyer' | 'vandal' | 'recon' | 'assassin' | 'triage' | 'thief' | 'rook';
 
+export type FactionType = 'cyberacme' | 'sekiguchi' | 'traxus' | 'arachne' | 'nucaloric' | 'mida';
+
 export interface RunnerVisual {
   name: string;
   role: string;

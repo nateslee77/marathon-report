@@ -4,6 +4,7 @@ export interface Badge {
   id: string;
   name: string;
   icon: string;
+  logoSrc?: string;
   color: string;
   category: BadgeCategory;
   description: string;
@@ -30,6 +31,16 @@ export const AVAILABLE_BADGES: Badge[] = [
   { id: 'vanguard', name: 'Vanguard', icon: 'V', color: '#0066ff', category: 'pinnacle', description: 'Animated vanguard emblem badge', animation: 'glow', pinnacleExclusive: true },
 ];
 
+// Faction badges — free for all users, use faction logo as icon
+export const FACTION_BADGES: Badge[] = [
+  { id: 'faction-cyberacme', name: 'CYBERACME', icon: '', logoSrc: '/images/faction logo/cyberacme.png', color: '#00ff00', category: 'free', description: 'Represent the CYBERACME faction' },
+  { id: 'faction-sekiguchi', name: 'SEKIGUCHI', icon: '', logoSrc: '/images/faction logo/sekiguchi.png', color: '#43e9a0', category: 'free', description: 'Represent the SEKIGUCHI faction' },
+  { id: 'faction-traxus', name: 'TRAXUS', icon: '', logoSrc: '/images/faction logo/traxus.png', color: '#ff4b00', category: 'free', description: 'Represent the TRAXUS faction' },
+  { id: 'faction-arachne', name: 'ARACHNE', icon: '', logoSrc: '/images/faction logo/arachne.png', color: '#df0008', category: 'free', description: 'Represent the ARACHNE faction' },
+  { id: 'faction-nucaloric', name: 'NUCALORIC', icon: '', logoSrc: '/images/faction logo/nucaloric.png', color: '#ff0961', category: 'free', description: 'Represent the NUCALORIC faction' },
+  { id: 'faction-mida', name: 'MIDA', icon: '', logoSrc: '/images/faction logo/mida.png', color: '#665ead', category: 'free', description: 'Represent the MIDA faction' },
+];
+
 // The Pinnacle badge — auto-displayed for Pinnacle tier members, not equippable
 export const PINNACLE_BADGE: Badge = {
   id: 'pinnacle', name: 'Pinnacle', icon: 'P', color: '#ffcc00', category: 'pinnacle',
@@ -37,6 +48,6 @@ export const PINNACLE_BADGE: Badge = {
 };
 
 export function getBadgeById(id: string): Badge | undefined {
-  return AVAILABLE_BADGES.find((b) => b.id === id);
+  return [...AVAILABLE_BADGES, ...FACTION_BADGES].find((b) => b.id === id);
 }
 
