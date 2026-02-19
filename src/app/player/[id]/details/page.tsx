@@ -29,9 +29,14 @@ interface DetailsPageProps {
 export default function DetailsPage({ params }: DetailsPageProps) {
   const { user, equippedBadges, cardThemeColor, avatarBorderStyle, selectedAvatar, isPinnacle } = useApp();
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   // Resolve the player: mock player > own profile > not found
@@ -266,15 +271,13 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           >
             <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Shell Loadout</h2>
           </div>
-          <div className="flex-1 flex items-center justify-center p-4 md:p-8 overflow-hidden">
-            <div className="scale-[0.72] md:scale-100 origin-center">
-              <ShellLoadout
-                runner={player.runner}
-                effectiveAccent={effectiveAccent}
-                slotSize={98}
-                shellSize={300}
-              />
-            </div>
+          <div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-hidden">
+            <ShellLoadout
+              runner={player.runner}
+              effectiveAccent={effectiveAccent}
+              slotSize={isMobile ? 64 : 98}
+              shellSize={isMobile ? 190 : 300}
+            />
           </div>
         </div>
 
