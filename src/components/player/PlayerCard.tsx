@@ -9,6 +9,7 @@ import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { ShellLoadout } from '@/components/player/ShellLoadout';
+import { RunnerAbilitiesCard } from '@/components/player/RunnerAbilitiesCard';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
@@ -336,6 +337,25 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               shellSize={260}
               extraTopPadding={14}
             />
+          </div>
+
+          {/* ── Runner Abilities ── */}
+          <div
+            className="relative px-4 py-3"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+          >
+            <div
+              className="mb-2"
+              style={{
+                fontSize: '0.575rem',
+                letterSpacing: '0.1em',
+                color: 'rgba(255,255,255,0.25)',
+                textTransform: 'uppercase',
+              }}
+            >
+              Abilities
+            </div>
+            <RunnerAbilitiesCard runner={player.runner} effectiveAccent={effectiveAccent} />
           </div>
 
           {/* ── Mini Recent Matches ── */}

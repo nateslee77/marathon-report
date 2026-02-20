@@ -15,6 +15,7 @@ import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { StatsFilter, DetailedPlayer } from '@/types';
 import { ShellLoadout } from '@/components/player/ShellLoadout';
+import { RunnerAbilitiesFull } from '@/components/player/RunnerAbilitiesFull';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
@@ -248,39 +249,13 @@ export default function DetailsPage({ params }: DetailsPageProps) {
         </div>
       </div>
 
-      {/* ── Shell Loadout (left) + Loadout / Career Highlights (right, stacked) ── */}
+      {/* ── Shell Loadout / Abilities (left) + Loadout / Career Highlights (right) ── */}
+      {/* HTML order: Loadout, Shell Loadout, Abilities, Career Highlights — correct for mobile stacking */}
       <div
         className="grid grid-cols-1 md:grid-cols-[1.35fr_1fr] gap-4 md:gap-6"
         style={{ alignItems: 'stretch' }}
       >
-        {/* Shell Loadout — col 1, spans both rows on desktop */}
-        <div
-          className="md:[grid-row:1/3]"
-          style={{
-            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <div
-            className="px-4 md:px-5 py-3 md:py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Shell Loadout</h2>
-          </div>
-          <div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-hidden">
-            <ShellLoadout
-              runner={player.runner}
-              effectiveAccent={effectiveAccent}
-              slotSize={isMobile ? 64 : 98}
-              shellSize={isMobile ? 190 : 300}
-            />
-          </div>
-        </div>
-
-        {/* Loadout — col 2, row 1 on desktop */}
+        {/* Loadout — col 2, row 1 on desktop; first on mobile */}
         <div
           className="md:[grid-column:2] md:[grid-row:1]"
           style={{
@@ -309,42 +284,42 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                 return `WPN ${idx + 1}`;
               };
               return (
-                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <div style={{ display: 'flex', gap: isMobile ? 5 : 8, alignItems: 'flex-start' }}>
                   {/* Weapons — 1×3 left column */}
                   {weapons.length > 0 && (
-                    <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
+                    <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: isMobile ? 4 : 6, minWidth: 0 }}>
                       {weapons.map((item) => (
                         <div
                           key={item.slot}
                           style={{
                             background: '#0a0a0a',
                             border: `1px solid ${effectiveAccent}1a`,
-                            padding: '10px 12px 8px',
+                            padding: isMobile ? '6px 8px 5px' : '10px 12px 8px',
                           }}
                         >
                           {item.image && (
-                            <div style={{ width: '100%', aspectRatio: '16 / 7', position: 'relative', marginBottom: 8 }}>
+                            <div style={{ width: '100%', aspectRatio: '16 / 7', position: 'relative', marginBottom: isMobile ? 4 : 8 }}>
                               <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
                             </div>
                           )}
-                          <div style={{ fontSize: '0.65rem', color: '#e5e5e5', fontWeight: 600, marginBottom: 2 }}>{item.name}</div>
-                          <div style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                          <div style={{ fontSize: isMobile ? '0.55rem' : '0.65rem', color: '#e5e5e5', fontWeight: 600, marginBottom: 2 }}>{item.name}</div>
+                          <div style={{ fontSize: '0.44rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                             {weaponLabel(item.slot)}
                           </div>
                         </div>
                       ))}
                     </div>
                   )}
-                  {/* Gear — 2×1 right column, much smaller squares */}
+                  {/* Gear — 2×1 right column */}
                   {gadgets.length > 0 && (
-                    <div style={{ flex: '0 0 28%', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <div style={{ flex: '0 0 28%', display: 'flex', flexDirection: 'column', gap: isMobile ? 4 : 6 }}>
                       {gadgets.map((item) => (
                         <div
                           key={item.slot}
                           style={{
                             background: '#0a0a0a',
                             border: `1px solid ${effectiveAccent}1a`,
-                            padding: '8px 6px',
+                            padding: isMobile ? '5px 4px' : '8px 6px',
                             textAlign: 'center',
                             aspectRatio: '1 / 1',
                             display: 'flex',
@@ -353,11 +328,11 @@ export default function DetailsPage({ params }: DetailsPageProps) {
                             justifyContent: 'center',
                           }}
                         >
-                          <div style={{ fontSize: '1.5rem', lineHeight: 1, marginBottom: 5, color: effectiveAccent + '99' }}>
+                          <div style={{ fontSize: isMobile ? '1rem' : '1.5rem', lineHeight: 1, marginBottom: isMobile ? 3 : 5, color: effectiveAccent + '99' }}>
                             {item.icon}
                           </div>
-                          <div style={{ fontSize: '0.52rem', color: '#e5e5e5', fontWeight: 500, lineHeight: 1.2 }}>{item.name}</div>
-                          <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 3 }}>
+                          <div style={{ fontSize: isMobile ? '0.44rem' : '0.52rem', color: '#e5e5e5', fontWeight: 500, lineHeight: 1.2 }}>{item.name}</div>
+                          <div style={{ fontSize: '0.38rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2 }}>
                             {item.slot}
                           </div>
                         </div>
@@ -370,9 +345,55 @@ export default function DetailsPage({ params }: DetailsPageProps) {
           </div>
         </div>
 
-        {/* Career Highlights — col 2, row 2 on desktop */}
+        {/* Shell Loadout — col 1, row 1 on desktop; second on mobile */}
+        <div
+          className="md:[grid-column:1] md:[grid-row:1]"
+          style={{
+            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <div
+            className="px-4 md:px-5 py-3 md:py-3.5"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Shell Loadout</h2>
+          </div>
+          <div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-hidden">
+            <ShellLoadout
+              runner={player.runner}
+              effectiveAccent={effectiveAccent}
+              slotSize={isMobile ? 64 : 98}
+              shellSize={isMobile ? 190 : 300}
+            />
+          </div>
+        </div>
+
+        {/* Runner Abilities — col 1, row 2 on desktop; third on mobile */}
+        <div
+          className="md:[grid-column:1] md:[grid-row:2]"
+          style={{
+            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
+          }}
+        >
+          <div
+            className="px-4 md:px-5 py-3 md:py-3.5"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Runner Abilities</h2>
+          </div>
+          <RunnerAbilitiesFull runner={player.runner} effectiveAccent={effectiveAccent} />
+        </div>
+
+        {/* Career Highlights — col 2, row 2 on desktop; fourth on mobile */}
         <div
           className="md:[grid-column:2] md:[grid-row:2]"
+
           style={{
             background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
             border: '1px solid rgba(255,255,255,0.06)',
