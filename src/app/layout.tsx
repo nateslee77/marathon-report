@@ -23,7 +23,10 @@ export const metadata: Metadata = {
   title: 'Marathon Intel - Player Stats & Analytics',
   description: 'Premium stats tracking and analytics for Marathon players',
   icons: {
-    icon: { url: '/images/Marathon_Bungie_Icon.svg', type: 'image/svg+xml' },
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
   },
 };
 
