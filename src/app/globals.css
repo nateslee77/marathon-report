@@ -387,78 +387,95 @@
 
 /* Pulse Glow */
 @keyframes avatar-pulse-glow {
-  0%, 100% { box-shadow: 0 0 4px var(--border-color), 0 0 8px var(--border-color-dim); }
-  50% { box-shadow: 0 0 12px var(--border-color), 0 0 24px var(--border-color-dim), 0 0 36px var(--border-color-dim2); }
+  0%, 100% {
+    box-shadow: 0 0 6px 2px var(--border-color), 0 0 18px 4px var(--border-color-dim);
+    border-color: var(--border-color-dim);
+  }
+  50% {
+    box-shadow: 0 0 18px 6px var(--border-color), 0 0 40px 10px var(--border-color-dim), 0 0 60px 16px var(--border-color-dim2);
+    border-color: var(--border-color-light);
+  }
 }
 .avatar-border-pulse-glow {
   animation: avatar-pulse-glow 2s ease-in-out infinite;
 }
 
 /* Spinning Gradient */
-@keyframes avatar-spin-gradient {
-  0% { --angle: 0deg; }
-  100% { --angle: 360deg; }
-}
 @property --angle {
   syntax: '<angle>';
   initial-value: 0deg;
   inherits: false;
 }
 .avatar-border-spinning-gradient {
-  border: 2px solid transparent !important;
+  border: 3px solid transparent !important;
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  animation: avatar-spin-conic 2s linear infinite;
+  animation: avatar-spin-conic 1.8s linear infinite;
 }
 @keyframes avatar-spin-conic {
-  0% { border-color: var(--border-color); box-shadow: 0 0 8px var(--border-color-dim); }
-  25% { border-color: var(--border-color-light); box-shadow: 0 0 12px var(--border-color-dim); }
-  50% { border-color: var(--border-color); box-shadow: 0 0 16px var(--border-color-dim2); }
-  75% { border-color: var(--border-color-light); box-shadow: 0 0 12px var(--border-color-dim); }
-  100% { border-color: var(--border-color); box-shadow: 0 0 8px var(--border-color-dim); }
+  0%   { border-color: var(--border-color);       box-shadow: 0 0 14px 4px var(--border-color-dim); }
+  25%  { border-color: var(--border-color-light);  box-shadow: 0 0 22px 6px var(--border-color); }
+  50%  { border-color: var(--border-color);        box-shadow: 0 0 14px 4px var(--border-color-dim); }
+  75%  { border-color: var(--border-color-light);  box-shadow: 0 0 22px 6px var(--border-color); }
+  100% { border-color: var(--border-color);        box-shadow: 0 0 14px 4px var(--border-color-dim); }
 }
 
 /* Shimmer Sweep */
 @keyframes avatar-shimmer {
-  0% { background-position: -200% 0; }
+  0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
 .avatar-border-shimmer-sweep {
-  box-shadow: 0 0 8px var(--border-color-dim);
+  box-shadow: 0 0 14px 3px var(--border-color-dim);
   position: relative;
   overflow: visible;
 }
 .avatar-border-shimmer-sweep::after {
   content: '';
   position: absolute;
-  inset: -3px;
-  background: linear-gradient(90deg, transparent 0%, var(--border-color-dim) 40%, var(--border-color) 50%, var(--border-color-dim) 60%, transparent 100%);
+  inset: -4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border-color-dim) 30%,
+    var(--border-color-light) 50%,
+    var(--border-color-dim) 70%,
+    transparent 100%
+  );
   background-size: 200% 100%;
-  animation: avatar-shimmer 2.5s linear infinite;
+  animation: avatar-shimmer 2s linear infinite;
   z-index: -1;
 }
 
 /* Breathing Ring */
 @keyframes avatar-breathing {
-  0%, 100% { border-color: var(--border-color-dim2); box-shadow: 0 0 4px var(--border-color-dim2); opacity: 0.6; }
-  50% { border-color: var(--border-color); box-shadow: 0 0 16px var(--border-color-dim); opacity: 1; }
+  0%, 100% {
+    border-color: var(--border-color-dim2);
+    box-shadow: 0 0 6px 1px var(--border-color-dim2);
+    opacity: 0.5;
+  }
+  50% {
+    border-color: var(--border-color-light);
+    box-shadow: 0 0 22px 6px var(--border-color), 0 0 40px 10px var(--border-color-dim);
+    opacity: 1;
+  }
 }
 .avatar-border-breathing-ring {
-  animation: avatar-breathing 3s ease-in-out infinite;
+  animation: avatar-breathing 2.5s ease-in-out infinite;
 }
 
 /* Electric Arc */
 @keyframes avatar-electric {
-  0%, 100% { box-shadow: 0 0 4px var(--border-color), 0 0 8px var(--border-color-dim); }
-  10% { box-shadow: 0 0 6px var(--border-color), 2px -2px 12px var(--border-color-dim), -3px 1px 8px var(--border-color-dim2); }
-  20% { box-shadow: 0 0 4px var(--border-color), -1px 3px 10px var(--border-color-dim); }
-  30% { box-shadow: 0 0 10px var(--border-color), 3px 0px 16px var(--border-color), -2px -3px 12px var(--border-color-dim); }
-  40% { box-shadow: 0 0 4px var(--border-color-dim); }
-  50% { box-shadow: 0 0 8px var(--border-color), 0 3px 14px var(--border-color-dim), 2px -1px 10px var(--border-color-dim2); }
-  60% { box-shadow: 0 0 4px var(--border-color); }
-  70% { box-shadow: 0 0 12px var(--border-color), -3px 2px 18px var(--border-color), 1px -2px 8px var(--border-color-dim); }
-  80% { box-shadow: 0 0 6px var(--border-color-dim); }
-  90% { box-shadow: 0 0 8px var(--border-color), 2px 2px 14px var(--border-color-dim); }
+  0%,100% { box-shadow: 0 0 6px 2px var(--border-color), 0 0 12px 4px var(--border-color-dim); }
+  10%     { box-shadow: 0 0 10px 4px var(--border-color), 4px -4px 20px 6px var(--border-color-dim), -5px 2px 14px 3px var(--border-color-dim2); }
+  20%     { box-shadow: 0 0 6px 2px var(--border-color), -2px 5px 16px 4px var(--border-color-dim); }
+  30%     { box-shadow: 0 0 18px 6px var(--border-color), 5px 0px 28px 8px var(--border-color), -4px -5px 20px 5px var(--border-color-dim); }
+  40%     { box-shadow: 0 0 6px 2px var(--border-color-dim); }
+  50%     { box-shadow: 0 0 14px 5px var(--border-color), 0 5px 24px 6px var(--border-color-dim), 4px -2px 18px 4px var(--border-color-dim2); }
+  60%     { box-shadow: 0 0 6px 2px var(--border-color); }
+  70%     { box-shadow: 0 0 22px 8px var(--border-color), -5px 4px 30px 8px var(--border-color), 2px -4px 14px 4px var(--border-color-dim); }
+  80%     { box-shadow: 0 0 8px 2px var(--border-color-dim); }
+  90%     { box-shadow: 0 0 12px 4px var(--border-color), 4px 4px 22px 6px var(--border-color-dim); }
 }
 .avatar-border-electric-arc {
   animation: avatar-electric 1.5s ease-in-out infinite;

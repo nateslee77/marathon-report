@@ -68,8 +68,6 @@ const AVAILABLE_AVATARS = [
 
 const CUSTOMIZATION_OPTIONS = [
   { label: 'Animated Avatar Border', description: 'Choose an animated border effect for your avatar', tier: 'pinnacle' as const, hasSubPicker: true },
-  { label: 'Link Social Media', description: 'Link a social media platform to your profile', tier: 'pinnacle' as const },
-  { label: 'Custom Bio', description: 'Add a short bio to your player profile', tier: 'pinnacle' as const },
 ];
 
 const BORDER_STYLES = [
