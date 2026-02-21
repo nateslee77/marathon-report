@@ -64,6 +64,9 @@ const AVAILABLE_AVATARS = [
   { id: 'gif-void', src: '/images/avatars/pinnacle avatars/Void5.gif', pinnacle: true },
   { id: 'gif-runner1', src: '/images/avatars/pinnacle avatars/tumblr_b7a9b8817a5a0d1664fc67e38d62cc82_031e176b_500.gif', pinnacle: true },
   { id: 'gif-runner2', src: '/images/avatars/pinnacle avatars/tumblr_bb26ed40249f0ff18a0c83c305396a25_35c77092_540.gif', pinnacle: true },
+  { id: 'gif-bingus', src: '/images/avatars/pinnacle avatars/bingus.gif', pinnacle: true },
+  // Free avatars
+  { id: 'worm', src: '/images/avatars/worm.webp', pinnacle: false },
 ];
 
 const CUSTOMIZATION_OPTIONS = [
