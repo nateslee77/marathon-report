@@ -29,6 +29,9 @@ interface AppContextType {
   setAvatarBorderStyle: (style: AvatarBorderStyle) => void;
   isPinnacle: boolean;
   refreshPremiumStatus: () => Promise<void>;
+  youtubeUrl: string | null;
+  twitchUrl: string | null;
+  setSocialLinks: (links: { youtube_url?: string | null; twitch_url?: string | null }) => Promise<{ error?: string }>;
 }
 
 const DEFAULT_AVATAR = '/images/avatars/default.svg';
@@ -49,6 +52,9 @@ const AppContext = createContext<AppContextType>({
   setAvatarBorderStyle: () => {},
   isPinnacle: false,
   refreshPremiumStatus: async () => {},
+  youtubeUrl: null,
+  twitchUrl: null,
+  setSocialLinks: async () => ({}),
 });
 
 /** Save a single preference to Supabase (fire-and-forget). */
@@ -71,6 +77,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [selectedAvatar, setSelectedAvatarState] = useState<string>(DEFAULT_AVATAR);
   const [avatarBorderStyle, setAvatarBorderStyleState] = useState<AvatarBorderStyle>('none');
   const [isPinnacle, setIsPinnacle] = useState(false);
+  const [youtubeUrl, setYoutubeUrl] = useState<string | null>(null);
+  const [twitchUrl, setTwitchUrl] = useState<string | null>(null);
   const hasFetchedPrefs = useRef(false);
 
   // Load persisted values from localStorage on mount (immediate cache)
@@ -123,6 +131,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         } else {
           localStorage.removeItem('marathon-pinnacle');
         }
+        if (prefs.youtube_url) setYoutubeUrl(prefs.youtube_url);
+        if (prefs.twitch_url) setTwitchUrl(prefs.twitch_url);
       })
       .catch(() => {
         // Fall back to localStorage values already loaded
@@ -158,6 +168,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setEquippedBadgesState(badges);
     localStorage.setItem('marathon-badges', JSON.stringify(badges));
     savePreferenceToSupabase({ equipped_badges: badges });
+  }, []);
+
+  const setSocialLinks = useCallback(async (links: { youtube_url?: string | null; twitch_url?: string | null }) => {
+    const res = await fetch('/api/user/social-links', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(links),
+    });
+    const data = await res.json();
+    if (!res.ok) return { error: data.error || 'Failed to save' };
+    if ('youtubeUrl' in data) setYoutubeUrl(data.youtubeUrl);
+    if ('twitchUrl' in data) setTwitchUrl(data.twitchUrl);
+    return {};
   }, []);
 
   const refreshPremiumStatus = useCallback(async () => {
@@ -209,7 +232,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [selectedAvatar]);
 
   return (
-    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle, refreshPremiumStatus }}>
+    <AppContext.Provider value={{ recentPlayers, addRecentPlayer, user, signIn, signOut, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle, refreshPremiumStatus, youtubeUrl, twitchUrl, setSocialLinks }}>
       {children}
     </AppContext.Provider>
   );

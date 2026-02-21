@@ -80,6 +80,8 @@ export interface DetailedPlayer {
   avatar: string;
   lastUpdated: Date;
   themeColor?: string;
+  youtubeUrl?: string;
+  twitchUrl?: string;
   loadout: LoadoutItem[];
   recentMatchSummary: MiniMatch[];
   careerHighlights: { label: string; value: string }[];

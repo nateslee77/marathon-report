@@ -28,7 +28,7 @@ interface DetailsPageProps {
 }
 
 export default function DetailsPage({ params }: DetailsPageProps) {
-  const { user, equippedBadges, cardThemeColor, avatarBorderStyle, selectedAvatar, isPinnacle } = useApp();
+  const { user, equippedBadges, cardThemeColor, avatarBorderStyle, selectedAvatar, isPinnacle, youtubeUrl, twitchUrl } = useApp();
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -100,6 +100,9 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   const displayBadges = isOwnProfile
     ? equippedBadges.map(getBadgeById).filter(Boolean)
     : (playerBadges[player.id] || []).map(getBadgeById).filter(Boolean);
+
+  const displayYoutubeUrl = isOwnProfile ? youtubeUrl : player.youtubeUrl;
+  const displayTwitchUrl = isOwnProfile ? twitchUrl : player.twitchUrl;
 
   return (
     <div className="space-y-6 md:space-y-8 animate-fade-in max-w-[1400px] mx-auto px-4 md:px-0 py-4 md:py-0">
@@ -219,6 +222,34 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             <span className="hidden md:inline-block" style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
             <RankBadge rank={player.competitiveRank} size="sm" />
           </div>
+
+          {/* Social Links */}
+          {(displayYoutubeUrl || displayTwitchUrl) && (
+            <div className="flex items-center gap-2 mt-2">
+              {displayYoutubeUrl && (
+                <a
+                  href={displayYoutubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', background: 'rgba(255,0,0,0.12)', border: '1px solid rgba(255,0,0,0.25)', color: '#ff4444', fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none' }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+                  YouTube
+                </a>
+              )}
+              {displayTwitchUrl && (
+                <a
+                  href={displayTwitchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', background: 'rgba(145,70,255,0.12)', border: '1px solid rgba(145,70,255,0.25)', color: '#9146ff', fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none' }}
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M11.6 6H13v4.5h-1.4V6zm3.8 0H17v4.5h-1.4V6zM2 0L.5 4v16.5H6V24l3.5-3.5H13L21.5 12V0H2zm18 11.5l-3.5 3.5H13l-3 3v-3H4.5V1.5h15.5V11.5z"/></svg>
+                  Twitch
+                </a>
+              )}
+            </div>
+          )}
 
           {/* Quick stats — grid on mobile, flex on desktop */}
           <div className="grid grid-cols-3 md:flex md:gap-6 gap-y-3 mt-4">

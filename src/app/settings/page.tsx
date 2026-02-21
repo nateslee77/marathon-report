@@ -82,16 +82,27 @@ const BORDER_STYLES = [
 ];
 
 export default function SettingsPage() {
-  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle } = useApp();
+  const { user, cardThemeColor, setCardThemeColor, equippedBadges, setEquippedBadges, selectedAvatar, setSelectedAvatar, avatarBorderStyle, setAvatarBorderStyle, isPinnacle, youtubeUrl, twitchUrl, setSocialLinks } = useApp();
   const [selectedColor, setSelectedColor] = useState(cardThemeColor || '#8844ff');
   const [replacingSlot, setReplacingSlot] = useState<number | null>(null);
   const [borderPickerOpen, setBorderPickerOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [upgradeLoading, setUpgradeLoading] = useState(false);
+  const [ytInput, setYtInput] = useState('');
+  const [twitchInput, setTwitchInput] = useState('');
+  const [socialSaving, setSocialSaving] = useState(false);
+  const [socialError, setSocialError] = useState<string | null>(null);
+  const [socialSuccess, setSocialSuccess] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Sync social inputs from context when loaded
+  useEffect(() => {
+    setYtInput(youtubeUrl || '');
+    setTwitchInput(twitchUrl || '');
+  }, [youtubeUrl, twitchUrl]);
 
   // Sync selectedColor when cardThemeColor changes (e.g. after hydration)
   useEffect(() => {
@@ -114,6 +125,23 @@ export default function SettingsPage() {
       if (data.url) window.location.href = data.url;
     } finally {
       setUpgradeLoading(false);
+    }
+  }
+
+  async function handleSaveSocialLinks() {
+    setSocialSaving(true);
+    setSocialError(null);
+    setSocialSuccess(false);
+    const result = await setSocialLinks({
+      youtube_url: ytInput.trim() || null,
+      twitch_url: twitchInput.trim() || null,
+    });
+    setSocialSaving(false);
+    if (result.error) {
+      setSocialError(result.error);
+    } else {
+      setSocialSuccess(true);
+      setTimeout(() => setSocialSuccess(false), 3000);
     }
   }
 
@@ -491,6 +519,105 @@ export default function SettingsPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* ── Social Links ── */}
+      <div className="game-card">
+        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>Social Links</h2>
+            <span style={{ fontSize: '0.55rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: '#ffcc00', border: '1px solid rgba(255,204,0,0.3)', padding: '1px 6px', background: 'rgba(255,204,0,0.08)' }}>
+              Pinnacle
+            </span>
+          </div>
+          <p className="text-xs text-text-tertiary mt-1">Add your YouTube and Twitch to your player card</p>
+        </div>
+        <div className="p-5 space-y-4" style={{ opacity: isPinnacle ? 1 : 0.5, pointerEvents: isPinnacle ? 'auto' : 'none' }}>
+
+          {/* YouTube */}
+          <div>
+            <label style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+              YouTube Channel URL
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={ytInput}
+                onChange={(e) => setYtInput(e.target.value)}
+                placeholder="https://youtube.com/@yourchannel"
+                className="flex-1 font-mono text-sm px-3 py-2"
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e5e5' }}
+              />
+              {youtubeUrl && (
+                <button
+                  onClick={() => { setYtInput(''); }}
+                  style={{ padding: '4px 10px', fontSize: '0.6rem', color: '#ff4444', background: 'rgba(255,68,68,0.06)', border: '1px solid rgba(255,68,68,0.15)', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.25)', marginTop: 4 }}>
+              Only youtube.com URLs accepted (e.g. youtube.com/@handle)
+            </div>
+          </div>
+
+          {/* Twitch */}
+          <div>
+            <label style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#9146ff"><path d="M11.6 6H13v4.5h-1.4V6zm3.8 0H17v4.5h-1.4V6zM2 0L.5 4v16.5H6V24l3.5-3.5H13L21.5 12V0H2zm18 11.5l-3.5 3.5H13l-3 3v-3H4.5V1.5h15.5V11.5z"/></svg>
+              Twitch Channel URL
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={twitchInput}
+                onChange={(e) => setTwitchInput(e.target.value)}
+                placeholder="https://twitch.tv/yourchannel"
+                className="flex-1 font-mono text-sm px-3 py-2"
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', color: '#e5e5e5' }}
+              />
+              {twitchUrl && (
+                <button
+                  onClick={() => { setTwitchInput(''); }}
+                  style={{ padding: '4px 10px', fontSize: '0.6rem', color: '#ff4444', background: 'rgba(255,68,68,0.06)', border: '1px solid rgba(255,68,68,0.15)', cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <div style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.25)', marginTop: 4 }}>
+              Only twitch.tv URLs accepted (e.g. twitch.tv/username)
+            </div>
+          </div>
+
+          {/* Error / Success */}
+          {socialError && (
+            <div style={{ fontSize: '0.7rem', color: '#ff4444', background: 'rgba(255,68,68,0.06)', border: '1px solid rgba(255,68,68,0.15)', padding: '6px 10px' }}>
+              {socialError}
+            </div>
+          )}
+          {socialSuccess && (
+            <div style={{ fontSize: '0.7rem', color: '#c2ff0b', background: 'rgba(194,255,11,0.06)', border: '1px solid rgba(194,255,11,0.15)', padding: '6px 10px' }}>
+              Social links saved ✓
+            </div>
+          )}
+
+          <button
+            onClick={handleSaveSocialLinks}
+            disabled={socialSaving}
+            style={{ padding: '8px 20px', fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#c2ff0b', background: 'rgba(194,255,11,0.08)', border: '1px solid rgba(194,255,11,0.2)', cursor: socialSaving ? 'not-allowed' : 'pointer', opacity: socialSaving ? 0.6 : 1 }}
+          >
+            {socialSaving ? 'Saving…' : 'Save Links'}
+          </button>
+        </div>
+
+        {!isPinnacle && (
+          <div className="px-5 pb-4" style={{ marginTop: -8 }}>
+            <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>Upgrade to Pinnacle to link your socials.</div>
+          </div>
+        )}
       </div>
 
       {/* ── Badges ── */}

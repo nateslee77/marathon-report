@@ -13,7 +13,7 @@ export async function GET(
 
   const { data, error } = await supabaseAdmin
     .from('users')
-    .select('bungie_membership_id, display_name, bungie_name, selected_avatar, is_pinnacle')
+    .select('bungie_membership_id, display_name, bungie_name, selected_avatar, is_pinnacle, youtube_url, twitch_url')
     .eq('bungie_membership_id', id)
     .single();
 
@@ -32,5 +32,7 @@ export async function GET(
     tag,
     avatar: data.selected_avatar ?? '',
     isPinnacle: data.is_pinnacle ?? false,
+    youtubeUrl: data.youtube_url ?? null,
+    twitchUrl: data.twitch_url ?? null,
   });
 }

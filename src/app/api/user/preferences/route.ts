@@ -9,6 +9,8 @@ const PREFERENCE_COLUMNS = [
   'avatar_border_style',
   'equipped_badges',
   'is_pinnacle',
+  'youtube_url',
+  'twitch_url',
 ] as const;
 
 export async function GET() {

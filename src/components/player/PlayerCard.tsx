@@ -20,9 +20,11 @@ interface PlayerCardProps {
 }
 
 export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
-  const { user, cardThemeColor, equippedBadges, avatarBorderStyle, isPinnacle } = useApp();
+  const { user, cardThemeColor, equippedBadges, avatarBorderStyle, isPinnacle, youtubeUrl, twitchUrl } = useApp();
   const isOwnCard = user?.id === player.id;
   const runner = RUNNER_VISUALS[player.runner];
+  const displayYoutubeUrl = isOwnCard ? youtubeUrl : player.youtubeUrl;
+  const displayTwitchUrl = isOwnCard ? twitchUrl : player.twitchUrl;
   const playerThemeColor = isOwnCard && cardThemeColor ? cardThemeColor : player.themeColor;
   const effectiveAccent = playerThemeColor ?? runner.accent;
   const useCustomTheme = !!playerThemeColor;
@@ -148,13 +150,43 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                   ...borderVars,
                 }}
               />
-              <div className="flex items-baseline gap-2">
-                <span className="font-bold text-xl tracking-tight" style={{ color: '#fff' }}>
-                  {player.name}
-                </span>
-                <span className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                  {player.tag}
-                </span>
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="font-bold text-xl tracking-tight" style={{ color: '#fff' }}>
+                    {player.name}
+                  </span>
+                  <span className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    {player.tag}
+                  </span>
+                </div>
+                {(displayYoutubeUrl || displayTwitchUrl) && (
+                  <div className="flex items-center gap-2 mt-1">
+                    {displayYoutubeUrl && (
+                      <a
+                        href={displayYoutubeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '2px 6px', background: 'rgba(255,0,0,0.12)', border: '1px solid rgba(255,0,0,0.25)', color: '#ff4444', fontSize: '0.55rem', letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background 150ms' }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+                        YT
+                      </a>
+                    )}
+                    {displayTwitchUrl && (
+                      <a
+                        href={displayTwitchUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '2px 6px', background: 'rgba(145,70,255,0.12)', border: '1px solid rgba(145,70,255,0.25)', color: '#9146ff', fontSize: '0.55rem', letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none', transition: 'background 150ms' }}
+                      >
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M11.6 6H13v4.5h-1.4V6zm3.8 0H17v4.5h-1.4V6zM2 0L.5 4v16.5H6V24l3.5-3.5H13L21.5 12V0H2zm18 11.5l-3.5 3.5H13l-3 3v-3H4.5V1.5h15.5V11.5z"/></svg>
+                        Twitch
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>

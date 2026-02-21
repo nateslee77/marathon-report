@@ -34,6 +34,8 @@ export const detailedPlayers: Record<string, DetailedPlayer> = {
     avatar: '/images/faction logo/arachne.png',
     lastUpdated: new Date(Date.now() - 1000 * 60 * 8),
     themeColor: '#df0008',
+    youtubeUrl: 'https://youtube.com/@sushi',
+    twitchUrl: 'https://twitch.tv/sushi',
     loadout: [
       { slot: 'primary', name: 'Overrun AR', icon: 'R', image: '/images/weapons meta pics/OVERRUN AR.png' },
       { slot: 'sidearm', name: 'CE Tactical Sidearm', icon: 'S', image: '/images/weapons meta pics/CE TACTICAL SIDEARM.png' },

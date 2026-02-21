@@ -16,6 +16,7 @@ const ZERO_STATS: PlayerStats = {
 export function buildDefaultPlayer(
   user: { id: string; name: string; tag: string },
   avatar: string,
+  social?: { youtubeUrl?: string; twitchUrl?: string },
 ): DetailedPlayer {
   return {
     id: user.id,
@@ -30,6 +31,8 @@ export function buildDefaultPlayer(
     competitiveRank: 'Unranked',
     membership: 'free',
     avatar,
+    youtubeUrl: social?.youtubeUrl || undefined,
+    twitchUrl: social?.twitchUrl || undefined,
     lastUpdated: new Date(),
     loadout: [],
     recentMatchSummary: [],

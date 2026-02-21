@@ -202,7 +202,7 @@ export default function HomePage() {
           >
             <div className="text-center">
               <div className="text-base md:text-xl font-mono font-bold text-text-primary tabular-nums">50K</div>
-              <div className="stat-label mt-0.5">Players</div>
+              <div className="stat-label mt-0.5">Runners</div>
             </div>
             <div className="w-px h-6 md:h-8 bg-border/50" />
             <div className="text-center">
@@ -276,7 +276,7 @@ export default function HomePage() {
               { name: 'THIEF', image: '/images/avatars/thief.jpg', usage: 15.3 },
               { name: 'DESTROYER', image: '/images/avatars/avatar4.png', usage: 13.8 },
               { name: 'ROOK', image: '/images/avatars/Rook.webp', usage: 11.2, zoom: true },
-              { name: 'VOID', image: '/images/avatars/avatar6.png', usage: 10.5 },
+              { name: 'ASSASSIN', image: '/images/avatars/avatar6.png', usage: 10.5 },
               { name: 'TRIAGE', image: '/images/avatars/triage.jpg', usage: 8.4 },
             ].sort((a, b) => b.usage - a.usage).map((runner) => (
               <div
