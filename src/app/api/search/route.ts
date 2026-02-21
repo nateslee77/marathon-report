@@ -23,22 +23,37 @@ export async function GET(request: NextRequest) {
   // then enforce length bounds before touching Supabase or Bungie.
   const query = raw.replace(/[^a-zA-Z0-9 _.#\-]/g, '').slice(0, 64);
 
-  if (query.length < 3) {
+  if (query.length < 2) {
     return NextResponse.json([]);
   }
 
   const results: SearchPlayer[] = [];
 
   // Tier 1: registered users in Supabase (trigram indexed — fast)
+  // Use separate .ilike() calls instead of .or() to avoid PostgREST wildcard encoding issues.
   if (supabaseAdmin) {
-    const { data } = await supabaseAdmin
-      .from('users')
-      .select('bungie_membership_id, display_name, bungie_name, is_pinnacle')
-      .or(`display_name.ilike.%${query}%,bungie_name.ilike.%${query}%`)
-      .limit(6);
+    const [byDisplay, byBungieName] = await Promise.all([
+      supabaseAdmin
+        .from('users')
+        .select('bungie_membership_id, display_name, bungie_name, is_pinnacle')
+        .ilike('display_name', `%${query}%`)
+        .limit(6),
+      supabaseAdmin
+        .from('users')
+        .select('bungie_membership_id, display_name, bungie_name, is_pinnacle')
+        .ilike('bungie_name', `%${query}%`)
+        .limit(6),
+    ]);
 
-    if (data) {
-      for (const row of data) {
+    const seen = new Set<string>();
+    const rows = [...(byDisplay.data ?? []), ...(byBungieName.data ?? [])];
+    const data = rows.filter((r) => {
+      if (seen.has(r.bungie_membership_id)) return false;
+      seen.add(r.bungie_membership_id);
+      return true;
+    });
+
+    for (const row of data) {
         const rawName = row.bungie_name ?? row.display_name ?? '';
         const hashIdx = rawName.lastIndexOf('#');
         const name = hashIdx > 0 ? rawName.slice(0, hashIdx) : rawName;
@@ -54,7 +69,6 @@ export async function GET(request: NextRequest) {
           winRate: 0,
           competitiveRank: 'Unranked',
         });
-      }
     }
   }
 

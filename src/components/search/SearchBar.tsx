@@ -23,7 +23,7 @@ export function SearchBar({ variant = 'rail' }: SearchBarProps) {
 
   // Debounced search — fires after 300ms, min 3 chars
   useEffect(() => {
-    if (query.length < 3) {
+    if (query.length < 2) {
       setResults([]);
       setIsLoading(false);
       return;
@@ -47,7 +47,7 @@ export function SearchBar({ variant = 'rail' }: SearchBarProps) {
 
   const showDropdown =
     isFocused &&
-    ((query.length === 0 && recentPlayers.length > 0) || query.length >= 3);
+    ((query.length === 0 && recentPlayers.length > 0) || query.length >= 2);
 
   const displayList = query.length === 0 ? recentPlayers.slice(0, 6) : results;
 
@@ -117,7 +117,7 @@ export function SearchBar({ variant = 'rail' }: SearchBarProps) {
             </div>
           )}
 
-          {query.length >= 3 && !isLoading && results.length === 0 && (
+          {query.length >= 2 && !isLoading && results.length === 0 && (
             <div className="px-3 py-4 text-center text-sm text-text-tertiary">
               No players found
             </div>
