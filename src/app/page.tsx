@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SearchBar } from '@/components/search/SearchBar';
@@ -8,7 +8,62 @@ import { DesktopAuthButton } from '@/components/auth/DesktopAuthButton';
 import { WeaponMetaTracker } from '@/components/weapons/WeaponMetaTracker';
 import { TiltShineCard } from '@/components/cards/TiltShineCard';
 
+// ── Wave-reveal scramble hook ───────────────────────────────────────────────
+// Letters start hidden. A narrow scramble window sweeps left-to-right;
+// each letter briefly shows random chars then locks into its final value.
+const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789#@!';
+
+interface CharState { display: string; locked: boolean; visible: boolean }
+
+function useScramble(text: string, revealDuration = 1600) {
+  const letters = useMemo(() => text.split(''), [text]);
+
+  const [chars, setChars] = useState<CharState[]>(() =>
+    letters.map(c => ({ display: c, locked: false, visible: false }))
+  );
+  const rafRef = useRef<number>(0);
+
+  useEffect(() => {
+    const WAVE_MS = 160; // width of the scramble window per character (ms)
+    const start   = performance.now();
+
+    function frame(now: number) {
+      const elapsed = now - start;
+
+      setChars(letters.map((char, i) => {
+        if (char === ' ') return { display: ' ', locked: true, visible: true };
+
+        const revealTime    = (i / (letters.length - 1)) * revealDuration;
+        const scrambleStart = revealTime - WAVE_MS;
+        const scrambleEnd   = revealTime + WAVE_MS;
+
+        if (elapsed < scrambleStart) {
+          return { display: char, locked: false, visible: false };
+        } else if (elapsed < scrambleEnd) {
+          return {
+            display: SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)],
+            locked: false,
+            visible: true,
+          };
+        } else {
+          return { display: char, locked: true, visible: true };
+        }
+      }));
+
+      if (elapsed < revealDuration + WAVE_MS) {
+        rafRef.current = requestAnimationFrame(frame);
+      }
+    }
+
+    rafRef.current = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [letters, revealDuration]);
+
+  return chars;
+}
+
 export default function HomePage() {
+  const titleChars = useScramble('Marathon Intel');
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // March 5th, 2026 10:00 AM PST = 18:00 UTC
@@ -136,61 +191,47 @@ export default function HomePage() {
                   Player Intelligence Platform
                 </div>
 
-                <h1 className="text-2xl md:text-4xl font-bold text-text-primary mb-3 md:mb-5 text-balance">
-                  Marathon Intel
-                </h1>
-
-                {/* Countdown inline */}
-                <div
-                  className="mb-1.5"
-                  style={{
-                    fontSize: '0.6rem',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.35)',
-                    fontWeight: 600,
-                    textAlign: 'center',
-                  }}
-                >
-                  Time Till Game Release
-                </div>
-                <div className="flex justify-center gap-2 md:gap-3 mb-4 md:mb-8">
-                  {[
-                    { value: countdown.days, label: 'Days' },
-                    { value: countdown.hours, label: 'Hrs' },
-                    { value: countdown.minutes, label: 'Min' },
-                    { value: countdown.seconds, label: 'Sec' },
-                  ].map((unit) => (
-                    <div
-                      key={unit.label}
-                      className="text-center"
+                <h1 className="text-2xl md:text-4xl font-bold mb-3 md:mb-5" aria-label="Marathon Intel">
+                  {titleChars.map((c, i) => (
+                    <span
+                      key={i}
                       style={{
-                        background: 'rgba(0,0,0,0.5)',
-                        border: '1px solid rgba(194,255,11,0.15)',
-                        padding: '8px 12px',
-                        minWidth: 56,
-                        backdropFilter: 'blur(8px)',
+                        display: 'inline-block',
+                        minWidth: c.display === ' ' ? '0.28em' : undefined,
+                        opacity: c.visible ? 1 : 0,
+                        color: c.locked ? '#e5e5e5' : 'rgba(194,255,11,0.55)',
+                        transition: c.locked ? 'color 0.12s ease' : undefined,
                       }}
                     >
-                      <div
-                        className="font-stat text-xl md:text-3xl font-bold tabular-nums leading-none"
-                        style={{ color: '#c2ff0b' }}
-                      >
-                        {String(unit.value).padStart(2, '0')}
-                      </div>
-                      <div
-                        className="mt-1"
-                        style={{
-                          fontSize: '0.45rem',
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: 'rgba(255,255,255,0.4)',
-                        }}
-                      >
-                        {unit.label}
-                      </div>
-                    </div>
+                      {c.display}
+                    </span>
                   ))}
+                </h1>
+
+                {/* Stats ribbon — inside hero */}
+                <div className="flex justify-center mb-4 md:mb-8">
+                  <div
+                    className="inline-flex items-center gap-3 md:gap-8 px-4 md:px-8 py-2.5 md:py-4 game-card"
+                    style={{ background: 'rgba(12,12,12,0.75)', backdropFilter: 'blur(8px)' }}
+                  >
+                    <div className="text-center">
+                      <div className="text-base md:text-xl font-stat font-bold text-text-primary tabular-nums">50K</div>
+                      <div className="stat-label mt-0.5">Runners</div>
+                    </div>
+                    <div className="w-px h-6 md:h-8 bg-border/50" />
+                    <div className="text-center">
+                      <div className="text-base md:text-xl font-stat font-bold text-text-primary tabular-nums">12.4K</div>
+                      <div className="stat-label mt-0.5">Matches</div>
+                    </div>
+                    <div className="w-px h-6 md:h-8 bg-border/50" />
+                    <div className="text-center">
+                      <div className="text-base md:text-xl font-stat font-bold tabular-nums flex items-center gap-1.5" style={{ color: '#c2ff0b' }}>
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#c2ff0b', display: 'inline-block', animation: 'pulse-dot 1.5s ease-in-out infinite' }} />
+                        Live
+                      </div>
+                      <div className="stat-label mt-0.5">Updates</div>
+                    </div>
+                  </div>
                 </div>
 
                 <p className="hidden md:block text-sm text-text-secondary max-w-md mx-auto mb-6">
@@ -207,29 +248,57 @@ export default function HomePage() {
           <SearchBar variant="hero" />
         </div>
 
-        {/* ── Stats ribbon ── */}
-        <div className="relative z-10 flex justify-center px-4 pt-6 pb-4 md:py-0 md:pb-16 md:-mt-8">
+        {/* ── Countdown — below hero ── */}
+        <div className="relative z-10 flex flex-col items-center px-4 pt-6 pb-4 md:pt-8 md:pb-16">
           <div
-            className="inline-flex items-center gap-3 md:gap-8 px-4 md:px-8 py-2.5 md:py-4 game-card"
-            style={{ background: 'linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)' }}
+            className="mb-1.5"
+            style={{
+              fontSize: '0.6rem',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: 'rgba(255,255,255,0.35)',
+              fontWeight: 600,
+              textAlign: 'center',
+            }}
           >
-            <div className="text-center">
-              <div className="text-base md:text-xl font-stat font-bold text-text-primary tabular-nums">50K</div>
-              <div className="stat-label mt-0.5">Runners</div>
-            </div>
-            <div className="w-px h-6 md:h-8 bg-border/50" />
-            <div className="text-center">
-              <div className="text-base md:text-xl font-stat font-bold text-text-primary tabular-nums">12.4K</div>
-              <div className="stat-label mt-0.5">Matches</div>
-            </div>
-            <div className="w-px h-6 md:h-8 bg-border/50" />
-            <div className="text-center">
-              <div className="text-base md:text-xl font-stat font-bold tabular-nums flex items-center gap-1.5" style={{ color: '#c2ff0b' }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#c2ff0b', display: 'inline-block', animation: 'pulse-dot 1.5s ease-in-out infinite' }} />
-                Live
+            Time Till Game Release
+          </div>
+          <div className="flex justify-center gap-2 md:gap-3">
+            {[
+              { value: countdown.days, label: 'Days' },
+              { value: countdown.hours, label: 'Hrs' },
+              { value: countdown.minutes, label: 'Min' },
+              { value: countdown.seconds, label: 'Sec' },
+            ].map((unit) => (
+              <div
+                key={unit.label}
+                className="text-center"
+                style={{
+                  background: 'rgba(0,0,0,0.5)',
+                  border: '1px solid rgba(194,255,11,0.15)',
+                  padding: '8px 12px',
+                  minWidth: 56,
+                }}
+              >
+                <div
+                  className="font-stat text-xl md:text-3xl font-bold tabular-nums leading-none"
+                  style={{ color: '#c2ff0b' }}
+                >
+                  {String(unit.value).padStart(2, '0')}
+                </div>
+                <div
+                  className="mt-1"
+                  style={{
+                    fontSize: '0.45rem',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(255,255,255,0.4)',
+                  }}
+                >
+                  {unit.label}
+                </div>
               </div>
-              <div className="stat-label mt-0.5">Updates</div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

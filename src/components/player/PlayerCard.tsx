@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { DetailedPlayer, MembershipTier, WeaponRecord } from '@/types';
+import { DetailedPlayer, MembershipTier, StatsFilter, WeaponRecord } from '@/types';
 import { RUNNER_VISUALS } from '@/lib/runners';
 import { formatKD, formatPercentage, cn } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
@@ -78,6 +78,8 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
     ? equippedBadges.map(getBadgeById).filter(Boolean)
     : (playerBadges[player.id] || []).map(getBadgeById).filter(Boolean);
 
+  const [statsFilter, setStatsFilter] = useState<StatsFilter>('thisWeek');
+  const filteredStats = player.stats[statsFilter];
   const stats = player.stats.overall;
 
   return (
@@ -147,6 +149,12 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               background: 'linear-gradient(180deg, transparent 40%, rgba(16,16,16,0.95) 100%)',
             }}
           />
+          {/* Pinnacle badge — bottom-right of shell image */}
+          {(player.membership === 'pinnacle' || (user?.id === player.id && isPinnacle)) && (
+            <div style={{ position: 'absolute', bottom: 12, right: 8, zIndex: 5 }}>
+              <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
+            </div>
+          )}
           {/* Player name overlay */}
           <div style={{ position: 'absolute', bottom: 12, left: 16, right: 16 }}>
             <div className="flex items-center gap-2.5">
@@ -227,9 +235,6 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              {(player.membership === 'pinnacle' || (user?.id === player.id && isPinnacle)) && (
-                <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
-              )}
               <RankBadge rank={player.competitiveRank} size="sm" />
               {/* Elo stack: trio + solo */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
@@ -259,7 +264,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 { label: 'K/D/A',    value: formatKD(stats.kda),                       color: 'rgba(255,255,255,0.6)' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className={`font-stat text-lg tabular-nums ${stat.bold ? 'font-bold' : 'font-semibold'}`} style={{ color: stat.color }}>
+                  <div className={`font-stat tabular-nums ${stat.bold ? 'font-bold' : 'font-semibold'}`} style={{ fontSize: '1.25rem', color: stat.color }}>
                     {stat.value}
                   </div>
                   <div className="mt-0.5" style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase' }}>
@@ -279,7 +284,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 { label: 'TIME',     value: stats.timePlayed.replace('h ', 'h ').split(' ')[0], color: 'rgba(255,255,255,0.5)' },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className="font-stat text-base tabular-nums font-semibold" style={{ color: stat.color }}>
+                  <div className="font-stat tabular-nums font-semibold" style={{ fontSize: '1rem', color: stat.color }}>
                     {stat.value}
                   </div>
                   <div className="mt-0.5" style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>
@@ -376,9 +381,83 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             )}
           </div>
 
+          {/* ── Stats with filter tabs ── */}
+          <div
+            className="relative px-4 py-5"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          >
+            {/* Section label */}
+            <div style={{ fontSize: '0.55rem', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', marginBottom: 10 }}>
+              Stats
+            </div>
+
+            {/* Filter chips */}
+            <div style={{ display: 'flex', gap: 4, marginBottom: 16 }}>
+              {([
+                { key: 'thisWeek',  label: 'Weekly'   },
+                { key: 'last10',    label: 'Last 10'  },
+                { key: 'last50',    label: 'Last 50'  },
+                { key: 'thisSeason',label: 'Seasonal' },
+                { key: 'overall',   label: 'All Time' },
+              ] as { key: StatsFilter; label: string }[]).map(({ key, label }) => {
+                const active = statsFilter === key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setStatsFilter(key)}
+                    style={{
+                      flex: '1 1 0',
+                      fontSize: '0.58rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.04em',
+                      padding: '7px 4px',
+                      border: active ? `1px solid ${effectiveAccent}60` : '1px solid rgba(255,255,255,0.1)',
+                      background: active ? `${effectiveAccent}20` : 'rgba(255,255,255,0.03)',
+                      color: active ? effectiveAccent : 'rgba(255,255,255,0.4)',
+                      cursor: 'pointer',
+                      transition: 'all 0.12s',
+                      whiteSpace: 'nowrap',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* 4 stats — equal-width bordered boxes */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
+              {[
+                { label: 'K/D',     value: formatKD(filteredStats.kd),                       color: filteredStats.kd >= 1.5 ? effectiveAccent : filteredStats.kd >= 1.0 ? '#e5e5e5' : '#ff4444' },
+                { label: 'EXT%',    value: formatPercentage(filteredStats.extractionRate, 1), color: filteredStats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
+                { label: 'Matches', value: String(filteredStats.matchesPlayed),               color: 'rgba(255,255,255,0.75)' },
+                { label: 'Time',    value: filteredStats.timePlayed.split(' ')[0],             color: 'rgba(255,255,255,0.55)' },
+              ].map((stat) => (
+                <div
+                  key={stat.label}
+                  style={{
+                    textAlign: 'center',
+                    padding: '12px 4px',
+                    background: 'rgba(255,255,255,0.025)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <div className="font-stat tabular-nums font-bold" style={{ fontSize: '1.125rem', color: stat.color, lineHeight: 1 }}>
+                    {stat.value}
+                  </div>
+                  <div style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', marginTop: 5 }}>
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* ── Click hint ── */}
           <div
-            className="relative px-4 py-3 text-center transition-opacity duration-200 opacity-0 group-hover:opacity-100"
+            className="relative px-4 py-3 text-center transition-opacity duration-200 opacity-100 md:opacity-0 md:group-hover:opacity-100"
             style={{
               fontSize: '0.6rem',
               letterSpacing: '0.1em',

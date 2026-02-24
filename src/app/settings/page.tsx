@@ -44,29 +44,29 @@ const MONETIZATION_TIERS = [
 ];
 
 const AVAILABLE_AVATARS = [
-  { id: 'avatar1', src: '/images/avatars/avatar1.png', pinnacle: false },
-  { id: 'avatar2', src: '/images/avatars/avatar2.png', pinnacle: false },
-  { id: 'avatar3', src: '/images/avatars/avatar3.png', pinnacle: false },
-  { id: 'avatar4', src: '/images/avatars/avatar4.png', pinnacle: false },
-  { id: 'avatar5', src: '/images/avatars/avatar5.png', pinnacle: false },
-  { id: 'avatar6', src: '/images/avatars/avatar6.png', pinnacle: false },
-  { id: 'avatar7', src: '/images/avatars/avatar7.png', pinnacle: false },
-  { id: 'thief', src: '/images/avatars/thief.jpg', pinnacle: false },
-  { id: 'triage', src: '/images/avatars/triage.jpg', pinnacle: false },
-  // Faction avatars — free for all users
-  { id: 'faction-cyberacme', src: '/images/faction logo/cyberacme.png', pinnacle: false, bg: '#000000' },
-  { id: 'faction-sekiguchi', src: '/images/faction logo/sekiguchi.png', pinnacle: false, bg: '#ffffff' },
-  { id: 'faction-traxus', src: '/images/faction logo/traxus.png', pinnacle: false, bg: '#000000' },
-  { id: 'faction-arachne', src: '/images/faction logo/arachne.png', pinnacle: false, bg: '#000000' },
+  // ── Free ──
+  { id: 'avatar1',          src: '/images/avatars/avatar1.png',                                                                                    pinnacle: false },
+  { id: 'avatar2',          src: '/images/avatars/avatar2.png',                                                                                    pinnacle: false },
+  { id: 'avatar3',          src: '/images/avatars/avatar3.png',                                                                                    pinnacle: false },
+  { id: 'avatar4',          src: '/images/avatars/avatar4.png',                                                                                    pinnacle: false },
+  { id: 'avatar5',          src: '/images/avatars/avatar5.png',                                                                                    pinnacle: false },
+  { id: 'avatar6',          src: '/images/avatars/avatar6.png',                                                                                    pinnacle: false },
+  { id: 'avatar7',          src: '/images/avatars/avatar7.png',                                                                                    pinnacle: false },
+  { id: 'thief',            src: '/images/avatars/thief.jpg',                                                                                      pinnacle: false },
+  { id: 'triage',           src: '/images/avatars/triage.jpg',                                                                                     pinnacle: false },
+  { id: 'worm',             src: '/images/avatars/worm.webp',                                                                                      pinnacle: false },
+  { id: 'faction-cyberacme',src: '/images/faction logo/cyberacme.png',  pinnacle: false, bg: '#000000' },
+  { id: 'faction-sekiguchi',src: '/images/faction logo/sekiguchi.png',  pinnacle: false, bg: '#ffffff' },
+  { id: 'faction-traxus',   src: '/images/faction logo/traxus.png',     pinnacle: false, bg: '#000000' },
+  { id: 'faction-arachne',  src: '/images/faction logo/arachne.png',    pinnacle: false, bg: '#000000' },
   { id: 'faction-nucaloric', src: '/images/faction logo/nucaloric.png', pinnacle: false, bg: '#ffffff' },
-  { id: 'faction-mida', src: '/images/faction logo/mida.png', pinnacle: false, bg: '#000000' },
-  // Pinnacle avatars
-  { id: 'gif-void', src: '/images/avatars/pinnacle avatars/Void5.gif', pinnacle: true },
-  { id: 'gif-runner1', src: '/images/avatars/pinnacle avatars/tumblr_b7a9b8817a5a0d1664fc67e38d62cc82_031e176b_500.gif', pinnacle: true },
-  { id: 'gif-runner2', src: '/images/avatars/pinnacle avatars/tumblr_bb26ed40249f0ff18a0c83c305396a25_35c77092_540.gif', pinnacle: true },
-  { id: 'gif-bingus', src: '/images/avatars/pinnacle avatars/bingus.gif', pinnacle: true },
-  // Free avatars
-  { id: 'worm', src: '/images/avatars/worm.webp', pinnacle: false },
+  { id: 'faction-mida',     src: '/images/faction logo/mida.png',       pinnacle: false, bg: '#000000' },
+  // ── Pinnacle ──
+  { id: 'gif-void',    src: '/images/avatars/pinnacle avatars/Void5.gif',                                                                          pinnacle: true },
+  { id: 'gif-runner1', src: '/images/avatars/pinnacle avatars/tumblr_b7a9b8817a5a0d1664fc67e38d62cc82_031e176b_500.gif',                           pinnacle: true },
+  { id: 'gif-runner2', src: '/images/avatars/pinnacle avatars/tumblr_bb26ed40249f0ff18a0c83c305396a25_35c77092_540.gif',                           pinnacle: true },
+  { id: 'gif-bingus',  src: '/images/avatars/pinnacle avatars/bingus.gif',                                                                         pinnacle: true },
+  { id: 'gif-ascii',   src: '/images/avatars/pinnacle avatars/ascii-art_3.gif',                                                                    pinnacle: true },
 ];
 
 const CUSTOMIZATION_OPTIONS = [
@@ -188,12 +188,10 @@ export default function SettingsPage() {
               const previewAvatarData = AVAILABLE_AVATARS.find((a) => a.src === selectedAvatar);
               const previewBg = previewAvatarData && 'bg' in previewAvatarData ? (previewAvatarData as any).bg as string : null;
               return user.avatar.endsWith('.gif') ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={user.avatar}
-                  alt={user.name}
-                  style={{ width: 80, height: 80, border: `2px solid ${selectedColor}55`, objectFit: 'cover', flexShrink: 0 }}
-                />
+                <div style={{ width: 80, height: 80, overflow: 'hidden', border: `2px solid ${selectedColor}55`, flexShrink: 0 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={user.avatar} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                </div>
               ) : previewBg ? (
                 <div style={{ width: 80, height: 80, background: previewBg, border: `2px solid ${selectedColor}55`, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8, flexShrink: 0 }}>
                   <Image src={user.avatar} alt={user.name} width={160} height={160} quality={90} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
@@ -217,128 +215,87 @@ export default function SettingsPage() {
 
           {/* Avatar Picker */}
           <div>
-            <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+            <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
               Choose Avatar
             </div>
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-              {AVAILABLE_AVATARS.map((avatar) => {
-                const isSelected = selectedAvatar === avatar.src;
-                const isGif = avatar.src.endsWith('.gif');
-                const isLocked = avatar.pinnacle && !isPinnacle;
-                const avatarBg = 'bg' in avatar ? (avatar as any).bg as string : null;
-                return (
-                  <button
-                    key={avatar.id}
-                    onClick={() => { if (!isLocked) setSelectedAvatar(avatar.src); }}
-                    style={{
-                      position: 'relative',
-                      width: '100%',
-                      aspectRatio: '1',
-                      background: isSelected ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)',
-                      border: isSelected
-                        ? `2px solid ${selectedColor}88`
-                        : avatarBg
-                        ? '1px solid rgba(255,255,255,0.12)'
-                        : '1px solid rgba(255,255,255,0.08)',
-                      cursor: isLocked ? 'not-allowed' : 'pointer',
-                      padding: avatarBg ? 0 : 6,
-                      transition: 'all 150ms',
-                      overflow: 'hidden',
-                      opacity: isLocked ? 0.5 : 1,
-                    }}
-                  >
-                    {avatar.pinnacle && !isLocked && (
-                      <div
+
+            {/* Shared render helper */}
+            {(() => {
+              const renderGrid = (avatars: typeof AVAILABLE_AVATARS) => (
+                <div className="grid grid-cols-6 sm:grid-cols-8 gap-2">
+                  {avatars.map((avatar) => {
+                    const isSelected = selectedAvatar === avatar.src;
+                    const isGif     = avatar.src.endsWith('.gif') || avatar.src.endsWith('.webp');
+                    const isLocked  = avatar.pinnacle && !isPinnacle;
+                    const avatarBg  = 'bg' in avatar ? (avatar as any).bg as string : null;
+                    return (
+                      <button
+                        key={avatar.id}
+                        onClick={() => { if (!isLocked) setSelectedAvatar(avatar.src); }}
                         style={{
-                          position: 'absolute',
-                          top: 3,
-                          left: 3,
-                          fontSize: '0.5rem',
-                          color: '#ffcc00',
-                          lineHeight: 1,
-                          zIndex: 2,
-                        }}
-                        title="Pinnacle Exclusive"
-                      >
-                        ★
-                      </div>
-                    )}
-                    {isLocked && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 3,
-                          left: 3,
-                          fontSize: '0.6rem',
-                          color: '#ffcc00',
-                          lineHeight: 1,
-                          zIndex: 2,
-                        }}
-                        title="Pinnacle Exclusive — upgrade to unlock"
-                      >
-                        🔒
-                      </div>
-                    )}
-                    {isSelected && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          top: 3,
-                          right: 3,
-                          width: 16,
-                          height: 16,
-                          background: selectedColor,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          zIndex: 2,
+                          position: 'relative',
+                          width: '100%',
+                          aspectRatio: '1',
+                          background: isSelected ? 'rgba(194,255,11,0.08)' : 'rgba(255,255,255,0.03)',
+                          border: isSelected
+                            ? `2px solid ${selectedColor}88`
+                            : avatarBg
+                            ? '1px solid rgba(255,255,255,0.12)'
+                            : '1px solid rgba(255,255,255,0.08)',
+                          cursor: isLocked ? 'not-allowed' : 'pointer',
+                          padding: avatarBg ? 0 : 3,
+                          transition: 'all 150ms',
+                          overflow: 'hidden',
+                          opacity: isLocked ? 0.45 : 1,
                         }}
                       >
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3">
-                          <polyline points="20 6 9 17 4 12" />
-                        </svg>
-                      </div>
-                    )}
-                    {isGif ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={avatar.src}
-                        alt={avatar.id}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    ) : avatarBg ? (
-                      <div style={{
-                        position: 'absolute',
-                        inset: 0,
-                        background: avatarBg,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 10,
-                      }}>
-                        <Image
-                          src={avatar.src}
-                          alt={avatar.id}
-                          width={200}
-                          height={200}
-                          quality={90}
-                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                        />
-                      </div>
-                    ) : (
-                      <Image
-                        src={avatar.src}
-                        alt={avatar.id}
-                        width={200}
-                        height={200}
-                        quality={90}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+                        {isLocked && (
+                          <div style={{ position: 'absolute', top: 2, left: 2, fontSize: '0.55rem', color: '#ffcc00', lineHeight: 1, zIndex: 2 }} title="Pinnacle Exclusive — upgrade to unlock">
+                            🔒
+                          </div>
+                        )}
+                        {isSelected && (
+                          <div style={{ position: 'absolute', top: 2, right: 2, width: 14, height: 14, background: selectedColor, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2 }}>
+                            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="3"><polyline points="20 6 9 17 4 12" /></svg>
+                          </div>
+                        )}
+                        {isGif ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img src={avatar.src} alt={avatar.id} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                        ) : avatarBg ? (
+                          <div style={{ position: 'absolute', inset: 0, background: avatarBg, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8 }}>
+                            <Image src={avatar.src} alt={avatar.id} width={160} height={160} quality={90} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                          </div>
+                        ) : (
+                          <Image src={avatar.src} alt={avatar.id} width={160} height={160} quality={90} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              );
+
+              return (
+                <>
+                  {/* Free */}
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ fontSize: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 8 }}>
+                      Free
+                    </div>
+                    {renderGrid(AVAILABLE_AVATARS.filter(a => !a.pinnacle))}
+                  </div>
+
+                  {/* Pinnacle */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                      <span style={{ fontSize: '0.5rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#ffaa00' }}>★ Pinnacle</span>
+                      {!isPinnacle && <span style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.28)' }}>— upgrade to unlock</span>}
+                    </div>
+                    {renderGrid(AVAILABLE_AVATARS.filter(a => a.pinnacle))}
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
