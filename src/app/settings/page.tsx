@@ -65,8 +65,12 @@ const AVAILABLE_AVATARS = [
   { id: 'gif-void',    src: '/images/avatars/pinnacle avatars/Void5.gif',                                                                          pinnacle: true },
   { id: 'gif-runner1', src: '/images/avatars/pinnacle avatars/tumblr_b7a9b8817a5a0d1664fc67e38d62cc82_031e176b_500.gif',                           pinnacle: true },
   { id: 'gif-runner2', src: '/images/avatars/pinnacle avatars/tumblr_bb26ed40249f0ff18a0c83c305396a25_35c77092_540.gif',                           pinnacle: true },
-  { id: 'gif-bingus',  src: '/images/avatars/pinnacle avatars/bingus.gif',                                                                         pinnacle: true },
-  { id: 'gif-ascii',   src: '/images/avatars/pinnacle avatars/ascii-art_3.gif',                                                                    pinnacle: true },
+  { id: 'gif-bingus',      src: '/images/avatars/pinnacle avatars/bingus.gif',                    pinnacle: true },
+  { id: 'gif-ascii',       src: '/images/avatars/pinnacle avatars/ascii-art_3.gif',               pinnacle: true },
+  { id: 'gif-glitch',      src: '/images/avatars/pinnacle avatars/GLITCH_STamped.gif',            pinnacle: true },
+  { id: 'gif-backbird',    src: '/images/avatars/pinnacle avatars/backbird-export.gif',           pinnacle: true },
+  { id: 'gif-destroyer',   src: '/images/avatars/pinnacle avatars/destroyer_compilercolored.gif', pinnacle: true },
+  { id: 'gif-marathon',    src: '/images/avatars/pinnacle avatars/marathonSHOOT.gif',             pinnacle: true },
 ];
 
 const CUSTOMIZATION_OPTIONS = [
@@ -952,6 +956,18 @@ export default function SettingsPage() {
               </div>
             </details>
           ))}
+        </div>
+      </div>
+
+      {/* ── Credits ── */}
+      <div className="game-card">
+        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>Credits</h2>
+        </div>
+        <div className="p-5 space-y-1">
+          <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+            Pixel avatars by <span style={{ color: 'rgba(255,255,255,0.7)' }}>diemango</span>
+          </p>
         </div>
       </div>
 
