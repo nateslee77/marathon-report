@@ -26,6 +26,8 @@ export function buildDefaultPlayer(
     runner: 'rook',
     emblem: { id: 'emblem-default', name: 'Default', rarity: 'standard' },
     rating: 0,
+    trioElo: 0,
+    soloElo: 0,
     rank: 0,
     level: 1,
     competitiveRank: 'Unranked',

@@ -1,5 +1,4 @@
 import { Match } from '@/types';
-import { Badge } from '../ui/Badge';
 import { getTimeAgo } from '@/lib/utils';
 
 interface MatchHeaderProps {
@@ -7,41 +6,56 @@ interface MatchHeaderProps {
 }
 
 export function MatchHeader({ match }: MatchHeaderProps) {
-  const team1Score = match.result === 'EXTRACTED' ? 'Extracted' : 'Eliminated';
-  const team2Score = match.result === 'EXTRACTED' ? 'Eliminated' : 'Extracted';
+  const isExtracted = match.result === 'EXTRACTED';
 
   return (
-    <div className="game-card-accent p-8">
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-text-primary mb-2">
-            {match.map}
-          </h1>
-          <div className="flex items-center gap-3">
-            <Badge variant="default">{match.mode}</Badge>
-            <span className="text-sm text-text-secondary">
-              Duration: <span className="text-text-primary font-semibold">{match.duration}</span>
-            </span>
-            <span className="text-sm text-text-tertiary">&middot;</span>
-            <span className="text-sm text-text-tertiary">{getTimeAgo(match.date)}</span>
-          </div>
-        </div>
+    <div
+      style={{
+        background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
+        border: `1px solid ${isExtracted ? 'rgba(194,255,11,0.15)' : 'rgba(255,68,68,0.15)'}`,
+        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
+        padding: '24px 32px',
+      }}
+    >
+      {/* Map name */}
+      <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff', margin: '0 0 8px 0' }}>
+        {match.map}
+      </h1>
+
+      {/* Mode + duration + time ago */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
+        <span
+          style={{
+            fontSize: '0.6rem',
+            fontWeight: 700,
+            color: 'rgba(255,255,255,0.4)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            padding: '3px 8px',
+            border: '1px solid rgba(255,255,255,0.1)',
+          }}
+        >
+          {match.mode}
+        </span>
+        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{match.duration}</span>
+        <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.25)' }}>{getTimeAgo(match.date)}</span>
       </div>
 
-      {/* Match Result */}
-      <div className="grid grid-cols-3 gap-4 items-center pt-6 border-t border-border/40">
-        <div className="text-center">
-          <div className="stat-label mb-2">Team Alpha</div>
-          <div className={`text-2xl font-bold ${match.result === 'EXTRACTED' ? 'text-accent-primary' : 'text-accent-danger'}`}>
-            {team1Score}
-          </div>
-        </div>
-        <div className="text-center text-text-tertiary text-sm">VS</div>
-        <div className="text-center">
-          <div className="stat-label mb-2">Team Bravo</div>
-          <div className={`text-2xl font-bold ${match.result === 'ELIMINATED' ? 'text-accent-primary' : 'text-accent-danger'}`}>
-            {team2Score}
-          </div>
+      {/* Centered result badge */}
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div
+          style={{
+            padding: '10px 32px',
+            background: isExtracted ? 'rgba(194,255,11,0.08)' : 'rgba(255,68,68,0.08)',
+            border: `1px solid ${isExtracted ? 'rgba(194,255,11,0.3)' : 'rgba(255,68,68,0.3)'}`,
+            fontSize: '0.9rem',
+            fontWeight: 700,
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: isExtracted ? '#c2ff0b' : '#ff4444',
+          }}
+        >
+          {match.result}
         </div>
       </div>
     </div>

@@ -18,6 +18,11 @@ export default function PlayerPage({ params }: PlayerPageProps) {
   const [fireteam, setFireteam] = useState<DetailedPlayer[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Scroll to top on mount (mobile fix)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     async function load() {
       setLoading(true);

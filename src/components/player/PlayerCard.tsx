@@ -1,15 +1,17 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { DetailedPlayer, MembershipTier, RARITY_COLORS } from '@/types';
+import { DetailedPlayer, MembershipTier, WeaponRecord } from '@/types';
 import { RUNNER_VISUALS } from '@/lib/runners';
 import { formatKD, formatPercentage, cn } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { ShellLoadout } from '@/components/player/ShellLoadout';
-import { RunnerAbilitiesCard } from '@/components/player/RunnerAbilitiesCard';
+import { PerformanceGraph } from '@/components/player/PerformanceGraph';
+import { WeaponCard } from '@/components/player/WeaponCard';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
@@ -22,6 +24,20 @@ interface PlayerCardProps {
 export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
   const { user, cardThemeColor, equippedBadges, avatarBorderStyle, isPinnacle, youtubeUrl, twitchUrl } = useApp();
   const isOwnCard = user?.id === player.id;
+
+  // Fetch weapon data from Supabase via API (keyed by lowercase name for lookup)
+  const [weaponData, setWeaponData] = useState<Record<string, WeaponRecord>>({});
+  useEffect(() => {
+    fetch('/api/weapons')
+      .then(r => r.json())
+      .then((rows: WeaponRecord[]) => {
+        if (!Array.isArray(rows)) return;
+        const map: Record<string, WeaponRecord> = {};
+        rows.forEach(r => { map[r.weapon.toLowerCase()] = r; });
+        setWeaponData(map);
+      })
+      .catch(() => {});
+  }, []);
   const runner = RUNNER_VISUALS[player.runner];
   const displayYoutubeUrl = isOwnCard ? youtubeUrl : player.youtubeUrl;
   const displayTwitchUrl = isOwnCard ? twitchUrl : player.twitchUrl;
@@ -109,12 +125,12 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
         {/* ── Emblem Header ── */}
         <div
           className="relative overflow-hidden"
-          style={{ height: 120, background: emblemGradient }}
+          style={{ height: 140, background: emblemGradient }}
         >
           {/* Shell at top of emblem, reflected on y-axis */}
           <div
             className="absolute top-0 right-0"
-            style={{ width: 90, height: 120, opacity: 0.5, transform: 'scaleX(-1)' }}
+            style={{ width: 90, height: 140, opacity: 0.5, transform: 'scaleX(-1)' }}
           >
             <Image
               src={runner.image}
@@ -197,22 +213,16 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
           className="relative flex-1 flex flex-col"
           style={{ background: useCustomTheme ? `radial-gradient(ellipse at 50% 20%, ${effectiveAccent}22 0%, transparent 55%)` : runner.bgGradient }}
         >
-          {/* Runner + Platform + Rating row */}
+          {/* Runner + Platform + Rating + Elo row */}
           <div
-            className="relative flex items-center justify-between px-4 py-3"
+            className="relative flex items-center justify-between px-4 py-2.5"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
           >
             <div className="flex items-center gap-2">
-              <span
-                className="font-mono text-xs font-semibold uppercase"
-                style={{ color: effectiveAccent }}
-              >
+              <span className="font-mono text-xs font-semibold uppercase" style={{ color: effectiveAccent }}>
                 {runner.name}
               </span>
-              <span
-                className="font-mono text-xs"
-                style={{ color: 'rgba(255,255,255,0.3)' }}
-              >
+              <span className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
                 Lvl {player.level}
               </span>
             </div>
@@ -221,12 +231,17 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
               )}
               <RankBadge rank={player.competitiveRank} size="sm" />
-              <span
-                className="font-mono text-sm font-bold"
-                style={{ color: effectiveAccent }}
-              >
-                {player.rating}
-              </span>
+              {/* Elo stack: trio + solo */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <span style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>TRIO</span>
+                  <span className="font-mono font-bold" style={{ fontSize: '0.6rem', color: effectiveAccent }}>{player.trioElo ?? player.rating}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                  <span style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>SOLO</span>
+                  <span className="font-mono" style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)' }}>{player.soloElo ?? player.rating}</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -283,72 +298,19 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               <div className="flex items-center justify-center py-4" style={{ color: 'rgba(255,255,255,0.2)' }}>
                 <span className="font-mono" style={{ fontSize: '0.65rem' }}>No loadout configured</span>
               </div>
-            ) : (() => {
-              const WEAPON_SLOTS = ['primary', 'sidearm', 'weapon3'];
-              const weapons = player.loadout.filter(i => WEAPON_SLOTS.includes(i.slot));
-              const gadgets = player.loadout.filter(i => !WEAPON_SLOTS.includes(i.slot));
-              return (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                  {/* Weapons — horizontal 3-column grid */}
-                  {weapons.length > 0 && (
-                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${weapons.length}, 1fr)`, gap: 4 }}>
-                      {weapons.map((item) => {
-                        const rarityColor = item.rarity ? RARITY_COLORS[item.rarity] : null;
-                        const borderColor = rarityColor ? rarityColor + '55' : effectiveAccent + '18';
-                        return (
-                          <div
-                            key={item.slot}
-                            style={{
-                              position: 'relative',
-                              background: '#0a0a0a',
-                              border: `1px solid ${borderColor}`,
-                              padding: '6px 6px 5px',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              alignItems: 'center',
-                            }}
-                          >
-                            {item.image ? (
-                              <div style={{ width: '100%', height: 44, position: 'relative', marginBottom: 4 }}>
-                                <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
-                              </div>
-                            ) : (
-                              <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: effectiveAccent + '66', marginBottom: 4 }}>
-                                {item.icon}
-                              </div>
-                            )}
-                            <div className="truncate w-full text-center" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>{item.name}</div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                  {/* Gadgets — compact horizontal row below weapons */}
-                  {gadgets.length > 0 && (
-                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${gadgets.length}, 1fr)`, gap: 4 }}>
-                      {gadgets.map((item) => (
-                        <div
-                          key={item.slot}
-                          style={{
-                            background: '#0a0a0a',
-                            border: `1px solid ${effectiveAccent}18`,
-                            padding: '5px 6px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 6,
-                          }}
-                        >
-                          <div style={{ fontSize: '1rem', lineHeight: 1, flexShrink: 0, color: effectiveAccent + '99' }}>
-                            {item.icon}
-                          </div>
-                          <div className="truncate" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>{item.name}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                {player.loadout.map((item) => (
+                  <WeaponCard
+                    key={item.slot}
+                    item={item}
+                    data={weaponData[item.name.toLowerCase()] ?? null}
+                    accent={effectiveAccent}
+                    compact
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ── Shell Loadout ── */}
@@ -376,9 +338,9 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             />
           </div>
 
-          {/* ── Runner Abilities ── */}
+          {/* ── Performance Graph ── */}
           <div
-            className="relative px-4 py-3"
+            className="relative px-4 py-3 flex-1"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
           >
             <div
@@ -390,70 +352,13 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 textTransform: 'uppercase',
               }}
             >
-              Abilities
+              Performance
             </div>
-            <RunnerAbilitiesCard runner={player.runner} effectiveAccent={effectiveAccent} />
-          </div>
-
-          {/* ── Mini Recent Matches ── */}
-          <div className="relative px-4 py-3 flex-1">
-            <div
-              className="mb-2"
-              style={{
-                fontSize: '0.575rem',
-                letterSpacing: '0.1em',
-                color: 'rgba(255,255,255,0.25)',
-                textTransform: 'uppercase',
-              }}
-            >
-              Recent
-            </div>
-            {player.recentMatchSummary.length === 0 ? (
-              <div className="flex items-center justify-center py-4" style={{ color: 'rgba(255,255,255,0.2)' }}>
-                <span className="font-mono" style={{ fontSize: '0.65rem' }}>No recent matches</span>
-              </div>
+            {player.recentMatchSummary.length >= 2 ? (
+              <PerformanceGraph matches={player.recentMatchSummary} compact />
             ) : (
-              <div className="space-y-1.5">
-                {player.recentMatchSummary.map((match, i) => (
-                  <div
-                    key={i}
-                    className="flex items-center justify-between font-mono text-xs"
-                    style={{
-                      padding: '4px 8px',
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid rgba(255,255,255,0.03)',
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span
-                        style={{
-                          color: match.result === 'EXTRACTED' ? '#c2ff0b' : '#ff4444',
-                          fontWeight: 700,
-                          fontSize: '0.65rem',
-                        }}
-                      >
-                        {match.result === 'EXTRACTED' ? 'E' : 'D'}
-                      </span>
-                      <span style={{ color: 'rgba(255,255,255,0.5)' }}>{match.map}</span>
-                      {match.runner && (
-                        <span
-                          style={{
-                            color: RUNNER_VISUALS[match.runner].accent,
-                            fontSize: '0.55rem',
-                            fontWeight: 600,
-                            textTransform: 'uppercase',
-                            opacity: 0.8,
-                          }}
-                        >
-                          {RUNNER_VISUALS[match.runner].name}
-                        </span>
-                      )}
-                    </div>
-                    <span style={{ color: 'rgba(255,255,255,0.6)' }}>
-                      {match.kills}/{match.deaths}/{match.assists}
-                    </span>
-                  </div>
-                ))}
+              <div className="flex items-center justify-center py-4" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                <span className="font-mono" style={{ fontSize: '0.65rem' }}>No match data</span>
               </div>
             )}
           </div>

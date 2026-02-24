@@ -40,13 +40,13 @@ export function TeammateCard({ teammate, side }: TeammateCardProps) {
         <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-5">
           <div>
             <div className="stat-label mb-1">K/D</div>
-            <div className="text-lg font-mono font-semibold tabular-nums text-text-primary">
+            <div className="text-lg font-stat font-semibold tabular-nums text-text-primary">
               {formatKD(teammate.kd)}
             </div>
           </div>
           <div>
             <div className="stat-label mb-1">Extract Rate</div>
-            <div className="text-lg font-mono font-semibold tabular-nums text-accent-primary">
+            <div className="text-lg font-stat font-semibold tabular-nums text-accent-primary">
               {formatPercentage(teammate.winRate)}
             </div>
           </div>

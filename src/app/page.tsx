@@ -173,7 +173,7 @@ export default function HomePage() {
                       }}
                     >
                       <div
-                        className="font-mono text-xl md:text-3xl font-bold tabular-nums leading-none"
+                        className="font-stat text-xl md:text-3xl font-bold tabular-nums leading-none"
                         style={{ color: '#c2ff0b' }}
                       >
                         {String(unit.value).padStart(2, '0')}
@@ -214,17 +214,17 @@ export default function HomePage() {
             style={{ background: 'linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)' }}
           >
             <div className="text-center">
-              <div className="text-base md:text-xl font-mono font-bold text-text-primary tabular-nums">50K</div>
+              <div className="text-base md:text-xl font-stat font-bold text-text-primary tabular-nums">50K</div>
               <div className="stat-label mt-0.5">Runners</div>
             </div>
             <div className="w-px h-6 md:h-8 bg-border/50" />
             <div className="text-center">
-              <div className="text-base md:text-xl font-mono font-bold text-text-primary tabular-nums">12.4K</div>
+              <div className="text-base md:text-xl font-stat font-bold text-text-primary tabular-nums">12.4K</div>
               <div className="stat-label mt-0.5">Matches</div>
             </div>
             <div className="w-px h-6 md:h-8 bg-border/50" />
             <div className="text-center">
-              <div className="text-base md:text-xl font-mono font-bold tabular-nums flex items-center gap-1.5" style={{ color: '#c2ff0b' }}>
+              <div className="text-base md:text-xl font-stat font-bold tabular-nums flex items-center gap-1.5" style={{ color: '#c2ff0b' }}>
                 <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#c2ff0b', display: 'inline-block', animation: 'pulse-dot 1.5s ease-in-out infinite' }} />
                 Live
               </div>

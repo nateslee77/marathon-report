@@ -4,45 +4,88 @@ import { PlayerStatRow } from './PlayerStatRow';
 interface TeamBreakdownProps {
   team1: MatchPlayer[];
   team2: MatchPlayer[];
+  matchResult: string;
 }
 
-export function TeamBreakdown({ team1, team2 }: TeamBreakdownProps) {
+const CARD_BG: React.CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
+  border: '1px solid rgba(255,255,255,0.06)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
+};
+
+export function TeamBreakdown({ team1, team2, matchResult }: TeamBreakdownProps) {
+  const isTeam1Extracted = matchResult === 'EXTRACTED';
+  const extracted = isTeam1Extracted ? team1 : team2;
+  const eliminated = isTeam1Extracted ? team2 : team1;
+
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-      {/* Team Alpha */}
-      <div className="game-card overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-border/40 bg-background-elevated/30">
-          <h2 className="text-lg font-semibold text-text-primary">Team Alpha</h2>
-        </div>
-        <div className="px-5 py-2 border-b border-border/30 grid grid-cols-12 gap-4 stat-label">
-          <div className="col-span-3">Player</div>
-          <div className="col-span-2">K/D/A</div>
-          <div className="col-span-2">K/D</div>
-          <div className="col-span-2">Damage</div>
-          <div className="col-span-3">Objective</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Extracted group */}
+      <div style={CARD_BG}>
+        <div
+          style={{
+            padding: '10px 16px',
+            borderBottom: '1px solid rgba(194,255,11,0.12)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <div style={{ width: 2, height: 14, background: '#c2ff0b', flexShrink: 0 }} />
+          <h2
+            style={{
+              fontSize: '0.65rem',
+              fontWeight: 700,
+              color: '#c2ff0b',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              margin: 0,
+            }}
+          >
+            EXTRACTED
+          </h2>
+          <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.25)', fontFamily: 'monospace' }}>
+            {extracted.length} runners
+          </span>
         </div>
         <div>
-          {team1.map((player) => (
-            <PlayerStatRow key={player.playerId} player={player} />
+          {extracted.map((player) => (
+            <PlayerStatRow key={player.playerId} player={player} isExtracted />
           ))}
         </div>
       </div>
 
-      {/* Team Bravo */}
-      <div className="game-card overflow-hidden">
-        <div className="px-5 py-3.5 border-b border-border/40 bg-background-elevated/30">
-          <h2 className="text-lg font-semibold text-text-primary">Team Bravo</h2>
-        </div>
-        <div className="px-5 py-2 border-b border-border/30 grid grid-cols-12 gap-4 stat-label">
-          <div className="col-span-3">Player</div>
-          <div className="col-span-2">K/D/A</div>
-          <div className="col-span-2">K/D</div>
-          <div className="col-span-2">Damage</div>
-          <div className="col-span-3">Objective</div>
+      {/* Eliminated group */}
+      <div style={CARD_BG}>
+        <div
+          style={{
+            padding: '10px 16px',
+            borderBottom: '1px solid rgba(255,68,68,0.12)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <div style={{ width: 2, height: 14, background: '#ff4444', flexShrink: 0 }} />
+          <h2
+            style={{
+              fontSize: '0.65rem',
+              fontWeight: 700,
+              color: '#ff4444',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              margin: 0,
+            }}
+          >
+            ELIMINATED
+          </h2>
+          <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.25)', fontFamily: 'monospace' }}>
+            {eliminated.length} runners
+          </span>
         </div>
         <div>
-          {team2.map((player) => (
-            <PlayerStatRow key={player.playerId} player={player} />
+          {eliminated.map((player) => (
+            <PlayerStatRow key={player.playerId} player={player} isExtracted={false} />
           ))}
         </div>
       </div>

@@ -3,29 +3,33 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { detailedPlayers, mockMatches, mockRecentlyPlayedWith, mockWeaponStats } from '@/lib/mock-data';
+import { detailedPlayers, mockMatches, mockRecentlyPlayedWith, mockWeaponStats, playerBadges } from '@/lib/mock-data';
 import { RUNNER_VISUALS } from '@/lib/runners';
 import { StatsGrid } from '@/components/player/StatsGrid';
 import { RecentMatches } from '@/components/player/RecentMatches';
-import { WeaponUsage } from '@/components/player/WeaponUsage';
 import { RecentlyPlayedWith } from '@/components/player/RecentlyPlayedWith';
-import { formatKD, formatPercentage, cn } from '@/lib/utils';
+import { formatKD, formatPercentage } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
 import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
-import { StatsFilter, DetailedPlayer } from '@/types';
+import { DetailedPlayer, WeaponRecord } from '@/types';
 import { ShellLoadout } from '@/components/player/ShellLoadout';
-import { RunnerAbilitiesFull } from '@/components/player/RunnerAbilitiesFull';
+import { ShellStats } from '@/components/player/ShellStats';
+import { PerformanceGraph } from '@/components/player/PerformanceGraph';
+import { WeaponCard } from '@/components/player/WeaponCard';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
-import { playerBadges } from '@/lib/mock-data';
 import { buildDefaultPlayer } from '@/lib/default-player';
 
 interface DetailsPageProps {
-  params: {
-    id: string;
-  };
+  params: { id: string };
 }
+
+const CARD_BG: React.CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
+  border: '1px solid rgba(255,255,255,0.06)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
+};
 
 export default function DetailsPage({ params }: DetailsPageProps) {
   const { user, equippedBadges, cardThemeColor, avatarBorderStyle, selectedAvatar, isPinnacle, youtubeUrl, twitchUrl } = useApp();
@@ -40,7 +44,19 @@ export default function DetailsPage({ params }: DetailsPageProps) {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Resolve the player: mock player > own profile > rook placeholder
+  const [weaponData, setWeaponData] = useState<Record<string, WeaponRecord>>({});
+  useEffect(() => {
+    fetch('/api/weapons')
+      .then(r => r.json())
+      .then((rows: WeaponRecord[]) => {
+        if (!Array.isArray(rows)) return;
+        const map: Record<string, WeaponRecord> = {};
+        rows.forEach(r => { map[r.weapon.toLowerCase()] = r; });
+        setWeaponData(map);
+      })
+      .catch(() => {});
+  }, []);
+
   const mockPlayer = detailedPlayers[params.id];
   const isOwnProfile = mounted && !mockPlayer && !!user && user.id === params.id;
   const idSlice = params.id.slice(-4).replace(/\D/g, '').padStart(4, '0');
@@ -70,9 +86,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
       })()
     : runner.emblemGradient;
 
-  const borderClass = isOwnProfile && avatarBorderStyle !== 'none'
-    ? `avatar-border-${avatarBorderStyle}`
-    : '';
+  const borderClass = isOwnProfile && avatarBorderStyle !== 'none' ? `avatar-border-${avatarBorderStyle}` : '';
   const borderVars = {
     '--border-color': effectiveAccent,
     '--border-color-dim': effectiveAccent + '88',
@@ -87,65 +101,58 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   const displayYoutubeUrl = isOwnProfile ? youtubeUrl : player.youtubeUrl;
   const displayTwitchUrl = isOwnProfile ? twitchUrl : player.twitchUrl;
 
+  const topWeapons = [...mockWeaponStats].sort((a, b) => b.kills - a.kills).slice(0, 5);
+  const maxWeaponKills = topWeapons[0]?.kills ?? 1;
+
+  const primaryWeapon = player.loadout.find(i => i.slot === 'primary');
+  const sidearmWeapon = player.loadout.find(i => i.slot === 'sidearm');
+  const hasShellUsage = !!(player.shellUsage && player.shellUsage.length > 0);
+  const hasWeaponUsage = !isOwnProfile && topWeapons.length > 0;
+
+  // Section header: accent label + fading line
+  const SectionHeader = ({ label }: { label: string }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+      <span style={{
+        fontSize: '0.55rem',
+        fontWeight: 700,
+        color: effectiveAccent,
+        letterSpacing: '0.2em',
+        textTransform: 'uppercase',
+        flexShrink: 0,
+      }}>
+        {label}
+      </span>
+      <div style={{ flex: 1, height: 1, background: `linear-gradient(90deg, ${effectiveAccent}50 0%, rgba(255,255,255,0.04) 100%)` }} />
+    </div>
+  );
+
   return (
-    <div className="space-y-6 md:space-y-8 animate-fade-in max-w-[1400px] mx-auto px-4 md:px-0 py-4 md:py-0">
+    <div className="space-y-8 animate-fade-in max-w-[1400px] mx-auto px-4 md:px-0 py-4 md:py-0">
+
       {/* ── Back link ── */}
       <Link
         href={`/player/${player.id}`}
         className="inline-flex items-center gap-2 text-sm transition-colors duration-150 hover:opacity-80"
-        style={{ color: '#c2ff0b', minHeight: 44, display: 'inline-flex', alignItems: 'center' }}
+        style={{ color: effectiveAccent, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}
       >
         <span style={{ fontSize: '0.75rem' }}>&larr;</span>
         Back to Fireteam
       </Link>
 
-      {/* ── Runner Hero Banner ── */}
+      {/* ── HERO BANNER — identity only ── */}
       <div
         className="relative overflow-hidden"
-        style={{
-          background: emblemGradient,
-          minHeight: 160,
-          border: `1px solid ${effectiveAccent}22`,
-        }}
+        style={{ background: emblemGradient, minHeight: 150, border: `1px solid ${effectiveAccent}22` }}
       >
-        {/* Runner bg gradient — suppressed when player has a custom theme color */}
         {!playerThemeColor && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: runner.bgGradient,
-            }}
-          />
+          <div style={{ position: 'absolute', inset: 0, background: runner.bgGradient }} />
         )}
-        {/* Shell at top-right of emblem, reflected */}
-        <div
-          className="absolute top-0 right-0 bottom-0"
-          style={{
-            width: 200,
-            opacity: 0.5,
-            transform: 'scaleX(-1)',
-          }}
-        >
-          <Image
-            src={runner.image}
-            alt={runner.name}
-            fill
-            style={{ objectFit: 'contain', objectPosition: 'left top' }}
-          />
+        <div className="absolute top-0 right-0 bottom-0" style={{ width: 200, opacity: 0.45, transform: 'scaleX(-1)' }}>
+          <Image src={runner.image} alt={runner.name} fill style={{ objectFit: 'contain', objectPosition: 'left top' }} />
         </div>
-        {/* Dark vignette */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.85) 100%)',
-          }}
-        />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(100deg, rgba(10,10,10,0.85) 40%, rgba(10,10,10,0.2) 100%)' }} />
 
-        {/* Hero content */}
-        <div className="relative px-4 py-5 md:px-8 md:py-8 flex flex-col justify-end" style={{ minHeight: 160 }}>
-          {/* Equipped badges */}
+        <div className="relative px-5 py-6 md:px-8 md:py-8 flex flex-col justify-center" style={{ minHeight: 150 }}>
           {displayBadges.length > 0 && (
             <div className="flex items-center flex-wrap gap-2 mb-3">
               {displayBadges.map((badge) => badge && (
@@ -154,304 +161,255 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             </div>
           )}
 
-          {/* Name and tag */}
-          <div className="flex items-center gap-3 mb-1">
+          <div className="flex items-center gap-4">
             <PlayerAvatar
               src={player.avatar}
               alt={player.name}
               width={72}
               height={72}
-              className={`md:w-[96px] md:h-[96px] ${borderClass}`}
-              style={{
-                flexShrink: 0,
-                width: 72,
-                height: 72,
-                border: `2px solid ${effectiveAccent}55`,
-                borderRadius: 0,
-                objectFit: 'cover',
-                ...borderVars,
-              }}
+              className={`md:w-[88px] md:h-[88px] ${borderClass}`}
+              style={{ flexShrink: 0, width: 72, height: 72, border: `2px solid ${effectiveAccent}55`, borderRadius: 0, objectFit: 'cover', ...borderVars }}
             />
             <div className="min-w-0">
-              <div className="flex items-baseline gap-2 md:gap-3">
-                <h1 className="text-xl md:text-3xl font-bold tracking-tight truncate" style={{ color: '#fff' }}>
+              <div className="flex items-baseline gap-2 md:gap-3 flex-wrap">
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight" style={{ color: '#fff' }}>
                   {player.name}
                 </h1>
-                <span className="font-mono text-sm md:text-lg flex-shrink-0" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                <span className="font-mono text-base md:text-lg flex-shrink-0" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   {player.tag}
                 </span>
               </div>
-            </div>
-          </div>
-
-          {/* Runner + Platform + Rating row — wraps on mobile */}
-          <div className="flex flex-wrap items-center gap-2 md:gap-4 mt-1">
-            <span className="font-mono text-xs md:text-sm font-bold" style={{ color: effectiveAccent }}>
-              {runner.name}
-            </span>
-            {(player.membership === 'pinnacle' || (isOwnProfile && isPinnacle)) && (
-              <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
-            )}
-            <span className="hidden md:inline-block" style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
-            <span className="font-mono text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              {player.platform}
-            </span>
-            <span className="font-mono text-xs md:text-sm" style={{ color: 'rgba(255,255,255,0.3)' }}>
-              Lvl {player.level}
-            </span>
-            <span className="font-mono text-xs md:text-sm font-bold" style={{ color: effectiveAccent }}>
-              {player.rating} SR
-            </span>
-            <span className="hidden md:inline-block" style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
-            <RankBadge rank={player.competitiveRank} size="sm" />
-          </div>
-
-          {/* Social Links */}
-          {(displayYoutubeUrl || displayTwitchUrl) && (
-            <div className="flex items-center gap-2 mt-2">
-              {displayYoutubeUrl && (
-                <a
-                  href={displayYoutubeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', background: 'rgba(255,0,0,0.12)', border: '1px solid rgba(255,0,0,0.25)', color: '#ff4444', fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none' }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-                  YouTube
-                </a>
-              )}
-              {displayTwitchUrl && (
-                <a
-                  href={displayTwitchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 10px', background: 'rgba(145,70,255,0.12)', border: '1px solid rgba(145,70,255,0.25)', color: '#9146ff', fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none' }}
-                >
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M11.6 6H13v4.5h-1.4V6zm3.8 0H17v4.5h-1.4V6zM2 0L.5 4v16.5H6V24l3.5-3.5H13L21.5 12V0H2zm18 11.5l-3.5 3.5H13l-3 3v-3H4.5V1.5h15.5V11.5z"/></svg>
-                  Twitch
-                </a>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
+                <span className="font-mono text-xs md:text-sm font-bold" style={{ color: effectiveAccent }}>
+                  {runner.name}
+                </span>
+                {(player.membership === 'pinnacle' || (isOwnProfile && isPinnacle)) && (
+                  <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
+                )}
+                <span style={{ width: 1, height: 12, background: 'rgba(255,255,255,0.12)', display: 'inline-block' }} />
+                <span className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>{player.platform}</span>
+                <span className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>Lvl {player.level}</span>
+              </div>
+              {(displayYoutubeUrl || displayTwitchUrl) && (
+                <div className="flex items-center gap-2 mt-2">
+                  {displayYoutubeUrl && (
+                    <a href={displayYoutubeUrl} target="_blank" rel="noopener noreferrer"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 9px', background: 'rgba(255,0,0,0.12)', border: '1px solid rgba(255,0,0,0.25)', color: '#ff4444', fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none' }}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+                      YouTube
+                    </a>
+                  )}
+                  {displayTwitchUrl && (
+                    <a href={displayTwitchUrl} target="_blank" rel="noopener noreferrer"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 9px', background: 'rgba(145,70,255,0.12)', border: '1px solid rgba(145,70,255,0.25)', color: '#9146ff', fontSize: '0.6rem', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none' }}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.6 6H13v4.5h-1.4V6zm3.8 0H17v4.5h-1.4V6zM2 0L.5 4v16.5H6V24l3.5-3.5H13L21.5 12V0H2zm18 11.5l-3.5 3.5H13l-3 3v-3H4.5V1.5h15.5V11.5z"/></svg>
+                      Twitch
+                    </a>
+                  )}
+                </div>
               )}
             </div>
-          )}
+          </div>
+        </div>
+      </div>
 
-          {/* Quick stats — grid on mobile, flex on desktop */}
-          <div className="grid grid-cols-3 md:flex md:gap-6 gap-y-3 mt-4">
+      {/* ── OVERVIEW — career stats + rank ── */}
+      <div style={{ ...CARD_BG, padding: '18px 24px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px 0' }}>
+          {/* Career stat numbers */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px 28px', flex: 1 }}>
             {[
-              { label: 'K/D', value: formatKD(stats.kd), bold: true },
-              { label: 'KDA', value: formatKD(stats.kda) },
-              { label: 'Matches', value: String(stats.matchesPlayed) },
-              { label: 'Extraction', value: formatPercentage(stats.extractionRate) },
+              { label: 'K/D', value: formatKD(stats.kd), highlight: stats.kd >= 1.5 },
+              { label: 'KDA', value: formatKD(stats.kda), highlight: false },
+              { label: 'Extraction', value: formatPercentage(stats.extractionRate), highlight: stats.extractionRate >= 60 },
+              { label: 'Win Rate', value: formatPercentage(stats.winRate), highlight: false },
+              { label: 'Matches', value: String(stats.matchesPlayed), highlight: false },
+              { label: 'Time Played', value: stats.timePlayed, highlight: false },
             ].map((s) => (
               <div key={s.label}>
-                <div className={`font-stat text-base md:text-xl tabular-nums ${s.bold ? 'font-bold' : 'font-semibold'}`} style={{ color: '#fff' }}>
+                <div className="font-stat font-bold tabular-nums" style={{ fontSize: isMobile ? '1rem' : '1.3rem', color: s.highlight ? effectiveAccent : '#fff', marginBottom: 3 }}>
                   {s.value}
                 </div>
-                <div
-                  style={{
-                    fontSize: '0.525rem',
-                    letterSpacing: '0.1em',
-                    color: 'rgba(255,255,255,0.3)',
-                    textTransform: 'uppercase',
-                    marginTop: 2,
-                  }}
-                >
+                <div style={{ fontSize: '0.48rem', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>
                   {s.label}
                 </div>
               </div>
             ))}
           </div>
+
+          {/* Rank block — right side */}
+          <div style={{ borderLeft: '1px solid rgba(255,255,255,0.08)', paddingLeft: 24, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <RankBadge rank={player.competitiveRank} size="sm" />
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#e5e5e5' }}>{player.competitiveRank}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 16 }}>
+              <div>
+                <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 2 }}>Trio</div>
+                <div className="font-mono font-bold" style={{ fontSize: '0.85rem', color: effectiveAccent }}>{player.trioElo ?? player.rating}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 2 }}>Solo</div>
+                <div className="font-mono" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.45)' }}>{player.soloElo ?? player.rating}</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* ── Shell Loadout / Abilities (left) + Loadout / Career Highlights (right) ── */}
-      {/* HTML order: Loadout, Shell Loadout, Abilities, Career Highlights — correct for mobile stacking */}
-      <div
-        className="grid grid-cols-1 md:grid-cols-[1.35fr_1fr] gap-4 md:gap-6"
-        style={{ alignItems: 'stretch' }}
-      >
-        {/* Loadout — col 2, row 1 on desktop; first on mobile */}
-        <div
-          className="md:[grid-column:2] md:[grid-row:1]"
-          style={{
-            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
-          }}
-        >
-          <div
-            className="px-4 md:px-5 py-3 md:py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Loadout</h2>
+      {/* ── SHELL SECTION ── */}
+      <div>
+        <SectionHeader label="Shell" />
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : hasShellUsage ? '1fr 1fr 1fr' : '1fr 1fr', gap: 16 }}>
+
+          {/* Shell Loadout */}
+          <div style={{ ...CARD_BG, display: 'flex', flexDirection: 'column' }}>
+            <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <h2 style={{ fontSize: '0.65rem', fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>Loadout</h2>
+            </div>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px 12px', overflow: 'hidden' }}>
+              <ShellLoadout
+                runner={player.runner}
+                effectiveAccent={effectiveAccent}
+                slotSize={isMobile ? 60 : 70}
+                shellSize={isMobile ? 150 : 200}
+              />
+            </div>
           </div>
-          <div className="p-3 md:p-4">
-            {player.loadout.length === 0 ? (
-              <div className="flex items-center justify-center py-8" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                <span className="font-mono text-sm">No loadout configured</span>
+
+          {/* Shell Stats */}
+          <ShellStats player={player} effectiveAccent={effectiveAccent} />
+
+          {/* Shell Usage */}
+          {hasShellUsage && (
+            <div style={CARD_BG}>
+              <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <h2 style={{ fontSize: '0.65rem', fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>Usage</h2>
               </div>
-            ) : (() => {
-              const WEAPON_SLOTS = ['primary', 'sidearm', 'weapon3'] as const;
-              const weapons = player.loadout.filter(i => (WEAPON_SLOTS as readonly string[]).includes(i.slot));
-              const gadgets = player.loadout.filter(i => !(WEAPON_SLOTS as readonly string[]).includes(i.slot));
-              const weaponLabel = (slot: string) => {
-                const idx = WEAPON_SLOTS.indexOf(slot as typeof WEAPON_SLOTS[number]);
-                return `WPN ${idx + 1}`;
-              };
-              return (
-                <div style={{ display: 'flex', gap: isMobile ? 5 : 8, alignItems: 'flex-start' }}>
-                  {/* Weapons — 1×3 left column */}
-                  {weapons.length > 0 && (
-                    <div style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', gap: isMobile ? 4 : 6, minWidth: 0 }}>
-                      {weapons.map((item) => (
-                        <div
-                          key={item.slot}
-                          style={{
-                            background: '#0a0a0a',
-                            border: `1px solid ${effectiveAccent}1a`,
-                            padding: isMobile ? '6px 8px 5px' : '10px 12px 8px',
-                          }}
-                        >
-                          {item.image && (
-                            <div style={{ width: '100%', aspectRatio: '16 / 7', position: 'relative', marginBottom: isMobile ? 4 : 8 }}>
-                              <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
+              <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {player.shellUsage!.map((entry) => {
+                  const rv = RUNNER_VISUALS[entry.runner];
+                  return (
+                    <div key={entry.runner} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      <div style={{ width: 26, height: 36, position: 'relative', flexShrink: 0 }}>
+                        <Image src={rv.image} alt={rv.name} fill style={{ objectFit: 'contain', objectPosition: 'top' }} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: '0.6rem', fontWeight: 700, color: effectiveAccent, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          {rv.name}
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 12px' }}>
+                          {[
+                            { label: 'Usage', value: `${entry.usagePct}%` },
+                            { label: 'Kills', value: entry.kills.toLocaleString() },
+                            { label: 'EXT Rate', value: formatPercentage(entry.extractionRate) },
+                            { label: 'Credits', value: `${Math.round(entry.credits / 1000)}K` },
+                          ].map(({ label, value }) => (
+                            <div key={label}>
+                              <div style={{ fontSize: '0.44rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</div>
+                              <div className="font-mono" style={{ fontSize: '0.65rem', color: '#e5e5e5', fontWeight: 600 }}>{value}</div>
                             </div>
-                          )}
-                          <div style={{ fontSize: isMobile ? '0.55rem' : '0.65rem', color: '#e5e5e5', fontWeight: 600, marginBottom: 2 }}>{item.name}</div>
-                          <div style={{ fontSize: '0.44rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                            {weaponLabel(item.slot)}
-                          </div>
+                          ))}
                         </div>
-                      ))}
+                      </div>
                     </div>
-                  )}
-                  {/* Gear — 2×1 right column */}
-                  {gadgets.length > 0 && (
-                    <div style={{ flex: '0 0 28%', display: 'flex', flexDirection: 'column', gap: isMobile ? 4 : 6 }}>
-                      {gadgets.map((item) => (
-                        <div
-                          key={item.slot}
-                          style={{
-                            background: '#0a0a0a',
-                            border: `1px solid ${effectiveAccent}1a`,
-                            padding: isMobile ? '5px 4px' : '8px 6px',
-                            textAlign: 'center',
-                            aspectRatio: '1 / 1',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                        >
-                          <div style={{ fontSize: isMobile ? '1rem' : '1.5rem', lineHeight: 1, marginBottom: isMobile ? 3 : 5, color: effectiveAccent + '99' }}>
-                            {item.icon}
-                          </div>
-                          <div style={{ fontSize: isMobile ? '0.44rem' : '0.52rem', color: '#e5e5e5', fontWeight: 500, lineHeight: 1.2 }}>{item.name}</div>
-                          <div style={{ fontSize: '0.38rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 2 }}>
-                            {item.slot}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-
-        {/* Shell Loadout — col 1, row 1 on desktop; second on mobile */}
-        <div
-          className="md:[grid-column:1] md:[grid-row:1]"
-          style={{
-            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <div
-            className="px-4 md:px-5 py-3 md:py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Shell Loadout</h2>
-          </div>
-          <div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-hidden">
-            <ShellLoadout
-              runner={player.runner}
-              effectiveAccent={effectiveAccent}
-              slotSize={isMobile ? 64 : 98}
-              shellSize={isMobile ? 190 : 300}
-            />
-          </div>
-        </div>
-
-        {/* Runner Abilities — col 1, row 2 on desktop; third on mobile */}
-        <div
-          className="md:[grid-column:1] md:[grid-row:2]"
-          style={{
-            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
-          }}
-        >
-          <div
-            className="px-4 md:px-5 py-3 md:py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Runner Abilities</h2>
-          </div>
-          <RunnerAbilitiesFull runner={player.runner} effectiveAccent={effectiveAccent} />
-        </div>
-
-        {/* Career Highlights — col 2, row 2 on desktop; fourth on mobile */}
-        <div
-          className="md:[grid-column:2] md:[grid-row:2]"
-
-          style={{
-            background: 'linear-gradient(180deg, rgba(20,20,20,0.9) 0%, rgba(12,12,12,0.95) 100%)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03), 0 4px 12px rgba(0,0,0,0.4)',
-          }}
-        >
-          <div
-            className="px-4 md:px-5 py-3 md:py-3.5"
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
-          >
-            <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>Career Highlights</h2>
-          </div>
-          <div className="p-3 md:p-5 space-y-2 md:space-y-4">
-            {player.careerHighlights.length === 0 ? (
-              <div className="flex items-center justify-center py-8" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                <span className="font-mono text-sm">No highlights yet</span>
+                  );
+                })}
               </div>
-            ) : (
-              player.careerHighlights.map((highlight) => (
-                <div
-                  key={highlight.label}
-                  className="flex items-center justify-between"
-                  style={{ padding: '6px 10px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
-                >
-                  <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)' }}>{highlight.label}</span>
-                  <span className="font-mono font-bold tabular-nums text-sm" style={{ color: effectiveAccent }}>{highlight.value}</span>
-                </div>
-              ))
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ── Stats Grid with Filters ── */}
-      <StatsGrid stats={player.stats} />
+      {/* ── WEAPONS SECTION ── */}
+      <div>
+        <SectionHeader label="Weapons" />
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : hasWeaponUsage ? '1fr 1fr 1fr' : '1fr 1fr', gap: 16 }}>
 
-      {/* ── Recent Matches ── */}
-      <RecentMatches matches={isOwnProfile ? [] : mockMatches} />
+          {/* Primary weapon */}
+          {primaryWeapon ? (
+            <WeaponCard
+              item={primaryWeapon}
+              data={weaponData[primaryWeapon.name.toLowerCase()] ?? null}
+              accent={effectiveAccent}
+            />
+          ) : (
+            <div style={{ ...CARD_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace' }}>No primary</span>
+            </div>
+          )}
 
-      {/* ── Weapons + Recently Played With ── */}
-      <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-        <WeaponUsage weapons={isOwnProfile ? [] : mockWeaponStats} />
-        <RecentlyPlayedWith players={isOwnProfile ? [] : mockRecentlyPlayedWith} />
+          {/* Sidearm */}
+          {sidearmWeapon ? (
+            <WeaponCard
+              item={sidearmWeapon}
+              data={weaponData[sidearmWeapon.name.toLowerCase()] ?? null}
+              accent={effectiveAccent}
+            />
+          ) : (
+            <div style={{ ...CARD_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+              <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace' }}>No sidearm</span>
+            </div>
+          )}
+
+          {/* Weapon usage */}
+          {hasWeaponUsage && (
+            <div style={CARD_BG}>
+              <div style={{ padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                <h2 style={{ fontSize: '0.65rem', fontWeight: 700, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>Most Used</h2>
+              </div>
+              <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {topWeapons.map((weapon) => {
+                  const barW = Math.round((weapon.kills / maxWeaponKills) * 100);
+                  return (
+                    <div key={weapon.weaponName}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 4 }}>
+                        <span style={{ fontSize: '0.6rem', color: '#e5e5e5', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '75%' }}>
+                          {weapon.weaponName}
+                        </span>
+                        <span className="font-mono" style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', flexShrink: 0, marginLeft: 6 }}>
+                          {weapon.kills.toLocaleString()} kills
+                        </span>
+                      </div>
+                      <div style={{ height: 2, background: 'rgba(255,255,255,0.07)', position: 'relative' }}>
+                        <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: `${barW}%`, background: effectiveAccent, opacity: 0.55 }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* ── PERFORMANCE SECTION ── */}
+      {player.recentMatchSummary.length >= 2 && (
+        <div>
+          <SectionHeader label="Performance" />
+          <div style={CARD_BG}>
+            <div style={{ padding: '16px 20px' }}>
+              <PerformanceGraph matches={player.recentMatchSummary} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── STATS SECTION ── */}
+      <div>
+        <SectionHeader label="Stats" />
+        <StatsGrid stats={player.stats} />
+      </div>
+
+      {/* ── HISTORY SECTION ── */}
+      <div>
+        <SectionHeader label="Match History" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <RecentMatches matches={isOwnProfile ? [] : mockMatches} />
+          <RecentlyPlayedWith players={isOwnProfile ? [] : mockRecentlyPlayedWith} />
+        </div>
+      </div>
+
     </div>
   );
 }

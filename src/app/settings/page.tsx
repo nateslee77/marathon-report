@@ -869,7 +869,7 @@ export default function SettingsPage() {
                     )}
                   </div>
                   <div className="flex items-baseline gap-2 mt-1">
-                    <span className="font-mono text-xl font-bold" style={{ color: isPinnacleTier && isPinnacle ? '#c2ff0b' : tier.accent || '#888' }}>
+                    <span className="font-stat text-xl font-bold" style={{ color: isPinnacleTier && isPinnacle ? '#c2ff0b' : tier.accent || '#888' }}>
                       {tier.price}
                     </span>
                     {'priceNote' in tier && (
@@ -964,6 +964,10 @@ export default function SettingsPage() {
             {
               q: 'Will my customizations be saved?',
               a: 'Yes. Your avatar, theme color, badges, and border style are saved to your account and will persist across devices as long as you\'re signed in.',
+            },
+            {
+              q: 'Where does the game data come from?',
+              a: 'All game information — weapons, runners, abilities, and lore — is sourced directly from Marathon by Bungie and the community resource marathon-guide.com. I do my best to keep everything accurate and up to date as the game evolves.',
             },
           ].map((item) => (
             <details

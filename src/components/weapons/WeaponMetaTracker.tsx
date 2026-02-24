@@ -29,7 +29,7 @@ const weaponMetaData = [
   { rank: 22, name: 'V85 CIRCUIT BREAKER', image: '/images/Weapons no bg/V85 CIRCUIT BREAKER-Picsart-BackgroundRemover.png', usage: 0.3 },
   { rank: 23, name: 'V66 LOOKOUT', image: '/images/Weapons no bg/V66 LOOKOUT-Picsart-BackgroundRemover.png', usage: 0.25 },
   { rank: 24, name: 'V11 PUNCH', image: '/images/Weapons no bg/V11 PUNCH-Picsart-BackgroundRemover.png', usage: 0.2 },
-  { rank: 25, name: 'B33 VOLLEY RIFLE', image: '/images/Weapons no bg/B33 VOLLEY RIFLE-Picsart-BackgroundRemover.png', usage: 0.15 },
+  { rank: 25, name: 'B33 VOLLEY RIFLE', image: '/images/Weapons no bg/B33_VOLLEY_RIFLE-removebg-preview.png', usage: 0.15 },
   { rank: 26, name: 'OUTLAND', image: '/images/Weapons no bg/OUTLAND-Picsart-BackgroundRemover.png', usage: 0.12 },
   { rank: 27, name: 'MISRIAH 2442', image: '/images/Weapons no bg/MISRIAH 2442-Picsart-BackgroundRemover.png', usage: 0.1 },
   { rank: 28, name: 'VOO ZEUS RG', image: '/images/Weapons no bg/VOO ZEUS RG-Picsart-BackgroundRemover.png', usage: 0.08 },

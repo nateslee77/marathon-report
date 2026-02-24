@@ -50,7 +50,7 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
       {overall.currentStreak >= 3 && (
         <div className="mb-6 p-4 border border-accent-primary/20 bg-accent-primary/5">
           <div className="stat-label text-accent-primary mb-1">Active Extraction Streak</div>
-          <div className="text-2xl font-mono font-bold text-accent-primary tabular-nums">
+          <div className="text-2xl font-stat font-bold text-accent-primary tabular-nums">
             {overall.currentStreak} matches
           </div>
         </div>
@@ -60,31 +60,31 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-6 pt-6 border-t border-border/40">
         <div>
           <div className="stat-label mb-1.5">K/D Ratio</div>
-          <div className="text-stat font-mono font-semibold tabular-nums text-text-primary">
+          <div className="text-stat font-stat font-semibold tabular-nums text-text-primary">
             {formatKD(overall.kd)}
           </div>
         </div>
         <div>
           <div className="stat-label mb-1.5">Extract Rate</div>
-          <div className="text-stat font-mono font-semibold tabular-nums text-accent-primary">
+          <div className="text-stat font-stat font-semibold tabular-nums text-accent-primary">
             {formatPercentage(overall.winRate)}
           </div>
         </div>
         <div>
           <div className="stat-label mb-1.5">Matches</div>
-          <div className="text-stat font-mono font-semibold tabular-nums text-text-primary">
+          <div className="text-stat font-stat font-semibold tabular-nums text-text-primary">
             {overall.matchesPlayed}
           </div>
         </div>
         <div>
           <div className="stat-label mb-1.5">Best Streak</div>
-          <div className="text-stat font-mono font-semibold tabular-nums text-accent-warning">
+          <div className="text-stat font-stat font-semibold tabular-nums text-accent-warning">
             {overall.bestStreak}
           </div>
         </div>
         <div>
           <div className="stat-label mb-1.5">Time Played</div>
-          <div className="text-stat font-mono font-semibold tabular-nums text-text-primary">
+          <div className="text-stat font-stat font-semibold tabular-nums text-text-primary">
             {overall.timePlayed}
           </div>
         </div>

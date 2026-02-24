@@ -51,12 +51,27 @@ export const RARITY_LABELS: Record<ItemRarity, string> = {
 // ── Loadout ──
 
 export interface LoadoutItem {
-  slot: 'primary' | 'sidearm' | 'weapon3' | 'equipment' | 'core';
+  slot: 'primary' | 'sidearm';
   name: string;
   icon: string;
   image?: string;
   rarity?: ItemRarity;
   credit?: number;
+}
+
+export interface WeaponRecord {
+  weapon: string;
+  type: string | null;
+  firepower: number | null;
+  accuracy: number | null;
+  handling: number | null;
+  range: number | null;
+  mag: number | null;
+  zoom: string | null;
+  description: string | null;
+  ammo_type: string | null;
+  dps: number | null;
+  mod_slots: string | null;
 }
 
 // ── Stats ──
@@ -74,6 +89,24 @@ export interface PlayerStats {
   timePlayed: string;
 }
 
+// ── Shell stats ──
+
+export interface ShellStat {
+  label: string;
+  value: number;
+  max: number;
+}
+
+// ── Shell usage (per runner played) ──
+
+export interface ShellUsageEntry {
+  runner: RunnerType;
+  usagePct: number;
+  kills: number;
+  extractionRate: number;
+  credits: number;
+}
+
 // ── Mini match (for card summary) ──
 
 export interface MiniMatch {
@@ -83,6 +116,8 @@ export interface MiniMatch {
   deaths: number;
   assists: number;
   runner?: RunnerType;
+  creditsExtracted?: number; // positive = extracted w/ credits, negative = eliminated w/ credits lost
+  matchId?: string;
 }
 
 // ── Detailed player (for triple-card view) ──
@@ -101,12 +136,16 @@ export interface DetailedPlayer {
   membership: MembershipTier;
   avatar: string;
   lastUpdated: Date;
+  trioElo?: number;
+  soloElo?: number;
   themeColor?: string;
   youtubeUrl?: string;
   twitchUrl?: string;
   loadout: LoadoutItem[];
   recentMatchSummary: MiniMatch[];
   careerHighlights: { label: string; value: string }[];
+  shellStats?: ShellStat[];
+  shellUsage?: ShellUsageEntry[];
   stats: {
     overall: PlayerStats;
     last10: PlayerStats;
@@ -140,10 +179,14 @@ export interface MatchPlayer {
   playerName: string;
   kills: number;
   deaths: number;
+  downs?: number;
   assists: number;
   damage: number;
   objectiveScore: number;
   isTopPerformer?: boolean;
+  runner?: RunnerType;
+  elo?: number;
+  credits?: number;
 }
 
 export interface Match {

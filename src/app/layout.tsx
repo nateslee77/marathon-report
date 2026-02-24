@@ -21,7 +21,7 @@ const rajdhani = Rajdhani({
 
 export const metadata: Metadata = {
   title: 'Marathon Intel - Player Stats & Analytics',
-  description: 'Premium stats tracking and analytics for Marathon players',
+  description: 'Stat tracker for Marathon by Bungie. View player profiles, K/D, extraction rates, weapon loadouts, shell stats, match history, and performance graphs.',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
