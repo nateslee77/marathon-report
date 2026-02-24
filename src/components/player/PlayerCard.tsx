@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { DetailedPlayer, MembershipTier } from '@/types';
+import { DetailedPlayer, MembershipTier, RARITY_COLORS } from '@/types';
 import { RUNNER_VISUALS } from '@/lib/runners';
 import { formatKD, formatPercentage, cn } from '@/lib/utils';
 import { RankBadge } from '@/components/ui/RankBadge';
@@ -292,30 +292,35 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                   {/* Weapons — horizontal 3-column grid */}
                   {weapons.length > 0 && (
                     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${weapons.length}, 1fr)`, gap: 4 }}>
-                      {weapons.map((item) => (
-                        <div
-                          key={item.slot}
-                          style={{
-                            background: '#0a0a0a',
-                            border: `1px solid ${effectiveAccent}18`,
-                            padding: '6px 6px 5px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                          }}
-                        >
-                          {item.image ? (
-                            <div style={{ width: '100%', height: 44, position: 'relative', marginBottom: 4 }}>
-                              <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
-                            </div>
-                          ) : (
-                            <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: effectiveAccent + '66', marginBottom: 4 }}>
-                              {item.icon}
-                            </div>
-                          )}
-                          <div className="truncate w-full text-center" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>{item.name}</div>
-                        </div>
-                      ))}
+                      {weapons.map((item) => {
+                        const rarityColor = item.rarity ? RARITY_COLORS[item.rarity] : null;
+                        const borderColor = rarityColor ? rarityColor + '55' : effectiveAccent + '18';
+                        return (
+                          <div
+                            key={item.slot}
+                            style={{
+                              position: 'relative',
+                              background: '#0a0a0a',
+                              border: `1px solid ${borderColor}`,
+                              padding: '6px 6px 5px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                            }}
+                          >
+                            {item.image ? (
+                              <div style={{ width: '100%', height: 44, position: 'relative', marginBottom: 4 }}>
+                                <Image src={item.image} alt={item.name} fill style={{ objectFit: 'contain' }} />
+                              </div>
+                            ) : (
+                              <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', color: effectiveAccent + '66', marginBottom: 4 }}>
+                                {item.icon}
+                              </div>
+                            )}
+                            <div className="truncate w-full text-center" style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.45)', fontWeight: 600 }}>{item.name}</div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                   {/* Gadgets — compact horizontal row below weapons */}

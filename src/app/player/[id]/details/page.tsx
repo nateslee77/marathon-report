@@ -40,31 +40,14 @@ export default function DetailsPage({ params }: DetailsPageProps) {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  // Resolve the player: mock player > own profile > not found
+  // Resolve the player: mock player > own profile > rook placeholder
   const mockPlayer = detailedPlayers[params.id];
   const isOwnProfile = mounted && !mockPlayer && !!user && user.id === params.id;
-  const player: DetailedPlayer | null = mockPlayer
-    ?? (isOwnProfile ? buildDefaultPlayer(user, selectedAvatar) : null);
-
-  if (!player) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
-        <div className="text-center space-y-3">
-          <div className="text-2xl font-bold" style={{ color: '#e5e5e5' }}>Player not found</div>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            No player exists with this ID.
-          </p>
-          <Link
-            href="/"
-            className="inline-block mt-4 text-sm font-mono"
-            style={{ color: '#c2ff0b' }}
-          >
-            &larr; Back to Search
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const idSlice = params.id.slice(-4).replace(/\D/g, '').padStart(4, '0');
+  const player: DetailedPlayer = mockPlayer
+    ?? (isOwnProfile
+      ? buildDefaultPlayer(user, selectedAvatar)
+      : buildDefaultPlayer({ id: params.id, name: 'Unknown Runner', tag: `#${idSlice}` }, ''));
 
   const runner = RUNNER_VISUALS[player.runner];
   const stats = player.stats.overall;

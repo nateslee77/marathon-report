@@ -25,8 +25,28 @@ export interface RunnerVisual {
 export interface EmblemInfo {
   id: string;
   name: string;
-  rarity: 'common' | 'rare' | 'legendary' | 'exotic';
+  rarity: ItemRarity;
 }
+
+// ── Rarity ──
+
+export type ItemRarity = 'standard' | 'enhanced' | 'deluxe' | 'superior' | 'prestige';
+
+export const RARITY_COLORS: Record<ItemRarity, string> = {
+  standard:  '#888888',
+  enhanced:  '#4cdb8a',
+  deluxe:    '#4488ff',
+  superior:  '#aa55ff',
+  prestige:  '#ffaa00',
+};
+
+export const RARITY_LABELS: Record<ItemRarity, string> = {
+  standard: 'STD',
+  enhanced: 'ENH',
+  deluxe:   'DLX',
+  superior: 'SUP',
+  prestige: 'PRE',
+};
 
 // ── Loadout ──
 
@@ -35,6 +55,8 @@ export interface LoadoutItem {
   name: string;
   icon: string;
   image?: string;
+  rarity?: ItemRarity;
+  credit?: number;
 }
 
 // ── Stats ──
@@ -167,6 +189,17 @@ export interface SearchPlayer {
   kd: number;
   winRate: number;
   competitiveRank: RankTier;
+}
+
+export interface SuggestResult {
+  membershipId: string;
+  membershipType: number;
+  displayName: string;
+  displayNameCode: number;
+  fullName: string; // "displayName#0000"
+  platform: Platform;
+  avatar?: string;  // present when user is registered on site
+  isRegistered: boolean;
 }
 
 export interface TeammateInfo {

@@ -141,6 +141,19 @@ export default function HomePage() {
                 </h1>
 
                 {/* Countdown inline */}
+                <div
+                  className="mb-1.5"
+                  style={{
+                    fontSize: '0.6rem',
+                    letterSpacing: '0.18em',
+                    textTransform: 'uppercase',
+                    color: 'rgba(255,255,255,0.35)',
+                    fontWeight: 600,
+                    textAlign: 'center',
+                  }}
+                >
+                  Time Till Game Release
+                </div>
                 <div className="flex justify-center gap-2 md:gap-3 mb-4 md:mb-8">
                   {[
                     { value: countdown.days, label: 'Days' },

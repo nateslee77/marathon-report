@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useApp } from '@/context/AppContext';
 import { getFireteam, mockSearchPlayers } from '@/lib/mock-data';
 import { TripleCardView } from '@/components/player/TripleCardView';
@@ -39,6 +38,7 @@ export default function PlayerPage({ params }: PlayerPageProps) {
       }
 
       // 3. Real player — fetch from Supabase via API
+      let resolved = false;
       try {
         const res = await fetch(`/api/player/${encodeURIComponent(params.id)}`);
         if (res.ok) {
@@ -48,6 +48,7 @@ export default function PlayerPage({ params }: PlayerPageProps) {
             data.avatar,
           );
           setFireteam([player]);
+          resolved = true;
 
           // Add to recent players
           addRecentPlayer({
@@ -60,11 +61,18 @@ export default function PlayerPage({ params }: PlayerPageProps) {
             winRate: 0,
             competitiveRank: 'Unranked',
           });
-        } else {
-          setFireteam([]);
         }
       } catch {
-        setFireteam([]);
+        // Fall through to rook placeholder
+      }
+
+      // 4. Unknown / not found — show empty rook placeholder
+      if (!resolved) {
+        const idSlice = params.id.slice(-4).replace(/\D/g, '').padStart(4, '0');
+        setFireteam([buildDefaultPlayer(
+          { id: params.id, name: 'Unknown Runner', tag: `#${idSlice}` },
+          '',
+        )]);
       }
 
       setLoading(false);
@@ -85,26 +93,6 @@ export default function PlayerPage({ params }: PlayerPageProps) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-sm text-text-tertiary font-mono animate-pulse">Loading...</div>
-      </div>
-    );
-  }
-
-  if (fireteam.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh] animate-fade-in">
-        <div className="text-center space-y-3">
-          <div className="text-2xl font-bold" style={{ color: '#e5e5e5' }}>Player not found</div>
-          <p className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            No player exists with this ID.
-          </p>
-          <Link
-            href="/"
-            className="inline-block mt-4 text-sm font-mono"
-            style={{ color: '#c2ff0b' }}
-          >
-            &larr; Back to Search
-          </Link>
-        </div>
       </div>
     );
   }
