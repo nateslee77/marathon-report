@@ -247,35 +247,47 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
 
           {/* ── Core Stats Grid ── */}
           <div
-            className="relative grid grid-cols-4 gap-0 px-4 py-4"
+            className="relative px-4 py-3"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
           >
-            {[
-              { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444', bold: true },
-              { label: 'EXT%', value: formatPercentage(stats.extractionRate, 1), color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
-              { label: 'MATCHES', value: String(stats.matchesPlayed), color: '#e5e5e5' },
-              { label: 'STREAK', value: String(stats.currentStreak), color: stats.currentStreak >= 3 ? effectiveAccent : '#e5e5e5' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div
-                  className={`font-stat text-lg tabular-nums ${stat.bold ? 'font-bold' : 'font-semibold'}`}
-                  style={{ color: stat.color }}
-                >
-                  {stat.value}
+            {/* Row 1 */}
+            <div className="grid grid-cols-4 gap-0 mb-3">
+              {[
+                { label: 'K/D',      value: formatKD(stats.kd),                       color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444', bold: true },
+                { label: 'EXT%',     value: formatPercentage(stats.extractionRate, 1), color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
+                { label: 'AVG KILLS',value: stats.averageKills.toFixed(1),             color: '#e5e5e5' },
+                { label: 'K/D/A',    value: formatKD(stats.kda),                       color: 'rgba(255,255,255,0.6)' },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className={`font-stat text-lg tabular-nums ${stat.bold ? 'font-bold' : 'font-semibold'}`} style={{ color: stat.color }}>
+                    {stat.value}
+                  </div>
+                  <div className="mt-0.5" style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase' }}>
+                    {stat.label}
+                  </div>
                 </div>
-                <div
-                  className="mt-0.5"
-                  style={{
-                    fontSize: '0.575rem',
-                    letterSpacing: '0.1em',
-                    color: 'rgba(255,255,255,0.3)',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {stat.label}
+              ))}
+            </div>
+            {/* Divider */}
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.04)', marginBottom: 10 }} />
+            {/* Row 2 */}
+            <div className="grid grid-cols-4 gap-0">
+              {[
+                { label: 'MATCHES',  value: String(stats.matchesPlayed),              color: 'rgba(255,255,255,0.7)' },
+                { label: 'STREAK',   value: String(stats.currentStreak),              color: stats.currentStreak >= 3 ? effectiveAccent : 'rgba(255,255,255,0.7)' },
+                { label: 'BEST STK', value: String(stats.bestStreak),                 color: 'rgba(255,255,255,0.7)' },
+                { label: 'TIME',     value: stats.timePlayed.replace('h ', 'h ').split(' ')[0], color: 'rgba(255,255,255,0.5)' },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="font-stat text-base tabular-nums font-semibold" style={{ color: stat.color }}>
+                    {stat.value}
+                  </div>
+                  <div className="mt-0.5" style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>
+                    {stat.label}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* ── Loadout Preview ── */}
@@ -342,6 +354,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
           <div
             className="relative px-4 py-3 flex-1"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
           >
             <div
               className="mb-2"
