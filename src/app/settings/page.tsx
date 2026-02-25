@@ -959,6 +959,146 @@ export default function SettingsPage() {
         </div>
       </div>
 
+      {/* ── How Elo Works ── */}
+      <div className="game-card">
+        <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="flex items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+              <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#c2ff0b" strokeWidth="1.5" strokeLinejoin="round" />
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#c2ff0b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <h2 className="text-lg font-semibold" style={{ color: '#e5e5e5' }}>How Elo Works</h2>
+          </div>
+        </div>
+
+        {/* Rank ladder */}
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.2)', marginBottom: 12, fontFamily: 'var(--font-mono)' }}>
+            Season 1 Ranks
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {([
+              { tier: 'Unranked',  range: '0 – 799',     color: '#666666', image: null,      desc: 'Complete placements to rank up.' },
+              { tier: 'Bronze',    range: '800 – 1099',   color: '#cd7f32', image: '/images/elo rank images/bronze elo.png', desc: 'Solid foundations. Keep pushing.' },
+              { tier: 'Silver',    range: '1100 – 1399',  color: '#c0c0c0', image: '/images/elo rank images/silver elo.png', desc: 'Above average. Refine your game.' },
+              { tier: 'Gold',      range: '1400 – 1699',  color: '#ffd700', image: '/images/elo rank images/gold elo.png',   desc: 'Consistent across all modes.' },
+              { tier: 'Platinum',  range: '1700 – 1999',  color: '#4ee2ec', image: null,      desc: 'Elite play. Most can\'t reach this.' },
+              { tier: 'Diamond',   range: '2000 – 2399',  color: '#b9f2ff', image: null,      desc: 'Top-tier. Very few reach this level.' },
+              { tier: 'Ultra',     range: '2400+',        color: '#c2ff0b', image: null,      desc: 'Top 500 globally.' },
+            ] as { tier: string; range: string; color: string; image: string | null; desc: string }[]).map((rank) => (
+              <div
+                key={rank.tier}
+                style={{
+                  display:    'flex',
+                  alignItems: 'center',
+                  gap:        12,
+                  padding:    '8px 10px',
+                  background: `${rank.color}08`,
+                  border:     `1px solid ${rank.color}22`,
+                }}
+              >
+                {/* Badge image or placeholder */}
+                {rank.image ? (
+                  <div style={{ width: 36, height: 36, position: 'relative', flexShrink: 0 }}>
+                    <Image src={rank.image} alt={rank.tier} fill unoptimized style={{ objectFit: 'contain' }} />
+                  </div>
+                ) : (
+                  <div style={{
+                    width:          36,
+                    height:         36,
+                    flexShrink:     0,
+                    display:        'flex',
+                    alignItems:     'center',
+                    justifyContent: 'center',
+                    background:     `${rank.color}14`,
+                    border:         `1px dashed ${rank.color}44`,
+                  }}>
+                    <div style={{
+                      width:     14,
+                      height:    14,
+                      background: rank.color,
+                      opacity:   0.55,
+                      transform: 'rotate(45deg)',
+                    }} />
+                  </div>
+                )}
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, color: rank.color, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                      {rank.tier}
+                    </span>
+                    <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)', fontFamily: 'var(--font-mono)' }}>
+                      {rank.range} pts
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.35)', marginTop: 1 }}>
+                    {rank.desc}
+                  </div>
+                </div>
+
+                {rank.tier === 'Ultra' && (
+                  <span style={{ fontSize: '0.42rem', letterSpacing: '0.1em', color: '#c2ff0b', border: '1px solid rgba(194,255,11,0.3)', padding: '1px 6px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
+                    TOP 500
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          <p style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.2)', marginTop: 10, fontFamily: 'var(--font-mono)' }}>
+            * Badge artwork coming soon for Unranked, Platinum, Diamond &amp; Ultra.
+          </p>
+        </div>
+
+        {/* FAQ items */}
+        <div className="p-5 space-y-1">
+          {([
+            {
+              q: 'What is Elo and why does MarathonIntel use it?',
+              a: 'Elo is a mathematical system for measuring skill relative to other players. Instead of a flat win/loss counter, your rating rises when you beat higher-rated opponents and falls less when losing to stronger ones. MarathonIntel tracks two separate Elo numbers — TRIO and SOLO — because the skills and team dynamics between those modes are fundamentally different.',
+            },
+            {
+              q: 'How is my Elo calculated after a match?',
+              a: 'Three things feed into your rating change: (1) Placement — where your team finished vs. every other team in the lobby. Beating higher-rated teams earns more. (2) Performance multiplier — your kills, damage, and survival time relative to the lobby average, bounded between ×0.85 and ×1.15 so farming can\'t dominate. (3) Reliability — new players move faster (K=64) until 30 matches are played, after which movement stabilises.',
+            },
+            {
+              q: 'Do SOLO and TRIO affect each other?',
+              a: 'No. SOLO Elo and TRIO Elo are entirely independent ratings. A match played in TRIO mode only touches your TRIO rating.',
+            },
+            {
+              q: 'Can I farm kills to boost my Elo?',
+              a: 'Only slightly. The performance multiplier is capped at ×1.15 (maximum) and ×0.85 (minimum). Placement in the match is still the primary driver, so you can\'t inflate your rating purely by hunting eliminations.',
+            },
+            {
+              q: 'Why does my rating move less as I play more?',
+              a: 'This is the Reliability factor. Early on your rating hasn\'t settled yet, so the system allows larger swings to calibrate you quickly. After ~30 matches in a mode your rating moves at the standard rate. This prevents a single lucky match from rocketing a new account into Diamond.',
+            },
+          ] as { q: string; a: string }[]).map((item) => (
+            <details
+              key={item.q}
+              className="group"
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
+            >
+              <summary
+                className="cursor-pointer select-none flex items-center justify-between px-4 py-3"
+                style={{ listStyle: 'none' }}
+              >
+                <span className="text-sm font-medium" style={{ color: '#e5e5e5' }}>{item.q}</span>
+                <span
+                  className="transition-transform duration-200 group-open:rotate-45"
+                  style={{ color: 'rgba(255,255,255,0.3)', fontSize: '1.1rem', lineHeight: 1, flexShrink: 0, marginLeft: 12 }}
+                >
+                  +
+                </span>
+              </summary>
+              <div className="px-4 pb-3" style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+                {item.a}
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+
       {/* ── Credits ── */}
       <div className="game-card">
         <div className="px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>

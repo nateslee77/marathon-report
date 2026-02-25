@@ -15,6 +15,8 @@ import { WeaponCard } from '@/components/player/WeaponCard';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
+import { EloBadge } from '@/components/ui/EloBadge';
+import { EloInfoModal } from '@/components/ui/EloInfoModal';
 
 interface PlayerCardProps {
   player: DetailedPlayer;
@@ -78,6 +80,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
     ? equippedBadges.map(getBadgeById).filter(Boolean)
     : (playerBadges[player.id] || []).map(getBadgeById).filter(Boolean);
 
+  const [eloModalOpen, setEloModalOpen] = useState(false);
   const [statsFilter, setStatsFilter] = useState<StatsFilter>('thisWeek');
   const filteredStats = player.stats[statsFilter];
   const stats = player.stats.overall;
@@ -152,7 +155,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
           {/* Pinnacle badge — bottom-right of shell image */}
           {(player.membership === 'pinnacle' || (user?.id === player.id && isPinnacle)) && (
             <div style={{ position: 'absolute', bottom: 12, right: 8, zIndex: 5 }}>
-              <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
+              <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" tooltipAlign="right" />
             </div>
           )}
           {/* Player name overlay */}
@@ -221,7 +224,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
           className="relative flex-1 flex flex-col"
           style={{ background: useCustomTheme ? `radial-gradient(ellipse at 50% 20%, ${effectiveAccent}22 0%, transparent 55%)` : runner.bgGradient }}
         >
-          {/* Runner + Platform + Rating + Elo row */}
+          {/* Runner row */}
           <div
             className="relative flex items-center justify-between px-4 py-2.5"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
@@ -234,20 +237,7 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
                 Lvl {player.level}
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <RankBadge rank={player.competitiveRank} size="sm" />
-              {/* Elo stack: trio + solo */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                  <span style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>TRIO</span>
-                  <span className="font-mono font-bold" style={{ fontSize: '0.6rem', color: effectiveAccent }}>{player.trioElo ?? player.rating}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                  <span style={{ fontSize: '0.45rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>SOLO</span>
-                  <span className="font-mono" style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.5)' }}>{player.soloElo ?? player.rating}</span>
-                </div>
-              </div>
-            </div>
+            <RankBadge rank={player.competitiveRank} size="sm" tooltipAlign="right" />
           </div>
 
           {/* ── Core Stats Grid ── */}
@@ -255,44 +245,83 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
             className="relative px-4 py-3"
             style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
           >
-            {/* Row 1 */}
-            <div className="grid grid-cols-4 gap-0 mb-3">
-              {[
-                { label: 'K/D',      value: formatKD(stats.kd),                       color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444', bold: true },
-                { label: 'EXT%',     value: formatPercentage(stats.extractionRate, 1), color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
-                { label: 'AVG KILLS',value: stats.averageKills.toFixed(1),             color: '#e5e5e5' },
-                { label: 'K/D/A',    value: formatKD(stats.kda),                       color: 'rgba(255,255,255,0.6)' },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className={`font-stat tabular-nums ${stat.bold ? 'font-bold' : 'font-semibold'}`} style={{ fontSize: '1.25rem', color: stat.color }}>
-                    {stat.value}
-                  </div>
-                  <div className="mt-0.5" style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase' }}>
-                    {stat.label}
-                  </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)' }}>
+              {/* K/D */}
+              <div style={{ textAlign: 'center' }}>
+                <div className="font-stat tabular-nums font-bold" style={{ fontSize: '1.25rem', color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444' }}>
+                  {formatKD(stats.kd)}
                 </div>
-              ))}
-            </div>
-            {/* Divider */}
-            <div style={{ height: 1, background: 'rgba(255,255,255,0.04)', marginBottom: 10 }} />
-            {/* Row 2 */}
-            <div className="grid grid-cols-4 gap-0">
-              {[
-                { label: 'MATCHES',  value: String(stats.matchesPlayed),              color: 'rgba(255,255,255,0.7)' },
-                { label: 'STREAK',   value: String(stats.currentStreak),              color: stats.currentStreak >= 3 ? effectiveAccent : 'rgba(255,255,255,0.7)' },
-                { label: 'BEST STK', value: String(stats.bestStreak),                 color: 'rgba(255,255,255,0.7)' },
-                { label: 'TIME',     value: stats.timePlayed.replace('h ', 'h ').split(' ')[0], color: 'rgba(255,255,255,0.5)' },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="font-stat tabular-nums font-semibold" style={{ fontSize: '1rem', color: stat.color }}>
-                    {stat.value}
-                  </div>
-                  <div className="mt-0.5" style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.22)', textTransform: 'uppercase' }}>
-                    {stat.label}
-                  </div>
+                <div style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 2 }}>
+                  K/D
                 </div>
-              ))}
+              </div>
+
+              {/* EXT% */}
+              <div style={{ textAlign: 'center' }}>
+                <div className="font-stat tabular-nums font-semibold" style={{ fontSize: '1.25rem', color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' }}>
+                  {formatPercentage(stats.extractionRate, 1)}
+                </div>
+                <div style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 2 }}>
+                  EXT%
+                </div>
+              </div>
+
+              {/* MATCHES */}
+              <div style={{ textAlign: 'center' }}>
+                <div className="font-stat tabular-nums font-semibold" style={{ fontSize: '1.25rem', color: 'rgba(255,255,255,0.7)' }}>
+                  {stats.matchesPlayed}
+                </div>
+                <div style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 2 }}>
+                  MATCHES
+                </div>
+              </div>
+
+              {/* STREAK */}
+              <div style={{ textAlign: 'center' }}>
+                <div className="font-stat tabular-nums font-semibold" style={{ fontSize: '1.25rem', color: stats.currentStreak >= 3 ? effectiveAccent : 'rgba(255,255,255,0.7)' }}>
+                  {stats.currentStreak}
+                </div>
+                <div style={{ fontSize: '0.5rem', letterSpacing: '0.09em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 2 }}>
+                  STREAK
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* ── Elo: TRIO + SOLO — click to learn more ── */}
+          <div
+            className="relative flex items-center justify-center px-4 py-3"
+            style={{
+              borderBottom: '1px solid rgba(255,255,255,0.04)',
+              gap: 24, cursor: 'pointer',
+              transition: 'background 0.12s',
+            }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEloModalOpen(true); }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.02)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)' }}>TRIO</span>
+              <EloBadge elo={player.trioElo ?? player.rating} size={36} />
+              <span className="font-mono font-bold" style={{ fontSize: '0.88rem', color: effectiveAccent }}>{player.trioElo ?? player.rating}</span>
+            </div>
+            <div style={{ width: 1, height: 22, background: 'rgba(255,255,255,0.08)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)' }}>SOLO</span>
+              <EloBadge elo={player.soloElo ?? player.rating} size={36} />
+              <span className="font-mono font-bold" style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.55)' }}>{player.soloElo ?? player.rating}</span>
+            </div>
+            <button
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEloModalOpen(true); }}
+              style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: 3, color: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', transition: 'color 0.12s' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.2)')}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
+                <path d="M12 8v1M12 12v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </button>
           </div>
 
           {/* ── Loadout Preview ── */}
@@ -454,6 +483,11 @@ export function PlayerCard({ player, isCenter = false }: PlayerCardProps) {
               ))}
             </div>
           </div>
+
+          {/* ── Elo info modal ── */}
+          {eloModalOpen && (
+            <EloInfoModal onClose={() => setEloModalOpen(false)} />
+          )}
 
           {/* ── Click hint ── */}
           <div

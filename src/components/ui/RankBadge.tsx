@@ -2,8 +2,9 @@ import { RankTier } from '@/types';
 import { RANK_VISUALS } from '@/lib/ranks';
 
 interface RankBadgeProps {
-  rank: RankTier;
-  size?: 'sm' | 'md' | 'lg';
+  rank:          RankTier;
+  size?:         'sm' | 'md' | 'lg';
+  tooltipAlign?: 'left' | 'right';
 }
 
 function RankIcon({ rank, size }: { rank: RankTier; size: number }) {
@@ -64,11 +65,12 @@ function RankIcon({ rank, size }: { rank: RankTier; size: number }) {
 
 const sizeMap = { sm: 14, md: 18, lg: 24 };
 
-export function RankBadge({ rank, size = 'md' }: RankBadgeProps) {
+export function RankBadge({ rank, size = 'md', tooltipAlign = 'left' }: RankBadgeProps) {
   const visual = RANK_VISUALS[rank];
   const iconSize = sizeMap[size];
   const fontSize = size === 'sm' ? '0.55rem' : size === 'md' ? '0.625rem' : '0.75rem';
   const padding = size === 'sm' ? '1px 6px' : size === 'md' ? '2px 8px' : '3px 10px';
+  const tooltipClass = tooltipAlign === 'right' ? 'badge-tooltip badge-tooltip-right' : 'badge-tooltip';
 
   return (
     <div className="badge-tooltip-wrap" style={{ position: 'relative', display: 'inline-flex' }}>
@@ -88,7 +90,7 @@ export function RankBadge({ rank, size = 'md' }: RankBadgeProps) {
         <RankIcon rank={rank} size={iconSize} />
         {visual.label}
       </div>
-      <div className="badge-tooltip" style={{ color: visual.color }}>
+      <div className={tooltipClass} style={{ color: visual.color }}>
         <div style={{ fontWeight: 700, fontSize: '0.65rem', marginBottom: 2 }}>Season 1 {visual.label}</div>
         <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.6rem', lineHeight: 1.35, fontWeight: 400 }}>Current competitive rank</div>
       </div>

@@ -7,6 +7,8 @@ import { SearchBar } from '@/components/search/SearchBar';
 import { DesktopAuthButton } from '@/components/auth/DesktopAuthButton';
 import { WeaponMetaTracker } from '@/components/weapons/WeaponMetaTracker';
 import { TiltShineCard } from '@/components/cards/TiltShineCard';
+import { EloBadge } from '@/components/ui/EloBadge';
+import { EloInfoModal } from '@/components/ui/EloInfoModal';
 
 // ── Wave-reveal scramble hook ───────────────────────────────────────────────
 // Letters start hidden. A narrow scramble window sweeps left-to-right;
@@ -65,6 +67,7 @@ function useScramble(text: string, revealDuration = 1600) {
 export default function HomePage() {
   const titleChars = useScramble('Marathon Intel');
   const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [eloInfoOpen, setEloInfoOpen] = useState(false);
 
   // March 5th, 2026 10:00 AM PST = 18:00 UTC
   const launchDate = useMemo(() => new Date('2026-03-05T18:00:00Z'), []);
@@ -693,7 +696,165 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+
+          {/* ── Elo Leaderboards ── */}
+          <div className="grid md:grid-cols-2 gap-4 md:gap-6 mt-4 md:mt-6">
+            {/* TRIO Elo Leaderboard */}
+            <div className="game-card">
+              <div
+                className="px-4 md:px-5 py-3 flex items-center justify-between"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
+                  TRIO Elo
+                </h2>
+                <div className="flex items-center gap-2">
+                  <span style={{ fontSize: '0.55rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)', padding: '2px 8px', background: 'rgba(168,85,247,0.08)' }}>
+                    Season 1
+                  </span>
+                  <button
+                    onClick={() => setEloInfoOpen(true)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', transition: 'color 0.12s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.25)')}
+                    title="About the Elo system"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M12 8v1M12 12v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div className="p-3 md:p-5 space-y-1 md:space-y-1.5">
+                {[
+                  { rank: 1,  id: 'player-001', name: 'Sushi',       tag: '#7742', avatar: '/images/faction logo/arachne.png',    elo: 2847, twitch: true  },
+                  { rank: 2,  id: 'player-005', name: 'VoidWalker',  tag: '#7741', avatar: '/images/avatars/avatar5.png',          elo: 2789, twitch: true  },
+                  { rank: 3,  id: 'player-002', name: 'NovaBlade',   tag: '#1234', avatar: '/images/faction logo/nucaloric.png',   elo: 2681, youtube: true },
+                  { rank: 4,  id: 'player-024', name: 'NeonStrike',  tag: '#2209', avatar: '/images/avatars/avatar6.png',          elo: 2534, youtube: true },
+                  { rank: 5,  id: 'player-025', name: 'PhantomAce',  tag: '#5518', avatar: '/images/avatars/avatar1.png',          elo: 2412, twitch: true  },
+                  { rank: 6,  id: 'player-026', name: 'GhostRecon',  tag: '#8834', avatar: '/images/avatars/avatar3.png',          elo: 2301               },
+                  { rank: 7,  id: 'player-028', name: 'IronClad',    tag: '#4402', avatar: '/images/avatars/avatar2.png',          elo: 2198               },
+                  { rank: 8,  id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png',          elo: 2089, twitch: true  },
+                  { rank: 9,  id: 'player-027', name: 'SteelNova',   tag: '#1190', avatar: '/images/avatars/avatar4.png',          elo: 1834, youtube: true },
+                  { rank: 10, id: 'player-004', name: 'QuantumFist', tag: '#8877', avatar: '/images/avatars/avatar4.png',          elo: 1654, youtube: true },
+                ].map((entry) => (
+                  <Link
+                    key={entry.rank}
+                    href={`/player/${entry.id}`}
+                    className="flex items-center justify-between font-mono text-xs md:text-sm transition-all hover:scale-[1.02]"
+                    style={{
+                      padding: '5px 10px',
+                      background: entry.rank <= 3 ? 'rgba(168,85,247,0.04)' : 'rgba(255,255,255,0.02)',
+                      border: `1px solid ${entry.rank <= 3 ? 'rgba(168,85,247,0.12)' : 'rgba(255,255,255,0.04)'}`,
+                    }}
+                  >
+                    <div className="flex items-center gap-2 md:gap-3 min-w-0">
+                      <span className="font-bold tabular-nums" style={{ color: entry.rank <= 3 ? '#a855f7' : 'rgba(255,255,255,0.3)', width: 16, textAlign: 'right' }}>
+                        {entry.rank}
+                      </span>
+                      <Image src={entry.avatar} alt={entry.name} width={22} height={22} style={{ borderRadius: 0, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }} />
+                      <span className="truncate font-sans" style={{ color: '#e5e5e5' }}>{entry.name}</span>
+                      <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>{entry.tag}</span>
+                      {entry.twitch && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+                        </svg>
+                      )}
+                      {entry.youtube && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <EloBadge elo={entry.elo} size={20} />
+                      <span className="font-bold tabular-nums" style={{ color: '#e5e5e5', minWidth: 36, textAlign: 'right' }}>{entry.elo}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* SOLO Elo Leaderboard */}
+            <div className="game-card">
+              <div
+                className="px-4 md:px-5 py-3 flex items-center justify-between"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+              >
+                <h2 className="text-base md:text-lg font-semibold" style={{ color: '#e5e5e5' }}>
+                  SOLO Elo
+                </h2>
+                <div className="flex items-center gap-2">
+                  <span style={{ fontSize: '0.55rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)', padding: '2px 8px', background: 'rgba(168,85,247,0.08)' }}>
+                    Season 1
+                  </span>
+                  <button
+                    onClick={() => setEloInfoOpen(true)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, color: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', transition: 'color 0.12s' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.7)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.25)')}
+                    title="About the Elo system"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
+                      <path d="M12 8v1M12 12v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div className="p-3 md:p-5 space-y-1 md:space-y-1.5">
+                {[
+                  { rank: 1,  id: 'player-002', name: 'NovaBlade',   tag: '#1234', avatar: '/images/faction logo/nucaloric.png',   elo: 2831, youtube: true },
+                  { rank: 2,  id: 'player-001', name: 'Sushi',       tag: '#7742', avatar: '/images/faction logo/arachne.png',    elo: 2754, twitch: true  },
+                  { rank: 3,  id: 'player-024', name: 'NeonStrike',  tag: '#2209', avatar: '/images/avatars/avatar6.png',          elo: 2612, youtube: true },
+                  { rank: 4,  id: 'player-029', name: 'CyberWraith', tag: '#6615', avatar: '/images/avatars/avatar5.png',          elo: 2490, twitch: true  },
+                  { rank: 5,  id: 'player-005', name: 'VoidWalker',  tag: '#7741', avatar: '/images/avatars/avatar5.png',          elo: 2447, twitch: true  },
+                  { rank: 6,  id: 'player-025', name: 'PhantomAce',  tag: '#5518', avatar: '/images/avatars/avatar1.png',          elo: 2368               },
+                  { rank: 7,  id: 'player-026', name: 'GhostRecon',  tag: '#8834', avatar: '/images/avatars/avatar3.png',          elo: 2241               },
+                  { rank: 8,  id: 'player-027', name: 'SteelNova',   tag: '#1190', avatar: '/images/avatars/avatar4.png',          elo: 2114, youtube: true },
+                  { rank: 9,  id: 'player-028', name: 'IronClad',    tag: '#4402', avatar: '/images/avatars/avatar2.png',          elo: 1921               },
+                  { rank: 10, id: 'player-004', name: 'QuantumFist', tag: '#8877', avatar: '/images/avatars/avatar4.png',          elo: 1743, youtube: true },
+                ].map((entry) => (
+                  <Link
+                    key={entry.rank}
+                    href={`/player/${entry.id}`}
+                    className="flex items-center justify-between font-mono text-xs md:text-sm transition-all hover:scale-[1.02]"
+                    style={{
+                      padding: '5px 10px',
+                      background: entry.rank <= 3 ? 'rgba(168,85,247,0.04)' : 'rgba(255,255,255,0.02)',
+                      border: `1px solid ${entry.rank <= 3 ? 'rgba(168,85,247,0.12)' : 'rgba(255,255,255,0.04)'}`,
+                    }}
+                  >
+                    <div className="flex items-center gap-2 md:gap-3 min-w-0">
+                      <span className="font-bold tabular-nums" style={{ color: entry.rank <= 3 ? '#a855f7' : 'rgba(255,255,255,0.3)', width: 16, textAlign: 'right' }}>
+                        {entry.rank}
+                      </span>
+                      <Image src={entry.avatar} alt={entry.name} width={22} height={22} style={{ borderRadius: 0, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.08)' }} />
+                      <span className="truncate font-sans" style={{ color: '#e5e5e5' }}>{entry.name}</span>
+                      <span className="hidden sm:inline" style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.7rem' }}>{entry.tag}</span>
+                      {entry.twitch && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/>
+                        </svg>
+                      )}
+                      {entry.youtube && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.2)" style={{ flexShrink: 0 }}>
+                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <EloBadge elo={entry.elo} size={20} />
+                      <span className="font-bold tabular-nums" style={{ color: '#e5e5e5', minWidth: 36, textAlign: 'right' }}>{entry.elo}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
+        {eloInfoOpen && <EloInfoModal onClose={() => setEloInfoOpen(false)} />}
 
         {/* ── Buy Me a Coffee — mobile only (left rail handles desktop) ── */}
         <div className="md:hidden px-4 pb-6">

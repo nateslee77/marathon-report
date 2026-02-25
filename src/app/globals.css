@@ -317,6 +317,16 @@
   opacity: 1;
 }
 
+/* Right-aligned variant — tooltip extends leftward from the badge */
+.badge-tooltip-right {
+  left: auto;
+  right: 0;
+}
+.badge-tooltip-right::after {
+  left: auto;
+  right: 12px;
+}
+
 /* ═══════════════════════════════════════
    BADGE ANIMATIONS (premium pass badges)
    ═══════════════════════════════════════ */

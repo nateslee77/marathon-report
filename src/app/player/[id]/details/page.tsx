@@ -20,6 +20,8 @@ import { WeaponCard } from '@/components/player/WeaponCard';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { buildDefaultPlayer } from '@/lib/default-player';
+import { EloBadge } from '@/components/ui/EloBadge';
+import { EloInfoModal } from '@/components/ui/EloInfoModal';
 
 interface DetailsPageProps {
   params: { id: string };
@@ -35,6 +37,7 @@ export default function DetailsPage({ params }: DetailsPageProps) {
   const { user, equippedBadges, cardThemeColor, avatarBorderStyle, selectedAvatar, isPinnacle, youtubeUrl, twitchUrl } = useApp();
   const [mounted, setMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [eloModalOpen, setEloModalOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -214,19 +217,23 @@ export default function DetailsPage({ params }: DetailsPageProps) {
       </div>
 
       {/* ── OVERVIEW — career stats + rank ── */}
-      <div style={{ ...CARD_BG, padding: '18px 24px' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px 0' }}>
+      <div style={{ ...CARD_BG, padding: isMobile ? '14px 16px' : '18px 24px' }}>
+        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', flexWrap: isMobile ? undefined : 'wrap', alignItems: isMobile ? 'stretch' : 'center', gap: isMobile ? 14 : '16px 0' }}>
+
           {/* Career stat numbers */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px 28px', flex: 1 }}>
+          <div style={isMobile
+            ? { display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px 0' }
+            : { display: 'flex', flexWrap: 'wrap', flex: 1, gap: '12px 28px' }
+          }>
             {[
-              { label: 'K/D', value: formatKD(stats.kd), highlight: stats.kd >= 1.5 },
-              { label: 'KDA', value: formatKD(stats.kda), highlight: false },
-              { label: 'Extraction', value: formatPercentage(stats.extractionRate), highlight: stats.extractionRate >= 60 },
-              { label: 'Win Rate', value: formatPercentage(stats.winRate), highlight: false },
-              { label: 'Matches', value: String(stats.matchesPlayed), highlight: false },
-              { label: 'Time Played', value: stats.timePlayed, highlight: false },
+              { label: 'K/D',        value: formatKD(stats.kd),                       highlight: stats.kd >= 1.5 },
+              { label: 'KDA',        value: formatKD(stats.kda),                       highlight: false },
+              { label: 'Extraction', value: formatPercentage(stats.extractionRate),    highlight: stats.extractionRate >= 60 },
+              { label: 'Win Rate',   value: formatPercentage(stats.winRate),           highlight: false },
+              { label: 'Matches',    value: String(stats.matchesPlayed),               highlight: false },
+              { label: 'Time Played',value: stats.timePlayed,                          highlight: false },
             ].map((s) => (
-              <div key={s.label}>
+              <div key={s.label} style={isMobile ? { textAlign: 'center' } : {}}>
                 <div className="font-stat font-bold tabular-nums" style={{ fontSize: isMobile ? '1rem' : '1.3rem', color: s.highlight ? effectiveAccent : '#fff', marginBottom: 3 }}>
                   {s.value}
                 </div>
@@ -237,23 +244,57 @@ export default function DetailsPage({ params }: DetailsPageProps) {
             ))}
           </div>
 
-          {/* Rank block — right side */}
-          <div style={{ borderLeft: '1px solid rgba(255,255,255,0.08)', paddingLeft: 24, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {/* Rank + Elo block */}
+          <div style={{
+            ...(isMobile
+              ? { borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 12 }
+              : { borderLeft: '1px solid rgba(255,255,255,0.08)', paddingLeft: 24 }),
+            display: 'flex', flexDirection: 'column', gap: 8,
+          }}>
+            {/* In-game competitive rank */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <RankBadge rank={player.competitiveRank} size="sm" />
               <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#e5e5e5' }}>{player.competitiveRank}</span>
             </div>
-            <div style={{ display: 'flex', gap: 16 }}>
-              <div>
-                <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 2 }}>Trio</div>
-                <div className="font-mono font-bold" style={{ fontSize: '0.85rem', color: effectiveAccent }}>{player.trioElo ?? player.rating}</div>
+
+            {/* TRIO + SOLO Elo */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div
+                style={{ display: 'flex', gap: isMobile ? 24 : 20, cursor: 'pointer', padding: '6px 0', transition: 'opacity 0.12s' }}
+                onClick={() => setEloModalOpen(true)}
+                onMouseEnter={e => (e.currentTarget.style.opacity = '0.8')}
+                onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
+              >
+                <div>
+                  <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4, fontFamily: 'var(--font-mono)' }}>TRIO</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <EloBadge elo={player.trioElo ?? player.rating} size={34} />
+                    <span className="font-mono font-bold" style={{ fontSize: '0.95rem', color: effectiveAccent }}>{player.trioElo ?? player.rating}</span>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4, fontFamily: 'var(--font-mono)' }}>SOLO</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <EloBadge elo={player.soloElo ?? player.rating} size={34} />
+                    <span className="font-mono font-bold" style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.5)' }}>{player.soloElo ?? player.rating}</span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 2 }}>Solo</div>
-                <div className="font-mono" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.45)' }}>{player.soloElo ?? player.rating}</div>
-              </div>
+              <button
+                onClick={() => setEloModalOpen(true)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 3, color: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', transition: 'color 0.12s', flexShrink: 0 }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.6)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.2)')}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
+                  <path d="M12 8v1M12 12v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              </button>
             </div>
           </div>
+
+          {mounted && eloModalOpen && <EloInfoModal onClose={() => setEloModalOpen(false)} />}
         </div>
       </div>
 

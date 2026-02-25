@@ -387,13 +387,194 @@ function SkeletonRows({ count }: { count: number }) {
   );
 }
 
+// ── Rank row ──────────────────────────────────────────────────────────────────
+function WeaponRankRow({
+  weapon, display, barPct, isLast, onClick,
+}: {
+  weapon:  Weapon;
+  display?: number;
+  barPct:  number;
+  isLast:  boolean;
+  onClick: () => void;
+}) {
+  return (
+    <div
+      style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '7px 12px',
+        borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,0.03)',
+        cursor: 'pointer', background: 'transparent',
+        transition: 'background 0.1s',
+      }}
+      onClick={onClick}
+      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.025)')}
+      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+    >
+      <span style={{
+        width: 22, textAlign: 'right', flexShrink: 0,
+        fontSize: '0.5rem', fontWeight: 700,
+        color: 'rgba(255,255,255,0.12)', fontFamily: 'var(--font-mono)',
+      }}>
+        {String(display ?? weapon.rank).padStart(2, '0')}
+      </span>
+
+      <div style={{
+        width: 50, height: 28, flexShrink: 0,
+        position: 'relative', overflow: 'hidden',
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.05)',
+      }}>
+        {weapon.image && (
+          <Image
+            src={weapon.image} alt={weapon.name} fill unoptimized
+            sizes="60px"
+            style={{ objectFit: 'contain', padding: 3 }}
+          />
+        )}
+      </div>
+
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 4 }}>
+          <span style={{
+            fontSize: '0.58rem', color: '#c0c0c0', letterSpacing: '0.01em',
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+            maxWidth: 130,
+          }}>
+            {weapon.name}
+          </span>
+          {weapon.type && (
+            <span style={{
+              fontSize: '0.38rem', letterSpacing: '0.07em',
+              color: 'rgba(255,255,255,0.18)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              padding: '1px 4px', flexShrink: 0,
+              fontFamily: 'var(--font-mono)',
+            }}>
+              {weapon.type}
+            </span>
+          )}
+        </div>
+        <div style={{ height: 2, background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+          <div style={{
+            width: `${barPct}%`, height: '100%',
+            background: 'rgba(194,255,11,0.4)',
+            transition: 'width 0.4s ease',
+          }} />
+        </div>
+      </div>
+
+      <span style={{
+        fontSize: '0.62rem', fontWeight: 700, flexShrink: 0,
+        minWidth: 38, textAlign: 'right',
+        color: '#c2ff0b', fontFamily: 'var(--font-mono)',
+      }}>
+        {weapon.usage}%
+      </span>
+    </div>
+  );
+}
+
+// ── Mobile full-list bottom-sheet ─────────────────────────────────────────────
+function MobileWeaponListModal({
+  weapons, activeFilter, maxUsage, onSelect, onClose,
+}: {
+  weapons:      Weapon[];
+  activeFilter: string;
+  maxUsage:     number;
+  onSelect:     (w: Weapon) => void;
+  onClose:      () => void;
+}) {
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[105] flex flex-col justify-end"
+      style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(4px)' }}
+      onClick={onClose}
+    >
+      <div
+        style={{
+          background: '#0c0c0c',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '2px solid rgba(194,255,11,0.4)',
+          maxHeight: '85vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* drag handle */}
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 4px' }}>
+          <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.12)' }} />
+        </div>
+
+        {/* header */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '6px 16px 12px',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          flexShrink: 0,
+        }}>
+          <div>
+            <div style={{
+              fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.1em',
+              color: '#e0e0e0', fontFamily: 'var(--font-rajdhani)',
+            }}>
+              {activeFilter === 'ALL' ? 'ALL WEAPONS' : activeFilter}
+            </div>
+            <div style={{
+              fontSize: '0.42rem', letterSpacing: '0.1em',
+              color: 'rgba(255,255,255,0.25)', fontFamily: 'var(--font-mono)',
+              marginTop: 2,
+            }}>
+              {weapons.length} WEAPONS · BY PICK RATE
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              color: 'rgba(255,255,255,0.3)', background: 'none',
+              border: 'none', cursor: 'pointer', padding: 4,
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        {/* scrollable list */}
+        <div style={{ overflowY: 'auto', flex: 1 }}>
+          {weapons.map((weapon, i) => {
+            const barPct  = (weapon.usage / maxUsage) * 100;
+            const isLast  = i === weapons.length - 1;
+            const display = weapon.filteredRank ?? weapon.rank;
+            return (
+              <WeaponRankRow
+                key={weapon.rank}
+                weapon={weapon}
+                display={display}
+                barPct={barPct}
+                isLast={isLast}
+                onClick={() => { onSelect(weapon); onClose(); }}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
+const MOBILE_INITIAL_ROWS = 5;
+
 export function WeaponMetaTracker() {
   const [weapons, setWeapons]             = useState<Weapon[]>([]);
   const [loading, setLoading]             = useState(true);
   const [previewWeapon, setPreviewWeapon] = useState<Weapon | null>(null);
   const [activeFilter, setActiveFilter]   = useState('ALL');
   const [mounted, setMounted]             = useState(false);
+  const [mobileListOpen, setMobileListOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -418,6 +599,9 @@ export function WeaponMetaTracker() {
   const top3    = filteredRanked.slice(0, 3);
   const rest    = filteredRanked.slice(3);
   const maxUsage = filtered[0]?.usage ?? 1;
+
+  const mobilePreviewRest = rest.slice(0, MOBILE_INITIAL_ROWS);
+  const hasMobileMore     = rest.length > MOBILE_INITIAL_ROWS;
 
   return (
     <>
@@ -522,12 +706,17 @@ export function WeaponMetaTracker() {
         ) : null}
 
         {/* ── Rank list 4+ ── */}
-        <div style={{
-          maxHeight: 360,
-          overflowY: 'auto',
-          scrollbarWidth: 'thin',
-          scrollbarColor: 'rgba(255,255,255,0.07) transparent',
-        }}>
+
+        {/* Desktop — scrollable container */}
+        <div
+          className="hidden md:block"
+          style={{
+            maxHeight: 360,
+            overflowY: 'auto',
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(255,255,255,0.07) transparent',
+          }}
+        >
           {loading ? (
             <SkeletonRows count={10} />
           ) : rest.length === 0 && top3.length === 0 ? (
@@ -543,87 +732,87 @@ export function WeaponMetaTracker() {
               const barPct  = (weapon.usage / maxUsage) * 100;
               const isLast  = i === rest.length - 1;
               const display = activeFilter === 'ALL' ? weapon.rank : weapon.filteredRank;
-
               return (
-                <div
+                <WeaponRankRow
                   key={weapon.rank}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '7px 12px',
-                    borderBottom: isLast ? 'none' : '1px solid rgba(255,255,255,0.03)',
-                    cursor: 'pointer', background: 'transparent',
-                    transition: 'background 0.1s',
-                  }}
+                  weapon={weapon}
+                  display={display}
+                  barPct={barPct}
+                  isLast={isLast}
                   onClick={() => setPreviewWeapon(weapon)}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.025)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-                >
-                  <span style={{
-                    width: 22, textAlign: 'right', flexShrink: 0,
-                    fontSize: '0.5rem', fontWeight: 700,
-                    color: 'rgba(255,255,255,0.12)', fontFamily: 'var(--font-mono)',
-                  }}>
-                    {String(display).padStart(2, '0')}
-                  </span>
-
-                  <div style={{
-                    width: 50, height: 28, flexShrink: 0,
-                    position: 'relative', overflow: 'hidden',
-                    background: 'rgba(255,255,255,0.02)',
-                    border: '1px solid rgba(255,255,255,0.05)',
-                  }}>
-                    {weapon.image && (
-                      <Image
-                        src={weapon.image} alt={weapon.name} fill unoptimized
-                        sizes="60px"
-                        style={{ objectFit: 'contain', padding: 3 }}
-                      />
-                    )}
-                  </div>
-
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 4 }}>
-                      <span style={{
-                        fontSize: '0.58rem', color: '#c0c0c0', letterSpacing: '0.01em',
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                        maxWidth: 130,
-                      }}>
-                        {weapon.name}
-                      </span>
-                      {weapon.type && (
-                        <span style={{
-                          fontSize: '0.38rem', letterSpacing: '0.07em',
-                          color: 'rgba(255,255,255,0.18)',
-                          border: '1px solid rgba(255,255,255,0.07)',
-                          padding: '1px 4px', flexShrink: 0,
-                          fontFamily: 'var(--font-mono)',
-                        }}>
-                          {weapon.type}
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ height: 2, background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                      <div style={{
-                        width: `${barPct}%`, height: '100%',
-                        background: 'rgba(194,255,11,0.4)',
-                        transition: 'width 0.4s ease',
-                      }} />
-                    </div>
-                  </div>
-
-                  <span style={{
-                    fontSize: '0.62rem', fontWeight: 700, flexShrink: 0,
-                    minWidth: 38, textAlign: 'right',
-                    color: '#c2ff0b', fontFamily: 'var(--font-mono)',
-                  }}>
-                    {weapon.usage}%
-                  </span>
-                </div>
+                />
               );
             })
           )}
         </div>
+
+        {/* Mobile — limited rows + View More button */}
+        <div className="md:hidden">
+          {loading ? (
+            <SkeletonRows count={5} />
+          ) : rest.length === 0 && top3.length === 0 ? (
+            <div style={{
+              padding: '28px 16px', textAlign: 'center',
+              color: 'rgba(255,255,255,0.18)', fontSize: '0.58rem',
+              fontFamily: 'var(--font-mono)',
+            }}>
+              NO WEAPONS IN THIS CATEGORY
+            </div>
+          ) : (
+            <>
+              {mobilePreviewRest.map((weapon, i) => {
+                const barPct  = (weapon.usage / maxUsage) * 100;
+                const isLast  = i === mobilePreviewRest.length - 1 && !hasMobileMore;
+                const display = activeFilter === 'ALL' ? weapon.rank : weapon.filteredRank;
+                return (
+                  <WeaponRankRow
+                    key={weapon.rank}
+                    weapon={weapon}
+                    display={display}
+                    barPct={barPct}
+                    isLast={isLast}
+                    onClick={() => setPreviewWeapon(weapon)}
+                  />
+                );
+              })}
+              {hasMobileMore && (
+                <button
+                  onClick={() => setMobileListOpen(true)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    background: 'transparent',
+                    border: 'none',
+                    borderTop: '1px solid rgba(255,255,255,0.05)',
+                    cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    color: 'rgba(255,255,255,0.35)',
+                    fontSize: '0.48rem', letterSpacing: '0.1em',
+                    fontFamily: 'var(--font-mono)',
+                    fontWeight: 700,
+                  }}
+                >
+                  {`VIEW ALL  (${rest.length + 3})`}
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              )}
+            </>
+          )}
+        </div>
       </div>
+
+      {/* ── Mobile full-list modal ── */}
+      {mounted && mobileListOpen && (
+        <MobileWeaponListModal
+          weapons={filteredRanked}
+          activeFilter={activeFilter}
+          maxUsage={maxUsage}
+          onSelect={setPreviewWeapon}
+          onClose={() => setMobileListOpen(false)}
+        />
+      )}
 
       {/* ── Detail modal ── */}
       {mounted && previewWeapon && createPortal(

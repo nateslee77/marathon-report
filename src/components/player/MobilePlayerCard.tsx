@@ -1,5 +1,7 @@
 'use client';
 
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { DetailedPlayer } from '@/types';
@@ -11,6 +13,9 @@ import { PlayerAvatar } from '@/components/ui/PlayerAvatar';
 import { useApp } from '@/context/AppContext';
 import { getBadgeById, PINNACLE_BADGE } from '@/lib/badges';
 import { playerBadges } from '@/lib/mock-data';
+import { EloBadge } from '@/components/ui/EloBadge';
+import { EloInfoModal } from '@/components/ui/EloInfoModal';
+import { getEloRank } from '@/lib/elo-ranks';
 
 interface MobilePlayerCardProps {
   player: DetailedPlayer;
@@ -19,6 +24,41 @@ interface MobilePlayerCardProps {
 
 export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardProps) {
   const { user, cardThemeColor, equippedBadges, isPinnacle } = useApp();
+  const [eloModalOpen, setEloModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [eloTooltipVisible, setEloTooltipVisible] = useState(false);
+  const [eloTooltipPos, setEloTooltipPos] = useState<{ x: number; y: number } | null>(null);
+  const eloRowRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { setMounted(true); }, []);
+
+  const handleEloTap = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (eloTooltipVisible) {
+      setEloTooltipVisible(false);
+      setEloTooltipPos(null);
+      setEloModalOpen(true);
+    } else {
+      const rect = eloRowRef.current?.getBoundingClientRect();
+      if (rect) setEloTooltipPos({ x: rect.left + rect.width / 2, y: rect.bottom });
+      setEloTooltipVisible(true);
+    }
+  }, [eloTooltipVisible]);
+
+  // Dismiss tooltip on outside tap
+  useEffect(() => {
+    if (!eloTooltipVisible) return;
+    const dismiss = () => { setEloTooltipVisible(false); setEloTooltipPos(null); };
+    const timer = setTimeout(() => {
+      document.addEventListener('click', dismiss, { once: true });
+      document.addEventListener('touchstart', dismiss as EventListener, { once: true });
+    }, 50);
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener('click', dismiss);
+      document.removeEventListener('touchstart', dismiss as EventListener);
+    };
+  }, [eloTooltipVisible]);
   const isOwnCard = user?.id === player.id;
   const runner = RUNNER_VISUALS[player.runner];
   const playerThemeColor = isOwnCard && cardThemeColor ? cardThemeColor : player.themeColor;
@@ -143,15 +183,9 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
               </div>
               <div className="flex items-center gap-1.5 flex-shrink-0">
                 {(player.membership === 'pinnacle' || (user?.id === player.id && isPinnacle)) && (
-                  <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" />
+                  <BadgeIcon badge={PINNACLE_BADGE} size="sm" variant="tag" tooltipAlign="right" />
                 )}
-                <RankBadge rank={player.competitiveRank} size="sm" />
-                <span
-                  className="font-mono text-sm font-bold"
-                  style={{ color: effectiveAccent }}
-                >
-                  {player.rating}
-                </span>
+                <RankBadge rank={player.competitiveRank} size="sm" tooltipAlign="right" />
               </div>
             </div>
           </div>
@@ -159,39 +193,136 @@ export function MobilePlayerCard({ player, isCenter = false }: MobilePlayerCardP
 
         {/* ── Core Stats ── */}
         <div
-          className="grid grid-cols-3 gap-0"
           style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
             padding: '8px 12px',
             borderBottom: '1px solid rgba(255,255,255,0.04)',
             background: useCustomTheme ? `radial-gradient(ellipse at 50% 20%, ${effectiveAccent}22 0%, transparent 55%)` : runner.bgGradient,
           }}
         >
-          {[
-            { label: 'K/D', value: formatKD(stats.kd), color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444', bold: true },
-            { label: 'EXT%', value: formatPercentage(stats.extractionRate, 1), color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' },
-            { label: 'MATCHES', value: String(stats.matchesPlayed), color: '#e5e5e5' },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div
-                className={`font-stat text-lg tabular-nums leading-none ${stat.bold ? 'font-bold' : 'font-semibold'}`}
-                style={{ color: stat.color }}
-              >
-                {stat.value}
-              </div>
-              <div
-                className="mt-1"
-                style={{
-                  fontSize: '0.5rem',
-                  letterSpacing: '0.12em',
-                  color: 'rgba(255,255,255,0.28)',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {stat.label}
-              </div>
+          {/* K/D */}
+          <div style={{ textAlign: 'center' }}>
+            <div className="font-stat tabular-nums leading-none font-bold" style={{ fontSize: '1.1rem', color: stats.kd >= 1.5 ? effectiveAccent : stats.kd >= 1.0 ? '#e5e5e5' : '#ff4444' }}>
+              {formatKD(stats.kd)}
             </div>
-          ))}
+            <div style={{ fontSize: '0.48rem', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 3 }}>
+              K/D
+            </div>
+          </div>
+
+          {/* EXT% */}
+          <div style={{ textAlign: 'center' }}>
+            <div className="font-stat tabular-nums leading-none font-semibold" style={{ fontSize: '1.1rem', color: stats.extractionRate >= 60 ? effectiveAccent : '#e5e5e5' }}>
+              {formatPercentage(stats.extractionRate, 1)}
+            </div>
+            <div style={{ fontSize: '0.48rem', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 3 }}>
+              EXT%
+            </div>
+          </div>
+
+          {/* MATCHES */}
+          <div style={{ textAlign: 'center' }}>
+            <div className="font-stat tabular-nums leading-none font-semibold" style={{ fontSize: '1.1rem', color: '#e5e5e5' }}>
+              {stats.matchesPlayed}
+            </div>
+            <div style={{ fontSize: '0.48rem', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 3 }}>
+              MATCHES
+            </div>
+          </div>
+
+          {/* STREAK */}
+          <div style={{ textAlign: 'center' }}>
+            <div className="font-stat tabular-nums leading-none font-semibold" style={{ fontSize: '1.1rem', color: stats.currentStreak >= 3 ? effectiveAccent : '#e5e5e5' }}>
+              {stats.currentStreak}
+            </div>
+            <div style={{ fontSize: '0.48rem', letterSpacing: '0.12em', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', marginTop: 3 }}>
+              STREAK
+            </div>
+          </div>
         </div>
+
+        {/* ── Elo Ratings — tap once for rank info, tap again for full guide ── */}
+        <div
+          ref={eloRowRef}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20,
+            padding: '8px 12px',
+            borderBottom: '1px solid rgba(255,255,255,0.04)',
+            cursor: 'pointer', transition: 'background 0.12s',
+          }}
+          onClick={handleEloTap}
+          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.025)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)' }}>TRIO</span>
+            <EloBadge elo={player.trioElo ?? player.rating} size={34} />
+            <span className="font-mono font-bold" style={{ fontSize: '0.85rem', color: effectiveAccent }}>{player.trioElo ?? player.rating}</span>
+          </div>
+          <div style={{ width: 1, alignSelf: 'stretch', background: 'rgba(255,255,255,0.06)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'var(--font-mono)' }}>SOLO</span>
+            <EloBadge elo={player.soloElo ?? player.rating} size={34} />
+            <span className="font-mono font-bold" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.55)' }}>{player.soloElo ?? player.rating}</span>
+          </div>
+          <button
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setEloTooltipVisible(false); setEloTooltipPos(null); setEloModalOpen(true); }}
+            style={{ marginLeft: 4, background: 'none', border: 'none', cursor: 'pointer', padding: 3, color: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M12 8v1M12 12v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+          </button>
+        </div>
+        {mounted && eloModalOpen && <EloInfoModal onClose={() => setEloModalOpen(false)} />}
+
+        {/* ── Elo rank tooltip (first tap) ── */}
+        {mounted && eloTooltipVisible && eloTooltipPos && createPortal(
+          <div
+            style={{
+              position: 'fixed',
+              top: eloTooltipPos.y + 8,
+              left: eloTooltipPos.x,
+              transform: 'translateX(-50%)',
+              background: 'rgba(8,8,8,0.97)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              padding: '10px 14px',
+              zIndex: 9999,
+              minWidth: 210,
+              boxShadow: '0 8px 24px rgba(0,0,0,0.7)',
+            }}
+            onClick={(e) => { e.stopPropagation(); setEloTooltipVisible(false); setEloTooltipPos(null); setEloModalOpen(true); }}
+          >
+            {(() => {
+              const trioRank = getEloRank(player.trioElo ?? player.rating);
+              const soloRank = getEloRank(player.soloElo ?? player.rating);
+              return (
+                <>
+                  <div style={{ display: 'flex', gap: 18, marginBottom: 9 }}>
+                    <div>
+                      <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 3, fontFamily: 'var(--font-mono)' }}>TRIO</div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: trioRank.color }}>{trioRank.label}</div>
+                      <div style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.3)', marginTop: 1, fontFamily: 'var(--font-mono)' }}>{trioRank.minElo}–{trioRank.maxElo ?? '∞'} pts</div>
+                    </div>
+                    <div style={{ width: 1, background: 'rgba(255,255,255,0.07)', alignSelf: 'stretch' }} />
+                    <div>
+                      <div style={{ fontSize: '0.42rem', color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 3, fontFamily: 'var(--font-mono)' }}>SOLO</div>
+                      <div style={{ fontSize: '0.78rem', fontWeight: 700, color: soloRank.color }}>{soloRank.label}</div>
+                      <div style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.3)', marginTop: 1, fontFamily: 'var(--font-mono)' }}>{soloRank.minElo}–{soloRank.maxElo ?? '∞'} pts</div>
+                    </div>
+                  </div>
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 7, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                    <span style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.25)', fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>TAP FOR FULL ELO GUIDE</span>
+                    <span style={{ fontSize: '0.48rem', color: 'rgba(255,255,255,0.18)' }}>›</span>
+                  </div>
+                </>
+              );
+            })()}
+          </div>,
+          document.body
+        )}
 
         {/* ── Loadout ── */}
         <div style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
