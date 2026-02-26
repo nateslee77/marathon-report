@@ -27,12 +27,12 @@ export function LeftRail() {
     >
       {/* Logo + Wordmark */}
       <div style={{ padding: '28px 24px 20px' }}>
-        <Link href="/" className="flex items-center gap-3 focus-accent">
+        <Link href="/" className="flex items-center gap-2 focus-accent">
           <Image
-            src="/images/Marathon_Bungie_Icon.svg"
+            src="/images/marathon intel logo.png"
             alt="Marathon Intel"
-            width={36}
-            height={36}
+            width={72}
+            height={72}
             style={{ flexShrink: 0 }}
           />
           <div>

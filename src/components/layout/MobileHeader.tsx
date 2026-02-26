@@ -46,10 +46,10 @@ export function MobileHeader() {
           MARATHON
         </span>
         <Image
-          src="/images/Marathon_Bungie_Icon.svg"
+          src="/images/marathon intel logo.png"
           alt="Marathon Intel"
-          width={20}
-          height={20}
+          width={52}
+          height={52}
         />
         <span className="text-sm font-bold tracking-tight text-text-tertiary">
           INTEL
