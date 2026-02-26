@@ -55,7 +55,7 @@ export async function GET(
     kd = totalDeaths > 0 ? totalKills / totalDeaths : totalKills > 0 ? totalKills : null;
 
     const extractedCount = playerRows.filter(
-      (r) => (r.match_team_results as { extracted: boolean } | null)?.extracted === true,
+      (r) => (r.match_team_results as unknown as { extracted: boolean } | null)?.extracted === true,
     ).length;
     extractionPercent = (extractedCount / playerRows.length) * 100;
 
