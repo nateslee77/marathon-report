@@ -60,7 +60,7 @@ export async function GET(
     extractionPercent = (extractedCount / playerRows.length) * 100;
 
     const dates = playerRows
-      .map((r) => (r.matches as { played_at: string } | null)?.played_at)
+      .map((r) => (r.matches as unknown as { played_at: string } | null)?.played_at)
       .filter((d): d is string => Boolean(d));
     if (dates.length > 0) {
       lastPlayed = dates.sort().at(-1) ?? null;
