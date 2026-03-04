@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useApp } from '@/context/AppContext';
 import { AVAILABLE_BADGES, FACTION_BADGES, getBadgeById } from '@/lib/badges';
 import { BadgeIcon } from '@/components/ui/BadgeIcon';
+import { ELO_RANKS } from '@/lib/elo-ranks';
 
 const THEME_COLORS = [
   { name: 'Red', value: '#ff0000' },
@@ -977,15 +978,13 @@ export default function SettingsPage() {
             Season 1 Ranks
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {([
-              { tier: 'Unranked',  range: '0 – 799',     color: '#666666', image: null,      desc: 'Complete placements to rank up.' },
-              { tier: 'Bronze',    range: '800 – 1099',   color: '#cd7f32', image: '/images/elo rank images/bronze elo.png', desc: 'Solid foundations. Keep pushing.' },
-              { tier: 'Silver',    range: '1100 – 1399',  color: '#c0c0c0', image: '/images/elo rank images/silver elo.png', desc: 'Above average. Refine your game.' },
-              { tier: 'Gold',      range: '1400 – 1699',  color: '#ffd700', image: '/images/elo rank images/gold elo.png',   desc: 'Consistent across all modes.' },
-              { tier: 'Platinum',  range: '1700 – 1999',  color: '#4ee2ec', image: null,      desc: 'Elite play. Most can\'t reach this.' },
-              { tier: 'Diamond',   range: '2000 – 2399',  color: '#b9f2ff', image: null,      desc: 'Top-tier. Very few reach this level.' },
-              { tier: 'Ultra',     range: '2400+',        color: '#c2ff0b', image: null,      desc: 'Top 500 globally.' },
-            ] as { tier: string; range: string; color: string; image: string | null; desc: string }[]).map((rank) => (
+            {ELO_RANKS.map((r) => ({
+              tier:  r.tier,
+              range: r.maxElo !== null ? `${r.minElo.toLocaleString()} – ${r.maxElo.toLocaleString()}` : `${r.minElo.toLocaleString()}+`,
+              color: r.color,
+              image: r.image,
+              desc:  r.description,
+            })).map((rank) => (
               <div
                 key={rank.tier}
                 style={{
