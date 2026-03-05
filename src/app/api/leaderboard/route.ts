@@ -32,12 +32,10 @@ export async function GET(req: NextRequest) {
   }
 
   // ── Fallback: live query from players ────────────────────────────────────
-  const eloCol = mode === 'SOLO' ? 'solo_elo' : 'trio_elo';
-
   const { data: players, error } = await supabaseAdmin
     .from('players')
-    .select(`id, display_name, tag, ${eloCol}`)
-    .order(eloCol, { ascending: false })
+    .select('id, display_name, tag, solo_elo, trio_elo')
+    .order(mode === 'SOLO' ? 'solo_elo' : 'trio_elo', { ascending: false })
     .limit(limit);
 
   if (error) {
@@ -50,10 +48,11 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(players.map((p, i) => {
     const tag = p.tag ? `#${p.tag}` : '';
+    const elo = mode === 'SOLO' ? p.solo_elo : p.trio_elo;
     return {
       rank: i + 1,
       display_name: `${p.display_name}${tag}`,
-      elo: p[eloCol] as number,
+      elo: elo as number,
       tier: null,
     };
   }));
