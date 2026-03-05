@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json([]);
   }
 
-  return players.map((p, i) => {
+  return NextResponse.json(players.map((p, i) => {
     const tag = p.tag ? `#${p.tag}` : '';
     return {
       rank: i + 1,
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
       elo: p[eloCol] as number,
       tier: null,
     };
-  });
+  }));
 }
 
 // ── Helper ────────────────────────────────────────────────────────────────────
