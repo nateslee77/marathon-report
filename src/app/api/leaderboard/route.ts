@@ -31,24 +31,32 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(await enrichWithPlayerNames(snapshots, 'rank_position'));
   }
 
-  // ── Fallback: live query from player_ratings ──────────────────────────────
-  const { data: ratings, error } = await supabaseAdmin
-    .from('player_ratings')
-    .select('player_id, elo')
-    .eq('mode', mode)
-    .order('elo', { ascending: false })
+  // ── Fallback: live query from players ────────────────────────────────────
+  const eloCol = mode === 'SOLO' ? 'solo_elo' : 'trio_elo';
+
+  const { data: players, error } = await supabaseAdmin
+    .from('players')
+    .select(`id, display_name, tag, ${eloCol}`)
+    .order(eloCol, { ascending: false })
     .limit(limit);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  if (!ratings || ratings.length === 0) {
+  if (!players || players.length === 0) {
     return NextResponse.json([]);
   }
 
-  const rows = ratings.map((r, i) => ({ rank_position: i + 1, player_id: r.player_id, elo: r.elo, tier: null }));
-  return NextResponse.json(await enrichWithPlayerNames(rows, 'rank_position'));
+  return players.map((p, i) => {
+    const tag = p.tag ? `#${p.tag}` : '';
+    return {
+      rank: i + 1,
+      display_name: `${p.display_name}${tag}`,
+      elo: p[eloCol] as number,
+      tier: null,
+    };
+  });
 }
 
 // ── Helper ────────────────────────────────────────────────────────────────────
@@ -70,7 +78,6 @@ async function enrichWithPlayerNames(
 
   return rows.map((row) => {
     const p = playerMap.get(row.player_id);
-    // tag may be stored as "1234" or "" — prefix # only when non-empty
     const tag = p?.tag ? `#${p.tag}` : '';
     return {
       rank: row[rankField],
