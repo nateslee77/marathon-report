@@ -24,14 +24,10 @@ export const metadata: Metadata = {
   description: 'Stat tracker for Marathon by Bungie. View player profiles, K/D, extraction rates, weapon loadouts, shell stats, match history, and performance graphs.',
   icons: {
     icon: [
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/images/new marathon intel logo.png?v=2', type: 'image/png' },
     ],
-    shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    shortcut: '/images/new marathon intel logo.png?v=2',
+    apple: '/images/new marathon intel logo.png?v=2',
   },
 };
 
@@ -49,6 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${rajdhani.variable}`}>
       <head>
+        <link rel="icon" href="/images/new%20marathon%20intel%20logo.png?v=2" type="image/png" />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-VE88YJW5RT"
           strategy="afterInteractive"
