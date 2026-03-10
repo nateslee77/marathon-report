@@ -66,31 +66,7 @@ function useScramble(text: string, revealDuration = 1600) {
 
 export default function HomePage() {
   const titleChars = useScramble('Marathon Intel');
-  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [eloInfoOpen, setEloInfoOpen] = useState(false);
-
-  // March 5th, 2026 10:00 AM PST = 18:00 UTC
-  const launchDate = useMemo(() => new Date('2026-03-05T18:00:00Z'), []);
-
-  useEffect(() => {
-    function update() {
-      const now = new Date();
-      const diff = launchDate.getTime() - now.getTime();
-      if (diff <= 0) {
-        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        return;
-      }
-      setCountdown({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((diff / (1000 * 60)) % 60),
-        seconds: Math.floor((diff / 1000) % 60),
-      });
-    }
-    update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
-  }, [launchDate]);
 
   return (
     <div className="relative flex flex-col md:mx-[-24px] md:mt-[-24px]">
@@ -251,59 +227,6 @@ export default function HomePage() {
           <SearchBar variant="hero" />
         </div>
 
-        {/* ── Countdown — below hero ── */}
-        <div className="relative z-10 flex flex-col items-center px-4 pt-6 pb-4 md:pt-8 md:pb-16">
-          <div
-            className="mb-1.5"
-            style={{
-              fontSize: '0.6rem',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
-              color: 'rgba(255,255,255,0.35)',
-              fontWeight: 600,
-              textAlign: 'center',
-            }}
-          >
-            Time Till Game Release
-          </div>
-          <div className="flex justify-center gap-2 md:gap-3">
-            {[
-              { value: countdown.days, label: 'Days' },
-              { value: countdown.hours, label: 'Hrs' },
-              { value: countdown.minutes, label: 'Min' },
-              { value: countdown.seconds, label: 'Sec' },
-            ].map((unit) => (
-              <div
-                key={unit.label}
-                className="text-center"
-                style={{
-                  background: 'rgba(0,0,0,0.5)',
-                  border: '1px solid rgba(194,255,11,0.15)',
-                  padding: '8px 12px',
-                  minWidth: 56,
-                }}
-              >
-                <div
-                  className="font-stat text-xl md:text-3xl font-bold tabular-nums leading-none"
-                  style={{ color: '#c2ff0b' }}
-                >
-                  {String(unit.value).padStart(2, '0')}
-                </div>
-                <div
-                  className="mt-1"
-                  style={{
-                    fontSize: '0.45rem',
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(255,255,255,0.4)',
-                  }}
-                >
-                  {unit.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* ── Runner Meta Cards ── */}
